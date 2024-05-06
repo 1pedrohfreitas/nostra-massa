@@ -18,5 +18,7 @@ jobs:
           node-version: 20
 
       - name: Construindo aplicação
-        run : cd front && npm install && npm run build:prod
+        working-directory: front
+        run : ls -la
+        # cd front && npm install && npm run build:prod
       
