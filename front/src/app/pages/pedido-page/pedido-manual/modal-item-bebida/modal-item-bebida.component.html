@@ -1,0 +1,21 @@
+<div class="modal-container" *ngIf="showModal">
+    <div class="modal-conteudo">
+        <div class="row row-space-bottom">
+                <div class="col-2">
+                    <app-input  (valueChange)="setQuantidade($event)" [value]="itemPedidoBebida.quantidade.toString()" label="Quantidade" [type]="'number'"></app-input>
+                </div>
+                <div class="col-4">
+                    <app-input-select [optionDefault]="optionDefaultBebida" (optionSelected)="setBebida($event)" label="Bebida" [options]="listaBebidasOptions"></app-input-select>
+                </div>
+                <div class="col-3">
+                    <app-input-select [optionDefault]="optionDefaultTamanho" (optionSelected)="setTamanhoItem($event)" label="Tamanho" [options]="listaTamanhoItem"></app-input-select>
+                </div>
+                <div class="col-2">
+                    <app-input [readonly]="true"  [value]="itemPedidoBebida.valor.toString()" label="Valor"></app-input>
+                </div>
+        </div>
+        <div class="col-2">
+            <button (click)="save()">Gravar</button>
+        </div>
+    </div>
+</div>

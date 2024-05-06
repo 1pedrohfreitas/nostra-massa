@@ -1,0 +1,13 @@
+<div [id]="idNotificacaoNome" class="notificacao-item {{notificacao.tipo}}">
+    <div class="notificacao-item-icon">
+        <img src="assets/images/{{notificacao.tipo}}.png" alt="Notificação Item">
+    </div>
+    <div>
+        <div>
+            <h2>{{notificacao.titulo}}</h2>
+        </div>
+        <div *ngIf="notificacao.mensagem != ''">
+            <h3>{{notificacao.mensagem}}</h3>
+        </div>
+    </div>
+</div>

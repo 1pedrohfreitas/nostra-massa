@@ -1,0 +1,22 @@
+<div class="row">
+    <h1>Paramêtros</h1>
+</div>
+<div class="row row-space-bottom">
+    <div class="col-4">
+        <app-input-checkbox [(value)]="parametros.imprimir" label="Imprimir" ></app-input-checkbox>
+    </div>
+</div>
+<div class="row row-space-bottom">
+    <div class="col-4">
+        <app-input-select  (optionSelected)="setImpressora($event)" label="Lista Impressoras" [options]="listaImpressoras"></app-input-select>
+    </div>
+    <div class="col-4">
+        <app-input label="Impressora Selecionada" [readonly]="true" [value]="parametros.impressora"></app-input>
+    </div>
+</div>
+<div class="row">
+    <div class="col-3">
+        <button (click)="atualizaParametros()">Salvar</button>
+    </div>
+    
+</div>

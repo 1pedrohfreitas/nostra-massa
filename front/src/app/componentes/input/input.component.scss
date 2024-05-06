@@ -1,0 +1,28 @@
+
+.input-field{
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid blue;
+  
+    width: 100%;
+}
+.input-field label {
+    margin-left: 10px;
+}
+
+.input-field label .label-style{
+    background: #fff;
+    font-weight: bold;
+    letter-spacing: 2px;
+    position: relative;
+    padding: 0 10px;
+}
+
+.input-field input{
+    height: 50px;
+    margin-top: -10px;
+    padding: 10px 20px;
+    font-size: 20px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}

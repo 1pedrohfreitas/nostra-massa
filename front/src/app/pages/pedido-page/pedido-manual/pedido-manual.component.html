@@ -1,0 +1,123 @@
+<div id="container">
+    <div class="row">
+        <div class="col-2">
+            <app-input [readonly]="true" [value]="pedido.idPedido" [type]="'number'" label="Pedido"></app-input>
+        </div>
+        <div *ngIf="desabilitaCampoIDPedido" class="col-3">
+            <app-input [readonly]="true" [value]="pedido.dataPedido | date : 'dd/MM/yyyy HH:mm:ss'" label="Data / Hora Pedido"></app-input>
+        </div>
+        <div *ngIf="desabilitaCampoIDPedido" class="col-2">
+            <app-input [readonly]="true" [value]="pedido.valor" label="Valor:"></app-input>
+        </div>
+        <div *ngIf="desabilitaCampoIDPedido" class="col-2">
+            <button (click)="imprimir()"> Imprimir</button>
+        </div>
+        <div *ngIf="desabilitaCampoIDPedido" class="col-2">
+            <button (click)="cancelaPedido()"> Cancelar Pedido</button>
+        </div>
+        <div *ngIf="!desabilitaCampoIDPedido || pedido.status == 'CONCLUIDO'" class="col-2">
+            <button (click)="novoPedido()">Novo Pedido</button>
+        </div>
+    </div>
+    <div *ngIf="desabilitaCampoIDPedido" class="row">
+        <div class="col-auto">
+            <div class="row">
+                
+                <div class="col-1">
+                    <h2>Cliente:</h2>
+                </div>
+                <div class="col-3">
+                    <app-input
+                 label="Telefone:"
+                 id="pedido-telefone"
+                 [(value)]="pedido.clienteTelefone">
+            </app-input>
+                    <!-- <app-input [(value)]="telefoneCliente" label="Telefone"></app-input> -->
+                </div>
+                <div class="col-2">
+                    <button (click)="getDadosClienteByTelefone()">Pesquisar</button>
+                </div>
+                <div class="col-4">
+                    <app-input [(value)]="pedido.clienteNome" label="Nome"></app-input>
+                </div>
+                <div *ngIf="showSalvarCliente" class="col-2">
+                    <button (click)="adicionarCliente()">Cadastrar Usuario</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div *ngIf="desabilitaCampoIDPedido"  class="row">
+        <div class="col-1">
+            <h2>Endereço:</h2>
+        </div>
+        <div class="col-2">
+            <button (click)="openModalEndereco()">Preenche Endereço</button>
+        </div>
+        <div *ngIf="pedido.enderecoDescricao != undefined && pedido.enderecoDescricao.length > 0" class="col-11">
+            <app-input [readonly]="true" [value]="pedido.enderecoDescricao" label="Endereço"></app-input>
+        </div>
+        <div *ngIf="pedido.enderecoDescricao != undefined && pedido.enderecoDescricao.length > 0" class="col-1">
+            <app-input [readonly]="true" [value]="pedido.valorTaxa" label="Taxa:"></app-input>
+        </div>
+    </div>
+    <div *ngIf="desabilitaCampoIDPedido"  class="row">
+        <div class="col-3">
+            <button (click)="adicionaItemPedido()">Adicionar Item</button>
+        </div>
+    </div>
+    <div  *ngIf="desabilitaCampoIDPedido">
+        <div *ngFor="let item of pedido.itensPedido; let index = index" class="row">
+            <div class="col-1">
+                <button (click)="removerItemPedido(item.id)">Excluir</button>
+            </div>
+            <div class="col-1">
+                <button (click)="openModalItem(item, item.tipo)">Editar</button>
+            </div>
+            <div class="col-1">
+                <h2>Item {{index + 1}}:</h2>
+            </div>
+            <div class="col-2" *ngIf="item.descricao == ''">
+                <app-input-select (valueChange)="setTipoItem($event)" id="item-select-{{index + 1}}-tipo" label="Tipos" [options]="listaSelectTipo"></app-input-select>
+            </div>
+            <div class="col-2" *ngIf="item.descricao != ''">
+                <app-input [readonly]="true" [value]="item.tipo" id="item-{{index + 1}}-tipo" label="Tipo"></app-input>
+            </div>
+            <div class="col-2">
+                <app-input [readonly]="true" [value]="item.quantidade" label="Quan." [type]="'number'" id="item-{{index + 1}}-quantidade"></app-input>
+            </div>
+            <div class="col-5">
+                <app-input [readonly]="true" [value]="item.nome != undefined ? item.nome : ''" label="Descrição" id="item-{{index + 1}}-descricao"></app-input>
+            </div>
+            <div class="col-2">
+                <app-input [readonly]="true" [value]="item.tamanho != undefined ? item.tamanho : ''" id="item-{{index + 1}}-tamanho" label="Tamanho"></app-input>
+            </div>
+            <div class="col-2">
+                <app-input [readonly]="true" [value]="item.valor.toString()" label="Valor" id="item-{{index + 1}}-valor"></app-input>
+            </div>
+        </div>
+    </div>
+    
+    <div>
+        <app-modal-endereco
+            [(showModal)]="showModalEndereco"
+            [enderecoInput]="endereco"
+            (returnEndereco)="atualizaEndereco($event)"
+            [(showModal)]="showModalEndereco">
+        </app-modal-endereco>
+        <app-modal-item-pizza
+            [idPedido]="pedido.id"
+            [itemPedidoPizza]="itemPedidoPizza"
+            (dadosItemChange)="carregaDadosPedidoGeral()"
+            [(showModal)]="showModalItemPizza">
+        </app-modal-item-pizza>
+        
+        
+        <app-modal-item-bebida 
+            [idPedido]="pedido.id"
+            [itemPedidoBebida]="itemPedidoBebida"
+            (dadosItemChange)="carregaDadosPedidoGeral()" 
+            [(showModal)]="showModalItemBebida">
+        </app-modal-item-bebida>
+    </div>
+</div>

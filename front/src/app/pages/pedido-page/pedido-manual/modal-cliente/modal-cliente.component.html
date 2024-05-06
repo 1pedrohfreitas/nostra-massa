@@ -1,0 +1,47 @@
+
+
+<div class="modal-container" *ngIf="showModal">
+    <div class="modal-conteudo" >
+        <div class="row row-space-bottom">
+            <div class="col-2">
+                <app-input-text-autocomplete
+                 [options]="listaTelefones"
+                 (optionSelected)="handleTelefone($event)"
+                   label="Telefone:" id="pedido-telefone">
+            </app-input-text-autocomplete>
+            </div>
+            <div class="col-4">
+                <app-input [readonly]="clientePedidoByTelefone"
+                 label="Cliente:"
+                  id="pedido-cliente"
+                  [(value)]="clientePedido"></app-input>
+            </div>
+            <div class="col-auto">
+                <div class="row">
+                    <div *ngFor="let opcao of opcoesTipoPedido">
+                        <label [for]="'opcoesRadio-'+ opcao.id">
+                            <input type="radio" [name]="'opcoesRadio-'+ opcao.id" [id]="'opcoesRadio-'+ opcao.id" [(ngModel)]="opcaoTipoPedidoSelecionada"
+                                [value]="opcao.id" />
+                            <img [src]="opcao.img" [alt]="opcao.imgMsg">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-1">
+                <button (click)="openModalEndereco()">
+                    <img src="assets/images/casa.png" alt="Adicionar Pizza">
+                </button>
+            </div>
+            <div>
+                <app-modal-endereco [(showModal)]="showModalEndereco"></app-modal-endereco>
+            </div>
+        </div>
+        <div class="row">
+                <span><h1>{{opcaoTipoPedidoSelecionada == 2 ? 'Buscar' : clienteEnderecoDescricao}}</h1></span>
+        </div>
+            <div class="col-2">
+                <button (click)="save()">Gravar</button>
+            </div>
+    </div>
+</div>

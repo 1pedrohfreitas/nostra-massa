@@ -1,0 +1,34 @@
+.notificacao-item{
+    display: flex;
+    flex-direction: row;
+    border: 2px #000 solid;
+    width: 100%;
+    margin: 10px;
+    height: 70px;
+    
+}
+
+.notificacao-item-icon{
+    display: flex;
+    width: 56px;
+    justify-content: center;
+    align-items: center;
+    color: #00000065;
+}
+
+.sucesso{
+    background: rgb(77, 214, 77);
+}
+
+.alerta{
+    background: rgb(215, 218, 53);
+}
+
+.erro{
+    background: rgb(214, 120, 77);
+}
+
+img{
+    width: 48px;
+    height: 48px;
+}

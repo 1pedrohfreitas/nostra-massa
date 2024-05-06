@@ -1,0 +1,49 @@
+<div id="header-container">
+    <div>
+        Nostra Massa
+    </div>
+</div>
+<div id="container-main">
+    <div (mouseleave)="selecionaSubMenu(undefined)" id="menu-lateral">
+        <div id="menu-area">
+            <nav>
+                <ul>
+                    <li *ngFor="let item of menuItem">
+                        <div (mouseover)="selecionaSubMenu(item)">
+                            <a *ngIf="item.path != '' || item.nome == 'Inicio'" [routerLink]="item.path">
+                                <img [src]="item.img" [alt]="item.nome">
+                                <legend>{{item.nome}}</legend>
+                            </a>
+                            <a *ngIf="item.path == '' && item.nome != 'Inicio'">
+                                <img [src]="item.img" [alt]="item.nome">
+                                <legend>{{item.nome}}</legend>
+                            </a>
+                        </div>
+                        
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div *ngIf="showSubMenu" id="menu-area-sub1">
+            <nav>
+                <ul>
+                    <li *ngFor="let item of menuSelecionado.children">
+                        <div>
+                            <a routerLink="{{menuSelecionado.path}}/{{item.path}}">
+                                <img [src]="item.img" [alt]="item.nome">
+                                <legend>{{item.nome}}</legend>
+                            </a>
+                        </div>
+                        
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    
+    <div id="container-sub">
+        <router-outlet style="width: 100%;"></router-outlet>
+    </div>
+    <app-notificacoes [notificacoes]="notificacoes" ></app-notificacoes>
+
+</div>

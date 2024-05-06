@@ -1,0 +1,75 @@
+<div class="row">
+    <h1>Cadastro de Clientes</h1>
+</div>
+<div class="row row-space-bottom">
+    <div class="col-auto">
+        <div class="row row-space-bottom ">
+            <div class="col-2">
+                <app-input-text-autocomplete
+                 [options]="listaTelefones"
+                 (optionSelected)="handleTelefone($event)"
+                 label="Telefone:"
+                 id="pedido-telefone"
+                 [userInput]="clienteTelefone">
+            </app-input-text-autocomplete>
+            </div>
+            <div class="col-4">
+                <app-input [readonly]="clientePedidoByTelefone"
+                 label="Cliente:"
+                  id="pedido-cliente"
+                  [(value)]="clienteNome"></app-input>
+            </div>
+            <div *ngIf="cliente.id != null" class="col-3">
+                <button (click)="openModalEndereco()">
+                    Adicionar endereço
+                </button>
+            </div>
+            <div *ngIf="cliente.id != null" class="col-3">
+                <button (click)="excluirCliente()">
+                    Excluir cliente
+                </button>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-3">
+                <button (click)="adicionarCliente()">Salvar</button>
+            </div>
+        </div>
+        <div *ngIf="showModalEndereco">
+            <app-modal-endereco
+                [enderecoInput]="cliente.endereco"
+                (returnEndereco)="adicionaEnderecoCliente($event)"
+                [(showModal)]="showModalEndereco">
+            </app-modal-endereco>
+        </div>
+    </div>
+</div>
+<div class="row row-space-bottom" >
+    <h1>Lista de Clientes</h1>
+</div>
+<div class="row">
+    <div class="col-auto">
+        <table>
+            <!-- <caption>Título da tabela</caption> -->
+            <thead>
+              <tr>
+                <th style="width: 20px;">ID:</th>
+                <th style="width: 20px;">Ação:</th>
+                <th style="width: 40px;">Nome:</th>
+                <th style="width: 40px;">Telefone:</th>
+                <th style="width: 200px;">Endereço:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let clienteItem of listaClientes">
+                <td style="width: 20px;">{{clienteItem.id}}</td>
+                <td style="width: 20px;"><Button (click)="getDadosClienteByTelefone(clienteItem.telefone)">Editar</Button></td>
+                <td style="width: 40px;">{{clienteItem.nome}}</td>
+                <td style="width: 20px;">{{clienteItem.telefone}}</td>
+                <td style="width: 20px;">{{clienteItem.endereco?.enderecoDescricao}}</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="row">
+    <h1>Cadastro de Bebidas</h1>
+</div>
+<div class="row row-space-bottom">
+    <div class="col-4">
+        <app-input label="Bebida:" id="bebida" [(value)]="nome"></app-input>
+    </div>
+</div>
+<div class="row row-space-bottom ">
+    <div class="col-4">
+        <app-input-select label="Tamanho:" id="tamanho" [options]="tamanhoBebidas"></app-input-select>
+    </div>
+    <div class="col-2">
+        <app-input label="Valor:" id="valor-metade" type="number" [(value)]="valor"></app-input>
+    </div>
+</div>
+<div class="row row-space-bottom ">
+    <div class="col-3">
+        <button (click)="adicionar()">Salvar</button>
+    </div>
+    <div *ngIf="id != null && id != 0" class="col-3">
+        <button (click)="excluir()">
+            Excluir
+        </button>
+    </div>
+</div>
+<div class="row row-space-bottom">
+    <h1>Lista de Bebidas</h1>
+</div>
+<div class="row">
+    <div class="col-auto">
+        <table>
+            <thead>
+              <tr>
+                <th style="width: 20px;">Ação:</th>
+                <th style="width: 40px;">Nome:</th>
+                <th *ngFor="let tamanho of tamanhoBebidas">{{tamanho.value}}</th>  
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of listaItem">
+                <td><Button>Editar</Button></td>
+                <td>{{item.nome}}</td>
+                <td *ngFor="let tamanho of tamanhoBebidas">
+                    {{getValorBebidaByTamanho(tamanho.value ,item.tamanhoValor)}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+</div>

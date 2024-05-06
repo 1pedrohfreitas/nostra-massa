@@ -1,0 +1,53 @@
+<div class="row">
+    <h1>Cadastro de Acréscimos</h1>
+</div>
+<div class="row row-space-bottom">
+    <div class="col-1">
+        <app-input label="ID:" id="id" [(value)]="id"></app-input>
+    </div>
+    <div class="col-4">
+        <app-input label="Acrescimo:" id="acrescimo" [(value)]="nome"></app-input>
+    </div>
+
+    <div class="col-2">
+        <app-input label="Valor Metade:" id="valor-metade" type="number" [(value)]="valorMedade"></app-input>
+    </div>
+    <div class="col-2">
+        <app-input label="Valor Toda:" id="valor-toda" type="number" [(value)]="valorToda"></app-input>
+    </div>
+</div>
+<div class="row row-space-bottom">
+    <div class="col-3">
+        <button (click)="adicionar()">Salvar</button>
+    </div>
+    <div *ngIf="id != null && id != ''" class="col-3">
+        <button (click)="excluir()">
+            Excluir
+        </button>
+    </div>
+</div>
+<div class="row row-space-bottom">
+    <h1>Lista de Acréscimos</h1>
+</div>
+<div class="row">
+    <div class="col-3">
+        <table>
+            <thead>
+              <tr>
+                <th style="width: 20px;">Ação:</th>
+                <th style="width: 40px;">Nome:</th>
+                <th style="width: 40px;">Metade:</th>
+                <th style="width: 40px;">Toda:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of listaItem">
+                <td style="width: 20px;"><Button>Editar</Button></td>
+                <td style="width: 40px;">{{item.nome}}</td>
+                <td style="width: 40px;">8</td>
+                <td style="width: 40px;">10</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="input-field" >
+  <label for="{{id}}"><span class="label-style">{{label}}</span></label>
+  <input type="text" (change)="onCloseList()" (click)="changeShowList(true)"
+   [(ngModel)]="userInput" (input)="filterOptions()"
+   >
+  <ul *ngIf="showList">
+      <li *ngFor="let opt of filteredOptions" (click)="selectOption(opt)">
+          {{ opt.option }}
+      </li>
+  </ul>
+</div>
