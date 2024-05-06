@@ -18,8 +18,10 @@ jobs:
           node-version: 20
 
       - name: Acessando pasta do front
+        run : cd front
+      
+      - name: Acessando pasta do front
         run : ls -la
-        
       # - name: Baixando dependencias
       #   run: npm install
 
