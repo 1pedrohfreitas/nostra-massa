@@ -17,13 +17,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Acessando pasta do front
-        run : cd front && ls -la
+      - name: Construindo aplicação
+        run : cd front && npm install && npm run build:prod
       
-      - name: Acessando pasta do front
-        run : ls -la
-      # - name: Baixando dependencias
-      #   run: npm install
-
-      # - name: Construindo aplicação
-      #   run: npm run build:prod
