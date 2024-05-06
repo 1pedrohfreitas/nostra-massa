@@ -1,4 +1,4 @@
-name: Angular Build and Deploy
+name: Build Angular and Java Project
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build_angular:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,8 +17,32 @@ jobs:
         with:
           node-version: 20
 
-      - name: Construindo aplicação
-        working-directory: front
-        run : ls -la
-        # cd front && npm install && npm run build:prod
+      - name: Construindo aplicação Angular
+        run: |
+          cd front
+          npm install
+          npm run build:prod
+          cd ..
       
+      - name: Copiar arquivos para o projeto Java Spring
+        run: |
+          mkdir -p back/src/main/resources/static
+          cp -r front/dist/browser/* back/src/main/resources/static/
+
+  build_java:
+    needs: build_angular
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Build Java Project
+        run: |
+          cd back
+          ./mvnw clean package

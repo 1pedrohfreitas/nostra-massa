@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pedido_impresso" pageWidth="164" pageHeight="595" columnWidth="164" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="c8dec821-312d-4b74-b9eb-5437387361de">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="mm"/>
+	<parameter name="PEDIDO_NUMERO" class="java.lang.String"/>
+	<parameter name="PEDIDO_DATA_HORA" class="java.lang.String"/>
+	<parameter name="PEDIDO_CLIENTE" class="java.lang.String"/>
+	<parameter name="PEDIDO_ENDERECO" class="java.lang.String"/>
+	<parameter name="PEDIDO_TELEFONE" class="java.lang.String"/>
+	<parameter name="PEDIDO_TAXA_ENTREGA" class="java.lang.String"/>
+	<parameter name="PEDIDO_VALOR_RECEBER" class="java.lang.String"/>
+	<parameter name="PEDIDO_OBSERVACAO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="51" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="164" height="40" uuid="64cde243-a0c5-4c97-b2b0-a7cab21570b4"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="19" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pedido : "+$P{PEDIDO_NUMERO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="70" splitType="Stretch">
+			<textField textAdjust="StretchHeight">
+				<reportElement positionType="Float" stretchType="ElementGroupBottom" x="0" y="-10" width="164" height="20" uuid="99326653-3d2a-4a3d-9d62-3a3044a6dc59"/>
+				<box>
+					<topPen lineWidth="1.75"/>
+					<bottomPen lineWidth="1.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Justified">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NOME:  "+$P{PEDIDO_CLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="10" width="164" height="20" uuid="f8649f29-2952-4735-9adc-befb42aea041"/>
+				<box>
+					<bottomPen lineWidth="1.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Justified">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TELE: "+$P{PEDIDO_TELEFONE}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement positionType="Float" stretchType="ElementGroupBottom" x="0" y="30" width="164" height="40" uuid="0721fb2d-dd9e-4e9c-97e8-546797c47816"/>
+				<box>
+					<bottomPen lineWidth="1.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Justified">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ENDE : "+$P{PEDIDO_ENDERECO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="164" height="20" uuid="71acb0fb-a5a0-4bea-bdba-a102ee94ad8e"/>
+				<text><![CDATA[ITEM: 1 VALOR: RS 60,00]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="164" height="20" uuid="498800b7-5c4f-4a1c-946d-f4b3233c522f"/>
+				<text><![CDATA[PIZZA GG - NOSTRA MASSA]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="121" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="20" width="164" height="50" uuid="8bc240d3-7843-45f3-a056-c51489016375"/>
+				<box>
+					<bottomPen lineWidth="1.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Justified">
+					<font size="19" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["VALOR PEDIDO: RS" +$P{PEDIDO_VALOR_RECEBER}+",00"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement stretchType="ElementGroupBottom" x="0" y="70" width="164" height="50" uuid="cbdcd0cb-f2eb-4756-8978-68f82f444c1d"/>
+				<box>
+					<bottomPen lineWidth="1.75"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Justified">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["OBS: "+$P{PEDIDO_OBSERVACAO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="164" height="20" uuid="e47cb0fe-f2ea-4eae-8b12-b61593575fd5"/>
+				<box>
+					<topPen lineWidth="1.75"/>
+					<bottomPen lineWidth="1.75"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Justified">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TAXA: RS "+$P{PEDIDO_TAXA_ENTREGA} +",00"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
