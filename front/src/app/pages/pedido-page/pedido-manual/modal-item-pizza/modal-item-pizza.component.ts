@@ -378,6 +378,7 @@ export class ModalItemPizzaComponent {
         descricao = `${descricao} - ${value.nome} \r\n`
       });
     }
+    console.log(descricao)
     return descricao;
   }
 
@@ -389,20 +390,24 @@ export class ModalItemPizzaComponent {
         descricao = `${descricao} - ${value.nome} \r\n`
       });
     }
+    console.log(descricao)
     return descricao;
   }
 
   save() {
-    
+    this.itemPedidoPizza.descricao = '';
     const pedidoItemPizza : PizzaSaborDTO[]= []
     const sabor1Dados : PizzaSaborDTO = JSON.parse(JSON.stringify(this.pizzaSabor1))
     const sabor2Dados : PizzaSaborDTO = JSON.parse(JSON.stringify(this.pizzaSabor2))
     if(this.quantidadeSabores == '1'){
+      console.log(this.itemPedidoPizza)
       this.itemPedidoPizza.nome = sabor1Dados.nome
       this.itemPedidoPizza.descricao = 
-      +this.preencheDescricaoRetirar(sabor1Dados)
+      this.preencheDescricaoRetirar(sabor1Dados)
       +this.preencheDescricaoAcrescimo(sabor1Dados);
       pedidoItemPizza.push(sabor1Dados);
+      console.log(sabor1Dados)
+      console.log(this.itemPedidoPizza)
     }
 
     if(this.quantidadeSabores == '2'){
@@ -420,12 +425,15 @@ export class ModalItemPizzaComponent {
       pedidoItemPizza.push(sabor1Dados);
       pedidoItemPizza.push(sabor2Dados);
     }
+    
     this.itemPedidoPizza.descricao = this.itemPedidoPizza.quantidade + ' x '
       + this.itemPedidoPizza.nome + ' - '
       + this.itemPedidoPizza.tamanho + ' = '
-      + this.itemPedidoPizza.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '\r\n'
+      + this.itemPedidoPizza.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+      + '\r\n'
       + this.itemPedidoPizza.descricao;
     
+      console.log(this.itemPedidoPizza)
     
     this.itemPedidoPizza.pedidoItemPizza = JSON.stringify(pedidoItemPizza);
     this.itemPedidoPizza.tipo = 'Pizza'

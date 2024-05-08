@@ -5,6 +5,7 @@ import { ModalItemPizzaComponent } from './pedido-manual/modal-item-pizza/modal-
 import { ModalEnderecoComponent } from '../../componentes/modal-endereco/modal-endereco.component';
 import { ModalClienteComponent } from './pedido-manual/modal-cliente/modal-cliente.component';
 import { ModalItemBebidaComponent } from './pedido-manual/modal-item-bebida/modal-item-bebida.component';
+import { PreviaPedidoComponent } from './previa-pedido/previa-pedido.component';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { ModalItemBebidaComponent } from './pedido-manual/modal-item-bebida/moda
     ModalEnderecoComponent,
     ModalClienteComponent,
     ModalItemBebidaComponent,
+    PreviaPedidoComponent,
   ],
   imports: [
     CommonModule,
@@ -21,7 +23,8 @@ import { ModalItemBebidaComponent } from './pedido-manual/modal-item-bebida/moda
     ModalItemPizzaComponent,
     ModalEnderecoComponent,
     ModalClienteComponent,
-    ModalItemBebidaComponent
+    ModalItemBebidaComponent,
+    PreviaPedidoComponent,
   ],
 })
 export class PedidoModule { }

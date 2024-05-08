@@ -18,6 +18,9 @@
         <div *ngIf="!desabilitaCampoIDPedido || pedido.status == 'CONCLUIDO'" class="col-2">
             <button (click)="novoPedido()">Novo Pedido</button>
         </div>
+        <div *ngIf="this.pedido.id != 0" class="col-2">
+            <button (click)="mostrarEmNovaAba()">Previa do Pedido</button>
+        </div>
     </div>
     <div *ngIf="desabilitaCampoIDPedido" class="row">
         <div class="col-auto">
@@ -43,11 +46,19 @@
                 <div *ngIf="showSalvarCliente" class="col-2">
                     <button (click)="adicionarCliente()">Cadastrar Usuario</button>
                 </div>
+                <div>
+                    <app-input-checkbox
+                        id="entrega-checkbox"
+                        label="Entrega"
+                        [(value)]="pedido.entrega"
+                        (valueChange)="changeEntrega()">
+                        </app-input-checkbox>
+                </div>
 
             </div>
         </div>
     </div>
-    <div *ngIf="desabilitaCampoIDPedido"  class="row">
+    <div *ngIf="desabilitaCampoIDPedido && pedido.entrega"  class="row">
         <div class="col-1">
             <h2>Endereço:</h2>
         </div>
@@ -119,5 +130,9 @@
             (dadosItemChange)="carregaDadosPedidoGeral()" 
             [(showModal)]="showModalItemBebida">
         </app-modal-item-bebida>
+        <app-previa-pedido
+            [previa]="previa"
+            [(showModal)]="showModalPrevia">
+        </app-previa-pedido>
     </div>
 </div>

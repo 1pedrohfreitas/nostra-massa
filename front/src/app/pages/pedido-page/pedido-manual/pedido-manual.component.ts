@@ -27,9 +27,12 @@ export class PedidoManualComponent {
 
   idCliente = 0;
 
+  previa = '';
+
   showModalEndereco = false;
   showModalItemPizza = false;
   showModalItemBebida = false;
+  showModalPrevia = false;
 
   showSalvarCliente = false;
 
@@ -64,6 +67,16 @@ export class PedidoManualComponent {
   cancelaPedido() {
     if (this.pedido.idPedido != undefined) {
       this._pedidoService.cancelaPedido(this.pedido.idPedido).then((response) => { })
+    }
+  }
+
+  changeEntrega(){
+    if(!this.pedido.entrega){
+      this.pedido.valorTaxa = 0;
+      this.calculaValorPedido();
+    }
+    if(this.pedido.entrega){
+      this.getDadosClienteByTelefone();
     }
   }
 
@@ -356,5 +369,9 @@ export class PedidoManualComponent {
       })
     }
     this.pedido.valor = valor
+  }
+  mostrarEmNovaAba(){
+    this.previa = this.geraArquivoRelatorio();
+    this.showModalPrevia = true
   }
 }

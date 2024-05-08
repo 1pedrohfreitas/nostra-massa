@@ -70,7 +70,6 @@ export class ModalItemBebidaComponent {
     }
     if (changes['itemPedidoBebida']) {
       this.itemPedidoBebida = changes['itemPedidoBebida'].currentValue
-      console.log(this.itemPedidoBebida)
       this.optionDefaultBebida = {
         option : this.itemPedidoBebida.nome,
         value: this.itemPedidoBebida.nome
@@ -85,8 +84,6 @@ export class ModalItemBebidaComponent {
       if(this.optionDefaultTamanho != undefined){
         this.setTamanhoItem(this.optionDefaultTamanho);
       }
-      console.log(this.itemPedidoBebida);
-      
     }
   }
 

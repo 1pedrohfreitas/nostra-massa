@@ -5,8 +5,8 @@ export class PedidoDTO {
     id: number = 0;
     idPedido?: number = 0;
     dataPedido: string = '';
-    entrega?: boolean= true;
-    apalito?: boolean = false;
+    entrega : boolean= true;
+    apalito : boolean = false;
     tipoPagamento?: string = '';
     status?: string = '';
     valor: number = 0;

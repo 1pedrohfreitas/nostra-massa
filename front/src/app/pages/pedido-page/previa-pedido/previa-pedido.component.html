@@ -1,0 +1,12 @@
+<div class="modal-container" *ngIf="showModal">
+    <div class="modal-conteudo">
+        <div class="row">
+            <div class="col-3">
+                <button (click)="onCloseModal()">Fechar</button>
+            </div>
+        </div>
+        <div>
+            <div [innerText]="previa"></div>
+        </div>
+    </div>
+</div>
