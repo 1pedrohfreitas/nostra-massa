@@ -16,7 +16,7 @@ import br.com.nostramassa.gestao.dtos.pedido.RuaDTO;
 import br.com.nostramassa.gestao.services.EnderecoService;
 
 @RestController
-@RequestMapping(value = "/endereco")
+@RequestMapping(value = "/api/endereco")
 public class EnderecoController {
 
 	@Autowired

@@ -18,7 +18,7 @@ import br.com.nostramassa.gestao.dtos.pedido.PizzaSaborIngredienteDTO;
 import br.com.nostramassa.gestao.services.ProdutosService;
 
 @RestController
-@RequestMapping(value = "/produto")
+@RequestMapping(value = "/api/produto")
 public class ProdutosController {
 
 	@Autowired

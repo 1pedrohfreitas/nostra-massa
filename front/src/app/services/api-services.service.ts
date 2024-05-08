@@ -13,25 +13,25 @@ export class ApiServicesService {
     private _http: HttpClient,
   ) { }
   async get(url : string) {
-    const response = await lastValueFrom(this._http.get<ResponseDTO<any>>(`${environment.url}${url}`));
+    const response = await lastValueFrom(this._http.get<ResponseDTO<any>>(`${environment.url}api/${url}`));
     this.printMsg(response.msgs);
     return response.data;
   }
 
   async post(url : string, data : any) {
-    const response = await lastValueFrom(this._http.post<ResponseDTO<any>>(`${environment.url}${url}`,data));
+    const response = await lastValueFrom(this._http.post<ResponseDTO<any>>(`${environment.url}api/${url}`,data));
     this.printMsg(response.msgs);
     return response.data;
   }
 
   async put(url : string, data : any) {
-    const response = await lastValueFrom(this._http.put<ResponseDTO<any>>(`${environment.url}${url}`,data));
+    const response = await lastValueFrom(this._http.put<ResponseDTO<any>>(`${environment.url}api/${url}`,data));
     this.printMsg(response.msgs);
     return response.data;
   }
 
   async delete(url : string) {
-    const response = await lastValueFrom(this._http.delete<ResponseDTO<any>>(`${environment.url}${url}`));
+    const response = await lastValueFrom(this._http.delete<ResponseDTO<any>>(`${environment.url}api/${url}`));
     this.printMsg(response.msgs);
     return response.data;
     

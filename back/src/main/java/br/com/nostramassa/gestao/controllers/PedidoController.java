@@ -25,7 +25,7 @@ import br.com.nostramassa.gestao.services.ImpressoraService;
 import br.com.nostramassa.gestao.services.PedidoService;
 
 @RestController
-@RequestMapping(value = "/pedido")
+@RequestMapping(value = "api/pedido")
 public class PedidoController {
 	
 	@Autowired
@@ -34,7 +34,7 @@ public class PedidoController {
 	@Autowired
 	private ImpressoraService impressoraService;
 	
-	@GetMapping(path = "/", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(path = "", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Page<PedidoDTO>>> lista(
 			Pageable pageable
 			) {

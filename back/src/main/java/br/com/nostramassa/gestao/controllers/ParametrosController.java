@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nostramassa.gestao.dtos.ResponseDTO;
@@ -22,6 +23,7 @@ import br.com.nostramassa.gestao.services.ImpressoraService;
 import br.com.nostramassa.gestao.services.ParametroService;
 
 @RestController
+@RequestMapping(value = "/api/parametros")
 public class ParametrosController {
 	
 	@Autowired
@@ -30,12 +32,12 @@ public class ParametrosController {
 	@Autowired
 	private ParametroService parametroService;
 	
-	@GetMapping(path = "/parametros", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(path = "", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Parametros>> getParametros() {
 		Parametros parametros = parametroService.getParametros();
 		return new ResponseDTO<Parametros>().ok(parametros, null);
 	}
-	@PutMapping(path = "/parametros", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PutMapping(path = "", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Parametros>> atualizaParametros(
 			@RequestBody Parametros parametros) {
 		Parametros parametrosRetorno = parametroService.atualizaParametros(parametros);
@@ -45,7 +47,7 @@ public class ParametrosController {
 		return new ResponseDTO<Parametros>().ok(parametrosRetorno, Arrays.asList(msg));
 	}
 	
-	@GetMapping(path = "/parametros/listaImpressoras", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(path = "/listaImpressoras", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Page<String>>> listaImpressoras(Pageable pageable) {
 		if (pageable == null) {
 			pageable = PageRequest.of(0, 10000);

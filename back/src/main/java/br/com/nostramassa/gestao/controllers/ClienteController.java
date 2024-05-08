@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nostramassa.gestao.dtos.ResponseDTO;
@@ -22,12 +23,13 @@ import br.com.nostramassa.gestao.dtos.pedido.EnderecoDTO;
 import br.com.nostramassa.gestao.services.ClienteService;
 
 @RestController
+@RequestMapping(value = "/api/cliente")
 public class ClienteController {
 
 	@Autowired
 	private ClienteService clienteService;
 
-	@GetMapping(path = "/cliente", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(path = "", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Page<ClienteDTO>>> getClientes(Pageable pageable) {
 		if (pageable == null) {
 			pageable = PageRequest.of(0, 10000);
@@ -36,7 +38,7 @@ public class ClienteController {
 		return new ResponseDTO<Page<ClienteDTO>>().ok(cliente, null);
 	}
 
-	@GetMapping(path = "/cliente/{telefone}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(path = "/{telefone}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<ClienteDTO>> getClienteByTelefone(@PathVariable String telefone) {
 		ClienteDTO cliente = clienteService.getClienteByTelefone(telefone);
 		ResponseMessagemDTO msg = new ResponseMessagemDTO();
@@ -53,14 +55,14 @@ public class ClienteController {
 		return new ResponseDTO<ClienteDTO>().ok(cliente, Arrays.asList(msg));
 	}
 
-	@PostMapping(path = "/cliente", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(path = "", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<ClienteDTO>> adicionaCliente(@RequestBody ClienteDTO cliente) {
 		ResponseMessagemDTO msg = new ResponseMessagemDTO();
 		msg.setTitulo("Cliente cadastrado com sucesso");
 		msg.setTypeMsg("sucesso");
 		return new ResponseDTO<ClienteDTO>().ok(clienteService.criarCliente(cliente), Arrays.asList(msg));
 	}
-	@DeleteMapping(path = "/cliente/{idCliente}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@DeleteMapping(path = "/{idCliente}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<String>> excluirCliente(@PathVariable Long idCliente) {
 		ResponseMessagemDTO msg = new ResponseMessagemDTO();
 		msg.setTitulo("Cliente excluido com sucesso");
@@ -68,25 +70,10 @@ public class ClienteController {
 		return new ResponseDTO<String>().ok(clienteService.excluirCliente(idCliente), Arrays.asList(msg));
 	}
 
-	@PostMapping(path = "/cliente/endereco/{idCliente}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(path = "/endereco/{idCliente}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<EnderecoDTO>> adicionaEnderecoCliente(@RequestBody EnderecoDTO enderecoDTO,
 			@PathVariable Long idCliente) {
 		return new ResponseDTO<EnderecoDTO>().ok(clienteService.adicionaEnderecoCliente(idCliente, enderecoDTO), null);
 	}
-
-//	@PutMapping(path = "/cliente/{idCliente}", produces = { MediaType.APPLICATION_JSON_VALUE })
-//	public ResponseEntity<ResponseDTO<ClienteDTO>> atualizaCliente(@RequestBody ClienteDTO clienteDTO,
-//			@PathVariable Long idCliente) {
-//		return new ResponseDTO<ClienteDTO>().ok(clienteService.atualizaClienteDTO(idCliente, clienteDTO), null);
-//	}
-//
-//	@GetMapping(path = "/cliente/endereco/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-//	public ResponseEntity<ResponseDTO<EnderecoDTO>> getEnderecoClienteByID(@PathVariable Long id) {
-//		EnderecoDTO endereco = clienteService.getEnderecoClienteByIDCliente(id);
-//		ResponseMessagemDTO msg = new ResponseMessagemDTO();
-//		msg.setTitulo("Endereço atualizado");
-//		msg.setTypeMsg("sucesso");
-//		return new ResponseDTO<EnderecoDTO>().ok(endereco, Arrays.asList(msg));
-//	}
 
 }
