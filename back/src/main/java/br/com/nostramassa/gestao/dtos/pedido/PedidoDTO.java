@@ -55,6 +55,8 @@ public class PedidoDTO {
 
 	private String complemento;
 	
+	private String pedidoRelatorio;
+	
 	private List<PedidoItemDTO> itensPedido = new ArrayList<>();
 	
 }

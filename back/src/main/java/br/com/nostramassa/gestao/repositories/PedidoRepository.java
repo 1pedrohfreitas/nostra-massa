@@ -19,7 +19,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long>  {
 	@Query(value = "select distinct split_part(cast(p.datapedido as varchar),' ',1) from pedido p",nativeQuery = true)
 	public Page<String> getAllDatasReferencia(Pageable pageable);
 	
-	@Query(value = "select * from pedido p where p.datapedido between :inicio and :fim",nativeQuery = true)
+	@Query(value = "select * from pedido p where p.datapedido between :inicio and :fim order by p.id desc",nativeQuery = true)
 	public List<Pedido> getPedidosByDatasReferencia(LocalDateTime inicio, LocalDateTime fim);
 	
 	@Query(nativeQuery = true, value = "SELECT *\r\n"

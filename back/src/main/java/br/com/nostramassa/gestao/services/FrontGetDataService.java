@@ -83,7 +83,7 @@ public class FrontGetDataService {
 
 	public void atualizaBairros() {
 		bairros = new ArrayList<>();
-		bairrosRepository.findAll().forEach(item -> {
+		bairrosRepository.getBairrosOrderByMaisUtilizados().forEach(item -> {
 			BairroDTO bairroDTO = new BairroDTO();
 			bairroDTO.setId(item.getId());
 			bairroDTO.setNome(item.getNome());

@@ -26,6 +26,7 @@ export class InputTextAutocompleteComponent {
     if(this.optionDefault != undefined){
       this.selectOption(this.optionDefault)
     }
+    
     if(this.userInput == undefined){
       this.userInput = ''
     } else {

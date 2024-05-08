@@ -6,8 +6,8 @@
         <div *ngIf="desabilitaCampoIDPedido" class="col-3">
             <app-input [readonly]="true" [value]="pedido.dataPedido | date : 'dd/MM/yyyy HH:mm:ss'" label="Data / Hora Pedido"></app-input>
         </div>
-        <div *ngIf="desabilitaCampoIDPedido" class="col-2">
-            <app-input [readonly]="true" [value]="pedido.valor" label="Valor:"></app-input>
+        <div *ngIf="desabilitaCampoIDPedido" class="col-3">
+            <app-input [readonly]="true" [value]="pedido.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })" label="Valor:"></app-input>
         </div>
         <div *ngIf="desabilitaCampoIDPedido" class="col-2">
             <button (click)="imprimir()"> Imprimir</button>
@@ -57,8 +57,8 @@
         <div *ngIf="pedido.enderecoDescricao != undefined && pedido.enderecoDescricao.length > 0" class="col-11">
             <app-input [readonly]="true" [value]="pedido.enderecoDescricao" label="Endereço"></app-input>
         </div>
-        <div *ngIf="pedido.enderecoDescricao != undefined && pedido.enderecoDescricao.length > 0" class="col-1">
-            <app-input [readonly]="true" [value]="pedido.valorTaxa" label="Taxa:"></app-input>
+        <div *ngIf="pedido.enderecoDescricao != undefined && pedido.enderecoDescricao.length > 0" class="col-3">
+            <app-input [readonly]="true" [value]="pedido.valorTaxa.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })" label="Taxa:"></app-input>
         </div>
     </div>
     <div *ngIf="desabilitaCampoIDPedido"  class="row">
@@ -93,7 +93,7 @@
                 <app-input [readonly]="true" [value]="item.tamanho != undefined ? item.tamanho : ''" id="item-{{index + 1}}-tamanho" label="Tamanho"></app-input>
             </div>
             <div class="col-2">
-                <app-input [readonly]="true" [value]="item.valor.toString()" label="Valor" id="item-{{index + 1}}-valor"></app-input>
+                <app-input [readonly]="true" [value]="item.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })" label="Valor" id="item-{{index + 1}}-valor"></app-input>
             </div>
         </div>
     </div>

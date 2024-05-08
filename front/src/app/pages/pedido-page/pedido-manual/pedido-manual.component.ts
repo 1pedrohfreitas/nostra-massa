@@ -6,7 +6,7 @@ import { ClientesService } from '../../cliente-page/clientes.service';
 import { InputSelectOption } from '../../../componentes/input-select/input-select';
 import { LocalStorageServiceService } from '../../../services/local-storage-service.service';
 import { PedidoDTO, PedidoItemDTO } from '../../../shared/models/PedidoDTO';
-import { EnderecoDTO } from '../../../shared/models/ClienteDTO';
+import { BairroDTO, EnderecoDTO } from '../../../shared/models/ClienteDTO';
 import { PedidoModule } from '../pedido.module';
 import { ActivatedRoute } from '@angular/router';
 import { PizzaSaborDTO } from '../../../shared/models/PizzaDTO';
@@ -82,13 +82,13 @@ export class PedidoManualComponent {
             if (response.endereco.enderecoDescricao != undefined) {
               this.pedido.enderecoDescricao = response.endereco.enderecoDescricao
             }
-            this.pedido.valorTaxa = Number(response.endereco.bairro?.valorTaxa)
-            this.pedido.bairro = response.endereco.bairro?.nome
-            this.pedido.rua = response.endereco.rua?.nome
-            this.pedido.numero = response.endereco.numero
-            this.pedido.complemento = response.endereco.complemento
-            this.pedido.bloco = response.endereco.bloco
-            this.pedido.apartamento == response.endereco.apartamento
+            this.pedido.valorTaxa = response.endereco.bairro.valorTaxa;
+            this.pedido.bairro = response.endereco.bairro.nome;
+            this.pedido.rua = response.endereco.rua.nome;
+            this.pedido.numero = response.endereco.numero;
+            this.pedido.complemento = response.endereco.complemento;
+            this.pedido.bloco = response.endereco.bloco;
+            this.pedido.apartamento == response.endereco.apartamento;
 
           }
           this.gravarPedido();
@@ -157,7 +157,22 @@ export class PedidoManualComponent {
       this.showModalItemPizza = true;
     }
     if (this.tipoItemModal == 'Bebida') {
-      this.itemPedidoBebida = itemPedido;
+      if(this.itemPedidoBebida.nome == ''){
+        this.itemPedidoBebida = {
+          nome : 'COCA-COLA',
+          quantidade : 1,
+          tipo : 'Bebida',
+          valor : 13,
+          tamanho : '2l',
+          descricao : '',
+          id : 0,
+          idPedido : this.pedido.id,
+          pedidoItemPizza : ''
+        }
+      } else {
+        this.itemPedidoBebida = itemPedido;
+      }
+      
       this.showModalItemBebida = true;
     }
     this.tipoItemModal = 'Pizza'
@@ -170,9 +185,48 @@ export class PedidoManualComponent {
         this.desabilitaCampoIDPedido = true;
         if (this.pedido.clienteTelefone != undefined && this.pedido.clienteNome == '') {
           this.getDadosClienteByTelefone();
+        } else {
+          this.calculaValorPedido();
         }
+        this.preencheEnderecoDTO(response);
       }
+      this.carregaDadosPedidoGeral();
     });
+    
+  }
+
+  preencheEnderecoDTO(dados : PedidoDTO){
+    if (dados.apartamento != undefined) {
+      this.endereco.apartamento = JSON.parse(JSON.stringify(dados.apartamento))
+    }
+    if (dados.bairro != undefined) {
+      this.endereco.bairro = {
+        id: 0,
+        nome : JSON.parse(JSON.stringify(dados.bairro)),
+        valorTaxa : this.pedido.valorTaxa != undefined ? this.pedido.valorTaxa : 0
+      }
+    }
+
+    if (dados.bloco != undefined) {
+      this.endereco.bloco = JSON.parse(JSON.stringify(dados.bloco))
+    }
+    if (dados.complemento != undefined) {
+      this.endereco.complemento = JSON.parse(JSON.stringify(dados.complemento))
+    }
+    if (dados.enderecoDescricao != undefined) {
+      this.endereco.enderecoDescricao = JSON.parse(JSON.stringify(dados.enderecoDescricao))
+    }
+    if (dados.numero != undefined) {
+      this.endereco.numero = JSON.parse(JSON.stringify(dados.numero))
+    }
+    if (dados.rua != undefined) {
+      this.endereco.rua = {
+        id: 0,
+        nome: JSON.parse(JSON.stringify(dados.rua))
+      }
+       
+    }
+      
   }
 
   carregaDadosPedidoGeral() {
@@ -180,34 +234,13 @@ export class PedidoManualComponent {
       this._pedidoService.getDadosPedido(this.pedido.id).then((response) => {
         if (response != undefined && response != null) {
           this.pedido = response;
-          if (response.apartamento != undefined) {
-            this.endereco.apartamento = JSON.parse(JSON.stringify(response.apartamento))
-          }
-          if (response.bairro != undefined) {
-            this.endereco.bairro = JSON.parse(JSON.stringify(response.bairro))
-          }
-
-          if (response.bloco != undefined) {
-            this.endereco.bloco = JSON.parse(JSON.stringify(response.bloco))
-          }
-          if (response.complemento != undefined) {
-            this.endereco.complemento = JSON.parse(JSON.stringify(response.complemento))
-          }
-          if (response.enderecoDescricao != undefined) {
-            this.endereco.enderecoDescricao = JSON.parse(JSON.stringify(response.enderecoDescricao))
-          }
-          if (response.numero != undefined) {
-            this.endereco.numero = JSON.parse(JSON.stringify(response.numero))
-          }
-          if (response.rua != undefined) {
-            this.endereco.rua = JSON.parse(JSON.stringify(response.rua))
-          }
-          console.log(this.pedido)
+          this.preencheEnderecoDTO(response)
           if (response.itensPedido == null || response.itensPedido == undefined) {
             this.pedido.itensPedido = []
           }
           this.desabilitaCampoIDPedido = true;
         }
+        this.calculaValorPedido();
       });
     }
   }
@@ -219,8 +252,65 @@ export class PedidoManualComponent {
       })
     }
   }
+  geraArquivoRelatorio(): string{
+    const itensPedidoPizza : PedidoItemDTO[] = [];
+    const itensPedidoBebida : PedidoItemDTO[] = [];
+    
+    let pedidoReport =`      Pedido: ${this.pedido.idPedido} \r\n`
+    + '===========================\r\n'
+    + `Data/Hora : ${new Date(this.pedido.dataPedido).toLocaleString()}\r\n`
+    + '===========================\r\n'
+    +`Nome: ${this.pedido.clienteNome}\r\n`
+    + '===========================\r\n'
+    +`Telefone: ${this.pedido.clienteTelefone}\r\n`
+    + '===========================\r\n'
+    +`End: ${this.pedido.enderecoDescricao}\r\n`
+    + '===========================\r\n';
+    this.pedido.itensPedido.forEach((value)=>{
+      if(value.tipo == 'Pizza'){
+        itensPedidoPizza.push(value)
+      }
+      if(value.tipo == 'Bebida'){
+        itensPedidoBebida.push(value)
+      }
+      
+      
+    });
+
+    if(itensPedidoPizza.length > 0){
+      pedidoReport = pedidoReport + '==========Pizzas============\r\n'
+      itensPedidoPizza.forEach((value)=>{
+        pedidoReport = pedidoReport + value.descricao +'\r\n'
+        + '\r\n'
+        + '\r\n'
+        + '==========================\r\n';
+      })
+    }
+    if(itensPedidoBebida.length > 0){
+      pedidoReport = pedidoReport + '==========Bebidas===========\r\n'
+      itensPedidoBebida.forEach((value)=>{
+        pedidoReport = pedidoReport + value.descricao +'\r\n'
+        + '\r\n'
+        + '\r\n'
+        + '==========================\r\n';
+      })
+    }
+     
+    pedidoReport = `${pedidoReport}Taxa de Entrega: ${this.pedido.valorTaxa.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\r\n`
+    + '===========================\r\n'
+    +`Valor Pedido: ${this.pedido.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\r\n`
+    + '===========================\r\n';
+    if(this.pedido.observacao != null){
+      pedidoReport = `${pedidoReport}Observação: ${this.pedido.observacao}`;
+    }
+    
+    return pedidoReport;
+  }
   imprimir() {
     if (this.pedido.itensPedido.length > 0) {
+      
+      this.pedido.pedidoRelatorio = this.geraArquivoRelatorio();
+      
       this._pedidoService.salvarEImprimir(this.pedido).then((response) => {
       })
     } else {
@@ -228,13 +318,18 @@ export class PedidoManualComponent {
     }
   }
   openModalEndereco() {
-    console.log(this.endereco)
     this.showModalEndereco = true;
   }
 
   atualizaEndereco(enderecoModal: EnderecoDTO) {
     if (enderecoModal.enderecoDescricao != undefined) {
       this.pedido.enderecoDescricao = enderecoModal.enderecoDescricao;
+      this.pedido.rua = enderecoModal.rua.nome
+      this.pedido.bairro = enderecoModal.bairro.nome
+      this.pedido.numero = enderecoModal.numero
+      this.pedido.bloco = enderecoModal.bloco
+      this.pedido.apartamento = enderecoModal.apartamento
+      this.pedido.complemento = enderecoModal.complemento
     }
     if (enderecoModal.bairro != undefined) {
       this.pedido.valorTaxa = enderecoModal.bairro.valorTaxa;

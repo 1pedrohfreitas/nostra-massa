@@ -99,7 +99,7 @@ export class ModalItemPizzaComponent {
     }
     if (changes['itemPedidoPizza']) {
       this.itemPedidoPizza = changes['itemPedidoPizza'].currentValue
-      console.log(this.itemPedidoPizza)
+      
       if (this.itemPedidoPizza.nome == '') {
         this.itemPedidoPizza.tamanho = 'GG';
         this.itemPedidoPizza.quantidade = 1;
@@ -110,6 +110,11 @@ export class ModalItemPizzaComponent {
       };
       if (this.itemPedidoPizza.pedidoItemPizza != undefined) {
         const saboresItem: PizzaSaborDTO[] = JSON.parse(this.itemPedidoPizza.pedidoItemPizza);
+        this.quantidadeSabores = saboresItem.length.toString()
+        this.optionDefaultQuantidadeSabores = {
+          option : this.quantidadeSabores,
+          value : this.quantidadeSabores
+        }
         if (saboresItem.length > 0) {
           this.pizzaSabor1 = saboresItem[0];
           this.sabor1SelectDefault = {
@@ -345,7 +350,6 @@ export class ModalItemPizzaComponent {
         }
       })
     }
-    console.log(this.pizzaSabor1)
   }
   changeAcrescimo(idLado: number) {
     if (idLado == 1) {
@@ -364,8 +368,28 @@ export class ModalItemPizzaComponent {
         }
       })
     }
-    console.log(this.pizzaSabor1)
     this.calculaValorItem();
+  }
+  preencheDescricaoRetirar(sabor : PizzaSaborDTO) : string{
+    let descricao = '';
+    if(sabor.pizzaSaborIngredientesRetirar != undefined && sabor.pizzaSaborIngredientesRetirar.length > 0){
+      descricao = '=========RETIRAR==========\r\n';
+      sabor.pizzaSaborIngredientesRetirar.forEach((value)=>{
+        descricao = `${descricao} - ${value.nome} \r\n`
+      });
+    }
+    return descricao;
+  }
+
+  preencheDescricaoAcrescimo(sabor : PizzaSaborDTO) : string{
+    let descricao = '';
+    if(sabor.pizzasAcrescimos != undefined && sabor.pizzasAcrescimos.length > 0){
+      descricao = '=========ACRESCIMO========\r\n';
+      sabor.pizzasAcrescimos.forEach((value)=>{
+        descricao = `${descricao} - ${value.nome} \r\n`
+      });
+    }
+    return descricao;
   }
 
   save() {
@@ -375,18 +399,36 @@ export class ModalItemPizzaComponent {
     const sabor2Dados : PizzaSaborDTO = JSON.parse(JSON.stringify(this.pizzaSabor2))
     if(this.quantidadeSabores == '1'){
       this.itemPedidoPizza.nome = sabor1Dados.nome
+      this.itemPedidoPizza.descricao = 
+      +this.preencheDescricaoRetirar(sabor1Dados)
+      +this.preencheDescricaoAcrescimo(sabor1Dados);
       pedidoItemPizza.push(sabor1Dados);
     }
 
     if(this.quantidadeSabores == '2'){
       this.itemPedidoPizza.nome = `${sabor1Dados.nome} / ${sabor2Dados.nome}`
+      this.itemPedidoPizza.descricao = 
+      sabor1Dados.nome
+      +'\r\n'
+      +this.preencheDescricaoRetirar(sabor1Dados)
+      +this.preencheDescricaoAcrescimo(sabor1Dados)
+      +sabor2Dados.nome
+      +'\r\n'
+      this.preencheDescricaoRetirar(sabor2Dados)
+      +this.preencheDescricaoAcrescimo(sabor2Dados);
+
       pedidoItemPizza.push(sabor1Dados);
       pedidoItemPizza.push(sabor2Dados);
     }
-    this.itemPedidoPizza.descricao = this.itemPedidoPizza.quantidade + ' x ' + this.itemPedidoPizza.nome + ' - ' + this.itemPedidoPizza.tamanho + ' = ' + this.itemPedidoPizza.valor;
+    this.itemPedidoPizza.descricao = this.itemPedidoPizza.quantidade + ' x '
+      + this.itemPedidoPizza.nome + ' - '
+      + this.itemPedidoPizza.tamanho + ' = '
+      + this.itemPedidoPizza.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '\r\n'
+      + this.itemPedidoPizza.descricao;
+    
+    
     this.itemPedidoPizza.pedidoItemPizza = JSON.stringify(pedidoItemPizza);
     this.itemPedidoPizza.tipo = 'Pizza'
-    console.log(this.itemPedidoPizza)
     this._pedidoService.adicionaItemPedido(Number(this.idPedido), this.itemPedidoPizza).then((response) => {
       this.onCloseModal();
     });

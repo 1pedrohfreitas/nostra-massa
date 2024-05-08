@@ -70,6 +70,23 @@ export class ModalItemBebidaComponent {
     }
     if (changes['itemPedidoBebida']) {
       this.itemPedidoBebida = changes['itemPedidoBebida'].currentValue
+      console.log(this.itemPedidoBebida)
+      this.optionDefaultBebida = {
+        option : this.itemPedidoBebida.nome,
+        value: this.itemPedidoBebida.nome
+      }
+      if(this.optionDefaultBebida != undefined){
+        this.setBebida(this.optionDefaultBebida);
+      }
+      this.optionDefaultTamanho = {
+        option : this.itemPedidoBebida.tamanho,
+        value : this.itemPedidoBebida.tamanho
+      }
+      if(this.optionDefaultTamanho != undefined){
+        this.setTamanhoItem(this.optionDefaultTamanho);
+      }
+      console.log(this.itemPedidoBebida);
+      
     }
   }
 
@@ -117,7 +134,7 @@ export class ModalItemBebidaComponent {
       idPedido: this.idPedido,
       descricao: '',
       tipo: 'Bebida',
-      valor: 0,
+      valor: 13,
       tamanho: '2L',
       quantidade: 1,
       nome: 'COCA-COLA'
@@ -128,7 +145,7 @@ export class ModalItemBebidaComponent {
   }
 
   save() {
-    this.itemPedidoBebida.descricao = this.itemPedidoBebida.quantidade + ' x ' + this.itemPedidoBebida.nome + ' - ' + this.itemPedidoBebida.tamanho + ' = ' + this.itemPedidoBebida.valor;
+    this.itemPedidoBebida.descricao = this.itemPedidoBebida.quantidade + ' x ' + this.itemPedidoBebida.nome + ' - ' + this.itemPedidoBebida.tamanho + ' = ' + this.itemPedidoBebida.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     this.itemPedidoBebida.tipo = 'Bebida'
     this._pedidoService.adicionaItemPedido(Number(this.idPedido), this.itemPedidoBebida).then((response) => {
       this.onCloseModal();

@@ -89,14 +89,15 @@ public class ImpressoraService {
 	
 	private Map<String, Object> createParamsReport(PedidoDTO pedido) {
 		Map<String, Object> params = new LinkedHashMap<>();
-		params.put("PEDIDO_NUMERO", pedido.getIdPedido().toString());
-		params.put("PEDIDO_DATA_HORA", pedido.getDataPedido().toString());
-		params.put("PEDIDO_CLIENTE", pedido.getClienteNome());
-		params.put("PEDIDO_TELEFONE", pedido.getClienteTelefone());
-		params.put("PEDIDO_ENDERECO", pedido.getEnderecoDescricao());
-		params.put("PEDIDO_TAXA_ENTREGA", "0");
-		params.put("PEDIDO_VALOR_RECEBER", pedido.getValor().toString());
-		params.put("PEDIDO_OBSERVACAO", "");
+		params.put("PEDIDO", pedido.getPedidoRelatorio());
+//		params.put("PEDIDO_NUMERO", pedido.getIdPedido().toString());
+//		params.put("PEDIDO_DATA_HORA", pedido.getDataPedido().toString());
+//		params.put("PEDIDO_CLIENTE", pedido.getClienteNome());
+//		params.put("PEDIDO_TELEFONE", pedido.getClienteTelefone());
+//		params.put("PEDIDO_ENDERECO", pedido.getEnderecoDescricao());
+//		params.put("PEDIDO_TAXA_ENTREGA", "0");
+//		params.put("PEDIDO_VALOR_RECEBER", pedido.getValor().toString());
+//		params.put("PEDIDO_OBSERVACAO", "");
 		return params;
 	}
 	public static String timestampToStr(String pattern, Timestamp valor) {
@@ -109,7 +110,7 @@ public class ImpressoraService {
 
 		Parametros parametros = parametroService.getParametros();
 		
-		String nomeArquivo = String.format("%d_pedido.pdf",pedidoDTO.getIdPedido());
+		String nomeArquivo = String.format("%d_pedido.pdf",pedidoDTO.getId());
 		File pastaPedidos = new File("pedidos");
 		if (!pastaPedidos.exists()) {
 		    pastaPedidos.mkdirs();
@@ -117,6 +118,35 @@ public class ImpressoraService {
 		nomeArquivo = pastaPedidos.getPath() + File.separator + nomeArquivo;
 		Map<String, Object> params = createParamsReport(pedidoDTO);
 		String arquivoJarperString = "report/pedido_report.jrxml";
+		
+		Map<String, List<PedidoItemDTO>> itensPedido = new LinkedHashMap<>();
+		itensPedido.put("Pizza", new ArrayList<>());
+		itensPedido.put("Bebida", new ArrayList<>());
+		
+		List<PedidoItemDTO> listaItensPedido = new ArrayList<>();
+		if(pedidoDTO.getItensPedido() != null && !pedidoDTO.getItensPedido().isEmpty()) {
+			for(var item : pedidoDTO.getItensPedido()) {
+				itensPedido.get(item.getTipo()).add(item);
+			}
+			if(!itensPedido.get("Pizza").isEmpty()) {
+				PedidoItemDTO descricaoPizza = new PedidoItemDTO();
+				descricaoPizza.setDescricao("Pizzas");
+				listaItensPedido.add(descricaoPizza);
+				for(var item : itensPedido.get("Pizza")) {
+					listaItensPedido.add(item);
+				}	
+			}
+			if(!itensPedido.get("Bebida").isEmpty()) {
+				PedidoItemDTO descricaoBebida = new PedidoItemDTO();
+				descricaoBebida.setDescricao("Bebidas");
+				listaItensPedido.add(descricaoBebida);
+				for(var item : itensPedido.get("Bebida")) {
+					listaItensPedido.add(item);
+				}
+			}
+			
+		}
+		
 		
 		if(pedidoDTO.getItensPedido() == null || pedidoDTO.getItensPedido().isEmpty()) {
 			pedidoDTO.setItensPedido(Arrays.asList(new PedidoItemDTO()));
@@ -135,19 +165,8 @@ public class ImpressoraService {
 			InputStream arquivoJarper = resource.getInputStream();
 			JasperReport jr = JasperCompileManager.compileReport(arquivoJarper);
 			
-			//Criar os subRelatorios
-			
-//			InputStream arquivoJarperSubReportPizza = resource.getInputStream();
-//			JasperReport jrSubReportPizza = JasperCompileManager.compileReport(arquivoJarperSubReportPizza);
-//			
-//			InputStream arquivoJarperSubReportBebida = resource.getInputStream();
-//			JasperReport jrSubReportBebida = JasperCompileManager.compileReport(arquivoJarperSubReportBebida);
-//			
-//			params.put("SUB_REPORT_PIZZA", jrSubReportPizza);
-//			params.put("SUB_REPORT_BEBIDA", jrSubReportBebida);
-			
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jr, params
-					, new JRBeanCollectionDataSource(pedidoDTO.getItensPedido()));
+					, new JRBeanCollectionDataSource(listaItensPedido));
 			
 			JRPdfExporter jrPdfExporter = new JRPdfExporter();
 			jrPdfExporter.setExporterInput(new SimpleExporterInput(jasperPrint));

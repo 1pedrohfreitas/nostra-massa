@@ -4,13 +4,13 @@ import { PizzaAcrescimoDTO, PizzaSaborDTO } from "./PizzaDTO";
 export class PedidoDTO {
     id: number = 0;
     idPedido?: number = 0;
-    dataPedido?: string = '';
+    dataPedido: string = '';
     entrega?: boolean= true;
     apalito?: boolean = false;
     tipoPagamento?: string = '';
     status?: string = '';
-    valor?: number = 0;
-    valorTaxa?: number = 0;
+    valor: number = 0;
+    valorTaxa: number = 0;
     enderecoDescricao?: string = '';
     bairro?: string = '';
 	rua?: string = '';
@@ -22,7 +22,8 @@ export class PedidoDTO {
     idCliente?: number;
     clienteTelefone?: string = '';
     clienteNome?: string = '';
-    itensPedido: PedidoItemDTO[] = []
+    itensPedido: PedidoItemDTO[] = [];
+    pedidoRelatorio: string = '';
 }
 export class PedidoItemDTO {
     id : number = 0;

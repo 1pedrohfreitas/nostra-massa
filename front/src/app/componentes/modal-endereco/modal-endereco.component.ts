@@ -20,12 +20,8 @@ export class ModalEnderecoComponent {
   ruaDefault ?: InputSelectOption;
   bairroDefault ?: InputSelectOption;
   
-  endereco : EnderecoDTO = {
-    numero: '',
-    apartamento: '',
-    bloco: '',
-    complemento: ''
-  };
+  endereco : EnderecoDTO = new EnderecoDTO
+  
   constructor(
     private _localStorageService : LocalStorageServiceService
   ){
@@ -90,9 +86,6 @@ export class ModalEnderecoComponent {
     if(bairroSelecionado != undefined){
       this.endereco.bairro = bairroSelecionado;
     }
-    
-    
-    
   }
 
   handleRua(inputSelecionado: InputSelectOption){
@@ -100,6 +93,5 @@ export class ModalEnderecoComponent {
     if(ruaSelecionada != undefined){
       this.endereco.rua= ruaSelecionada;
     }
-    
   }
 }

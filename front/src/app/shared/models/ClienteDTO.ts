@@ -6,14 +6,14 @@ export class ClienteDTO {
 }
 
 export class EnderecoDTO {
-    id?: number;
-    bairro?: BairroDTO;
-    rua?: RuaDTO;
-    numero?: string;
-    bloco?: string;
-    apartamento?: string;
-    complemento?: string;
-    enderecoDescricao?: string;
+    id: number = 0;
+    bairro: BairroDTO = new BairroDTO;
+    rua: RuaDTO = new RuaDTO;
+    numero : string = '';
+    bloco: string = '';
+    apartamento: string = '';
+    complemento: string = '';
+    enderecoDescricao: string = '';
 }
 
 export class BairroDTO {
