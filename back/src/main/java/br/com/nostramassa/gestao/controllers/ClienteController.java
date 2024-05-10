@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.nostramassa.gestao.dtos.ResponseDTO;
 import br.com.nostramassa.gestao.dtos.ResponseMessagemDTO;
 import br.com.nostramassa.gestao.dtos.pedido.ClienteDTO;
-import br.com.nostramassa.gestao.dtos.pedido.EnderecoDTO;
 import br.com.nostramassa.gestao.services.ClienteService;
 
 @RestController
@@ -38,7 +37,7 @@ public class ClienteController {
 		return new ResponseDTO<Page<ClienteDTO>>().ok(cliente, null);
 	}
 
-	@GetMapping(path = "/{telefone}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(path = "/telefone/{telefone}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<ClienteDTO>> getClienteByTelefone(@PathVariable String telefone) {
 		ClienteDTO cliente = clienteService.getClienteByTelefone(telefone);
 		ResponseMessagemDTO msg = new ResponseMessagemDTO();
@@ -54,6 +53,11 @@ public class ClienteController {
 		
 		return new ResponseDTO<ClienteDTO>().ok(cliente, Arrays.asList(msg));
 	}
+	@GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ResponseDTO<ClienteDTO>> getClienteById(@PathVariable Long id) {
+		ClienteDTO cliente = clienteService.getClienteById(id);
+		return new ResponseDTO<ClienteDTO>().ok(cliente, null);
+	}
 
 	@PostMapping(path = "", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<ClienteDTO>> adicionaCliente(@RequestBody ClienteDTO cliente) {
@@ -68,12 +72,6 @@ public class ClienteController {
 		msg.setTitulo("Cliente excluido com sucesso");
 		msg.setTypeMsg("sucesso");
 		return new ResponseDTO<String>().ok(clienteService.excluirCliente(idCliente), Arrays.asList(msg));
-	}
-
-	@PostMapping(path = "/endereco/{idCliente}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<ResponseDTO<EnderecoDTO>> adicionaEnderecoCliente(@RequestBody EnderecoDTO enderecoDTO,
-			@PathVariable Long idCliente) {
-		return new ResponseDTO<EnderecoDTO>().ok(clienteService.adicionaEnderecoCliente(idCliente, enderecoDTO), null);
 	}
 
 }

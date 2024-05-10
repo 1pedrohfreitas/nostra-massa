@@ -87,7 +87,7 @@ public class FrontGetDataService {
 			BairroDTO bairroDTO = new BairroDTO();
 			bairroDTO.setId(item.getId());
 			bairroDTO.setNome(item.getNome());
-			bairroDTO.setValorTaxa(item.getValorTaxa());
+			bairroDTO.setTaxaEntrega(item.getValorTaxa());
 			bairros.add(bairroDTO);
 		});
 	}

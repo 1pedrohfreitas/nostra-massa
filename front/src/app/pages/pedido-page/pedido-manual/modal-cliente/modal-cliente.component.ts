@@ -64,10 +64,10 @@ export class ModalClienteComponent {
   }
 
   adicionaCliente() {
-    const cliente: ClienteDTO = {
-      nome: this.clientePedido,
-      telefone: this.telefonePedido
-    }
+    const cliente: ClienteDTO = new ClienteDTO
+    cliente.nome = this.clientePedido;
+    cliente.telefone = this.telefonePedido
+
     this._clientesService.adicionaCliente(cliente).then((response) => {
       this._getDadosService.getDadosGeral();
       this.listaTelefones = this._localStorageService.converteListaItemParaOption(this._localStorageService.listaTelefones, '', '', true);

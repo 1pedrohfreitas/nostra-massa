@@ -11,7 +11,7 @@ export class InputTextAutocompleteComponent {
   @Input() id: string = '';
   @Input() options:InputSelectOption[] = [];
   @Input() optionDefault ?: InputSelectOption;
-  @Input() userInput: any = '';
+  @Input() userInput?: any = '';
 
   @Output() optionSelected : EventEmitter<InputSelectOption> = new EventEmitter<InputSelectOption>();
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
@@ -35,9 +35,15 @@ export class InputTextAutocompleteComponent {
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes['optionDefault']) {
+      this.optionDefault = changes['optionDefault'].currentValue
+      console.log(changes['optionDefault'])
       if(this.optionDefault != undefined){
         this.selectOption(this.optionDefault);
       }
+    }
+    if (changes['userInput']) {
+      this.userInput = changes['userInput'].currentValue
+      console.log(changes['userInput'])
     }
   }
   selectOption(optionValue: InputSelectOption) {

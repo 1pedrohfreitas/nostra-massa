@@ -62,22 +62,22 @@ public class Pedido {
 	@Column(name = "telefone", length = 30)
 	private String telefone;
 	
-	@Column(name = "bairro", length = 200)
+	@Column(name = "bairro")
 	private String bairro;
 	
-	@Column(name = "rua", length = 200)
+	@Column(name = "rua")
 	private String rua;
 
-	@Column(name = "numero", length = 30)
+	@Column(name = "numero")
 	private String numero;
 
-	@Column(name = "bloco", length = 20)
+	@Column(name = "bloco")
 	private String bloco;
 
-	@Column(name = "apartamento", length = 20)
+	@Column(name = "apartamento")
 	private String apartamento;
 
-	@Column(name = "complemento", length = 300)
+	@Column(name = "complemento")
 	private String complemento;
 	
 }

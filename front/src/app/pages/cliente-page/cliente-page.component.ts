@@ -5,8 +5,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { PedidoModule } from '../pedido-page/pedido.module';
 import { InputSelectOption } from '../../componentes/input-select/input-select';
 import { LocalStorageServiceService } from '../../services/local-storage-service.service';
-import { GetDadosServiceService } from '../../services/get-dados-service.service';
-import { ClienteDTO, EnderecoDTO } from '../../shared/models/ClienteDTO';
+import { ClienteDTO } from '../../shared/models/ClienteDTO';
 
 @Component({
   selector: 'app-cliente-page',
@@ -65,15 +64,6 @@ export class ClientePageComponent {
     this.showModalEndereco = true;
   }
 
-  adicionaEnderecoCliente(endereco: EnderecoDTO){
-    if(this.cliente.id != undefined){
-      this._clientesService.saveDadosEnderecoCliente(this.cliente.id, endereco).then((response)=>{
-        this.cliente.endereco = response
-        this.getListaClientes();
-      })
-    }
-  }
-
   excluirCliente(){
     if(this.cliente.id != undefined){
       this._clientesService.excluirCliente(this.cliente.id).then((response)=>{
@@ -101,6 +91,7 @@ export class ClientePageComponent {
   getListaClientes(){
     this._clientesService.getListaClientes().then((response) => {
       this.listaClientes = response.content
+      console.log(response)
     })
   }
 }

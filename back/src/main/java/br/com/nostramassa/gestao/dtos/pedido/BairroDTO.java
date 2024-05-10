@@ -11,6 +11,6 @@ public class BairroDTO {
 
 	private Long id;
 	private String nome;
-	private Double valorTaxa;
+	private Double taxaEntrega;
 	
 }

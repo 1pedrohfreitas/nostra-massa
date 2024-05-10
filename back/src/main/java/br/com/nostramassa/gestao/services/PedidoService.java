@@ -198,21 +198,25 @@ public class PedidoService {
 	}
 
 	public PedidoItemDTO getItemPedido(Long idItem) {
-		PedidoItem item = new PedidoItem();
-		Optional<PedidoItem> pedidoItem = pedidoItemRepository.findById(idItem);
-		if (pedidoItem.isPresent()) {
-			item = pedidoItem.get();
-		}
 		PedidoItemDTO pedidoItemDTO = new PedidoItemDTO();
-		pedidoItemDTO.setDescricao(item.getDescricao());
-		pedidoItemDTO.setId(item.getId());
-		pedidoItemDTO.setIdPedido(item.getIdPedido());
-		pedidoItemDTO.setNome(item.getNome());
-		pedidoItemDTO.setQuantidade(item.getQuantidade());
-		pedidoItemDTO.setTamanho(item.getTamanho());
-		pedidoItemDTO.setTipo(item.getTipo());
-		pedidoItemDTO.setValor(item.getValor());
-		pedidoItemDTO.setPedidoItemPizza(item.getPedidoItemPizza());
+		if(idItem != 0) {
+			PedidoItem item = new PedidoItem();
+			Optional<PedidoItem> pedidoItem = pedidoItemRepository.findById(idItem);
+			if (pedidoItem.isPresent()) {
+				item = pedidoItem.get();
+			}
+			
+			pedidoItemDTO.setDescricao(item.getDescricao());
+			pedidoItemDTO.setId(item.getId());
+			pedidoItemDTO.setIdPedido(item.getIdPedido());
+			pedidoItemDTO.setNome(item.getNome());
+			pedidoItemDTO.setQuantidade(item.getQuantidade());
+			pedidoItemDTO.setTamanho(item.getTamanho());
+			pedidoItemDTO.setTipo(item.getTipo());
+			pedidoItemDTO.setValor(item.getValor());
+			pedidoItemDTO.setPedidoItemPizza(item.getPedidoItemPizza());	
+		}
+		
 		return pedidoItemDTO;
 	}
 

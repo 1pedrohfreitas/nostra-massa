@@ -6,10 +6,9 @@ import { ClientesService } from '../../cliente-page/clientes.service';
 import { InputSelectOption } from '../../../componentes/input-select/input-select';
 import { LocalStorageServiceService } from '../../../services/local-storage-service.service';
 import { PedidoDTO, PedidoItemDTO } from '../../../shared/models/PedidoDTO';
-import { BairroDTO, EnderecoDTO } from '../../../shared/models/ClienteDTO';
 import { PedidoModule } from '../pedido.module';
 import { ActivatedRoute } from '@angular/router';
-import { PizzaSaborDTO } from '../../../shared/models/PizzaDTO';
+import { ClienteDTO } from '../../../shared/models/ClienteDTO';
 
 @Component({
   selector: 'app-pedido-manual',
@@ -20,12 +19,11 @@ import { PizzaSaborDTO } from '../../../shared/models/PizzaDTO';
 })
 export class PedidoManualComponent {
   pedido: PedidoDTO = new PedidoDTO;
-  endereco: EnderecoDTO = new EnderecoDTO;
+  idCliente: number = 0;
+  idItem: number = 0;
   itemPedidoPizza: PedidoItemDTO = new PedidoItemDTO
   itemPedidoBebida: PedidoItemDTO = new PedidoItemDTO;
   tipoItemModal: string = 'Pizza';
-
-  idCliente = 0;
 
   previa = '';
 
@@ -70,12 +68,12 @@ export class PedidoManualComponent {
     }
   }
 
-  changeEntrega(){
-    if(!this.pedido.entrega){
+  changeEntrega() {
+    if (!this.pedido.entrega) {
       this.pedido.valorTaxa = 0;
       this.calculaValorPedido();
     }
-    if(this.pedido.entrega){
+    if (this.pedido.entrega) {
       this.getDadosClienteByTelefone();
     }
   }
@@ -87,23 +85,16 @@ export class PedidoManualComponent {
           if (response.id != undefined) {
             this.idCliente = response.id
           }
-          if (response.nome != undefined) {
-            this.pedido.clienteNome = response.nome;
-          }
-          if (response.endereco != undefined && response.endereco != null) {
-            this.endereco = response.endereco;
-            if (response.endereco.enderecoDescricao != undefined) {
-              this.pedido.enderecoDescricao = response.endereco.enderecoDescricao
-            }
-            this.pedido.valorTaxa = response.endereco.bairro.valorTaxa;
-            this.pedido.bairro = response.endereco.bairro.nome;
-            this.pedido.rua = response.endereco.rua.nome;
-            this.pedido.numero = response.endereco.numero;
-            this.pedido.complemento = response.endereco.complemento;
-            this.pedido.bloco = response.endereco.bloco;
-            this.pedido.apartamento == response.endereco.apartamento;
+          this.pedido.clienteNome = response.nome;
+          this.pedido.enderecoDescricao = response.enderecoDescricao
 
-          }
+          this.pedido.rua = response.nome;
+          this.pedido.bairro = response.bairro;
+          this.pedido.numero = response.numero;
+          this.pedido.complemento = response.complemento;
+          this.pedido.bloco = response.bloco;
+          this.pedido.apartamento = response.apartamento;
+          this.pedido.valorTaxa = response.taxaEntrega
           this.gravarPedido();
         } else {
           this.showSalvarCliente = true;
@@ -112,6 +103,7 @@ export class PedidoManualComponent {
       });
     }
   }
+
   adicionarCliente() {
     if (this.pedido.clienteNome == undefined || this.pedido.clienteNome == ''
       || this.pedido.clienteNome.length < 3) {
@@ -124,13 +116,15 @@ export class PedidoManualComponent {
     }
 
     if (this.pedido.clienteNome != undefined && this.pedido.clienteTelefone != undefined
-      && this.pedido.clienteNome != '' && this.pedido.clienteTelefone != '' && this.pedido.clienteNome.length > 3 && this.pedido.clienteTelefone.length > 8)
-      this._clientesService.adicionaCliente({
-        nome: this.pedido.clienteNome,
-        telefone: this.pedido.clienteTelefone
-      }).then((response) => {
+      && this.pedido.clienteNome != '' && this.pedido.clienteTelefone != '' && this.pedido.clienteNome.length > 3 && this.pedido.clienteTelefone.length > 8) {
+      let cliente = new ClienteDTO
+      cliente.nome = this.pedido.clienteNome;
+      cliente.telefone = this.pedido.clienteTelefone;
+
+      this._clientesService.adicionaCliente(cliente).then((response) => {
         this.gravarPedido();
       })
+    }
   }
 
   handleTelefone(telefoneSelecionado: InputSelectOption) {
@@ -161,85 +155,55 @@ export class PedidoManualComponent {
   }
 
   openModalItem(itemPedido: PedidoItemDTO, tipo: string) {
+    console.log(itemPedido)
     if (itemPedido.nome != '') {
       this.tipoItemModal = tipo
     }
+    this.idItem = itemPedido.id
 
     if (this.tipoItemModal == 'Pizza') {
-      this.itemPedidoPizza = itemPedido;
+      this.itemPedidoPizza = JSON.parse(JSON.stringify(itemPedido));
       this.showModalItemPizza = true;
     }
     if (this.tipoItemModal == 'Bebida') {
-      if(this.itemPedidoBebida.nome == ''){
+      if (this.itemPedidoBebida.nome == '') {
         this.itemPedidoBebida = {
-          nome : 'COCA-COLA',
-          quantidade : 1,
-          tipo : 'Bebida',
-          valor : 13,
-          tamanho : '2l',
-          descricao : '',
-          id : 0,
-          idPedido : this.pedido.id,
-          pedidoItemPizza : ''
+          nome: 'COCA-COLA',
+          quantidade: 1,
+          tipo: 'Bebida',
+          valor: 13,
+          tamanho: '2l',
+          descricao: '',
+          id: 0,
+          idPedido: this.pedido.id,
+          pedidoItemPizza: ''
         }
       } else {
         this.itemPedidoBebida = itemPedido;
       }
-      
+
       this.showModalItemBebida = true;
     }
     this.tipoItemModal = 'Pizza'
   }
 
   novoPedido() {
+    this.idCliente = 0;
     this._pedidoService.criarPedido().then((response) => {
       if (response != undefined && response != null) {
         this.pedido = response;
         this.desabilitaCampoIDPedido = true;
-        if (this.pedido.clienteTelefone != undefined && this.pedido.clienteNome == '') {
+        console.log(this.pedido)
+        if (this.pedido.clienteTelefone != undefined) {
+          console.log(1)
           this.getDadosClienteByTelefone();
         } else {
           this.calculaValorPedido();
         }
-        this.preencheEnderecoDTO(response);
       }
       this.carregaDadosPedidoGeral();
     });
-    
-  }
 
-  preencheEnderecoDTO(dados : PedidoDTO){
-    if (dados.apartamento != undefined) {
-      this.endereco.apartamento = JSON.parse(JSON.stringify(dados.apartamento))
-    }
-    if (dados.bairro != undefined) {
-      this.endereco.bairro = {
-        id: 0,
-        nome : JSON.parse(JSON.stringify(dados.bairro)),
-        valorTaxa : this.pedido.valorTaxa != undefined ? this.pedido.valorTaxa : 0
-      }
-    }
-
-    if (dados.bloco != undefined) {
-      this.endereco.bloco = JSON.parse(JSON.stringify(dados.bloco))
-    }
-    if (dados.complemento != undefined) {
-      this.endereco.complemento = JSON.parse(JSON.stringify(dados.complemento))
-    }
-    if (dados.enderecoDescricao != undefined) {
-      this.endereco.enderecoDescricao = JSON.parse(JSON.stringify(dados.enderecoDescricao))
-    }
-    if (dados.numero != undefined) {
-      this.endereco.numero = JSON.parse(JSON.stringify(dados.numero))
-    }
-    if (dados.rua != undefined) {
-      this.endereco.rua = {
-        id: 0,
-        nome: JSON.parse(JSON.stringify(dados.rua))
-      }
-       
-    }
-      
   }
 
   carregaDadosPedidoGeral() {
@@ -247,7 +211,7 @@ export class PedidoManualComponent {
       this._pedidoService.getDadosPedido(this.pedido.id).then((response) => {
         if (response != undefined && response != null) {
           this.pedido = response;
-          this.preencheEnderecoDTO(response)
+          console.log(this.pedido)
           if (response.itensPedido == null || response.itensPedido == undefined) {
             this.pedido.itensPedido = []
           }
@@ -265,95 +229,83 @@ export class PedidoManualComponent {
       })
     }
   }
-  geraArquivoRelatorio(): string{
-    const itensPedidoPizza : PedidoItemDTO[] = [];
-    const itensPedidoBebida : PedidoItemDTO[] = [];
-    
-    let pedidoReport =`      Pedido: ${this.pedido.idPedido} \r\n`
-    + '===========================\r\n'
-    + `Data/Hora : ${new Date(this.pedido.dataPedido).toLocaleString()}\r\n`
-    + '===========================\r\n'
-    +`Nome: ${this.pedido.clienteNome}\r\n`
-    + '===========================\r\n'
-    +`Telefone: ${this.pedido.clienteTelefone}\r\n`
-    + '===========================\r\n'
-    +`End: ${this.pedido.enderecoDescricao}\r\n`
-    + '===========================\r\n';
-    this.pedido.itensPedido.forEach((value)=>{
-      if(value.tipo == 'Pizza'){
+  geraArquivoRelatorio(): string {
+    const itensPedidoPizza: PedidoItemDTO[] = [];
+    const itensPedidoBebida: PedidoItemDTO[] = [];
+
+    let pedidoReport = `      Pedido: ${this.pedido.idPedido} \r\n`
+      + '===========================\r\n'
+      + `Data/Hora : ${new Date(this.pedido.dataPedido).toLocaleString()}\r\n`
+      + '===========================\r\n'
+      + `Nome: ${this.pedido.clienteNome}\r\n`
+      + '===========================\r\n'
+      + `Telefone: ${this.pedido.clienteTelefone}\r\n`
+      + '===========================\r\n'
+      + `End: ${this.pedido.rua}\r\n`
+      + `N: ${this.pedido.numero}\r\n`
+      + `Bairro: ${this.pedido.bairro}\r\n`;
+    if (this.pedido.bloco != undefined && this.pedido.bloco != '') {
+      pedidoReport = pedidoReport + 'Bloco: ' + this.pedido.bloco;
+    }
+
+    if (this.pedido.apartamento != undefined && this.pedido.apartamento != '') {
+      pedidoReport = pedidoReport + 'Apartamento: ' + this.pedido.apartamento;
+    }
+    pedidoReport = pedidoReport + '===========================\r\n';
+
+    this.pedido.itensPedido.forEach((value) => {
+      if (value.tipo == 'Pizza') {
         itensPedidoPizza.push(value)
       }
-      if(value.tipo == 'Bebida'){
+      if (value.tipo == 'Bebida') {
         itensPedidoBebida.push(value)
       }
-      
-      
+
+
     });
 
-    if(itensPedidoPizza.length > 0){
+    if (itensPedidoPizza.length > 0) {
       pedidoReport = pedidoReport + '==========Pizzas============\r\n'
-      itensPedidoPizza.forEach((value)=>{
-        pedidoReport = pedidoReport + value.descricao +'\r\n'
-        + '\r\n'
-        + '\r\n'
-        + '==========================\r\n';
+      itensPedidoPizza.forEach((value, index) => {
+        pedidoReport = pedidoReport + '======____Pizza:'+(index + 1)+'____=====\r\n'+ value.descricao + '\r\n'
+          + '\r\n'
+          + '\r\n'
+          + '==========================\r\n';
       })
     }
-    if(itensPedidoBebida.length > 0){
+    if (itensPedidoBebida.length > 0) {
       pedidoReport = pedidoReport + '==========Bebidas===========\r\n'
-      itensPedidoBebida.forEach((value)=>{
-        pedidoReport = pedidoReport + value.descricao +'\r\n'
-        + '\r\n'
-        + '\r\n'
-        + '==========================\r\n';
+      itensPedidoBebida.forEach((value) => {
+        pedidoReport = pedidoReport + value.descricao + '\r\n'
+          + '\r\n'
+          + '\r\n'
+          + '==========================\r\n';
       })
     }
-     
+
     pedidoReport = `${pedidoReport}Taxa de Entrega: ${this.pedido.valorTaxa.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\r\n`
-    + '===========================\r\n'
-    +`Valor Pedido: ${this.pedido.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\r\n`
-    + '===========================\r\n';
-    if(this.pedido.observacao != null){
+      + '===========================\r\n'
+      + `Valor Pedido: ${this.pedido.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\r\n`
+      + '===========================\r\n';
+    if (this.pedido.observacao != null) {
       pedidoReport = `${pedidoReport}Observação: ${this.pedido.observacao}`;
     }
-    
+
     return pedidoReport;
   }
   imprimir() {
     if (this.pedido.itensPedido.length > 0) {
-      
+
       this.pedido.pedidoRelatorio = this.geraArquivoRelatorio();
-      
+
       this._pedidoService.salvarEImprimir(this.pedido).then((response) => {
+        this.carregaDadosPedidoGeral();
       })
-    } else {
-      //TODO - Criar notificação para avisar que não tem item
-    }
+    } 
   }
   openModalEndereco() {
+    console.log(this.idCliente)
     this.showModalEndereco = true;
-  }
-
-  atualizaEndereco(enderecoModal: EnderecoDTO) {
-    if (enderecoModal.enderecoDescricao != undefined) {
-      this.pedido.enderecoDescricao = enderecoModal.enderecoDescricao;
-      this.pedido.rua = enderecoModal.rua.nome
-      this.pedido.bairro = enderecoModal.bairro.nome
-      this.pedido.numero = enderecoModal.numero
-      this.pedido.bloco = enderecoModal.bloco
-      this.pedido.apartamento = enderecoModal.apartamento
-      this.pedido.complemento = enderecoModal.complemento
-    }
-    if (enderecoModal.bairro != undefined) {
-      this.pedido.valorTaxa = enderecoModal.bairro.valorTaxa;
-    }
-    if (this.idCliente != 0) {
-      this._clientesService.saveDadosEnderecoCliente(this.idCliente, enderecoModal).then((response) => {
-
-      });
-    }
-    this.calculaValorPedido();
-    this.gravarPedido();
   }
 
   calculaValorPedido() {
@@ -370,7 +322,8 @@ export class PedidoManualComponent {
     }
     this.pedido.valor = valor
   }
-  mostrarEmNovaAba(){
+
+  mostrarEmNovaAba() {
     this.previa = this.geraArquivoRelatorio();
     this.showModalPrevia = true
   }

@@ -9,22 +9,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PedidoItemDTO {
 
-    private Long id;
+    private Long id = 0l; 
 
-    private Long idPedido;
+    private Long idPedido = 0l;
 
-    private String descricao;
+    private String descricao = "";
     
-    private String tipo;
+    private String tipo = "";
     
-    private Double valor;
+    private Double valor = 0d;
     
     private String tamanho;
 
-    private Long quantidade;
+    private Long quantidade = 0l;
     
-    private String nome;
+    private String nome = "";
     
-    private String pedidoItemPizza;
+    private String pedidoItemPizza = "";
 	
 }

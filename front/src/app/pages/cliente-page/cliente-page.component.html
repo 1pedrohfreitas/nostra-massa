@@ -38,8 +38,7 @@
         </div>
         <div *ngIf="showModalEndereco">
             <app-modal-endereco
-                [enderecoInput]="cliente.endereco"
-                (returnEndereco)="adicionaEnderecoCliente($event)"
+                [idCliente]="cliente.id"
                 [(showModal)]="showModalEndereco">
             </app-modal-endereco>
         </div>
@@ -67,7 +66,7 @@
                 <td style="width: 20px;"><Button (click)="getDadosClienteByTelefone(clienteItem.telefone)">Editar</Button></td>
                 <td style="width: 40px;">{{clienteItem.nome}}</td>
                 <td style="width: 20px;">{{clienteItem.telefone}}</td>
-                <td style="width: 20px;">{{clienteItem.endereco?.enderecoDescricao}}</td>
+                <td style="width: 20px;">{{clienteItem.enderecoDescricao}}</td>
               </tr>
             </tbody>
           </table>

@@ -39,7 +39,7 @@ public class EnderecoService {
 			BairroDTO bairroDTO = new BairroDTO();
 			bairroDTO.setId(item.getId());
 			bairroDTO.setNome(item.getNome());
-			bairroDTO.setValorTaxa(item.getValorTaxa());
+			bairroDTO.setTaxaEntrega(item.getValorTaxa());
 			lista.add(bairroDTO);
 		});
 		return new PageImpl<>(lista, pageable, lista.size());

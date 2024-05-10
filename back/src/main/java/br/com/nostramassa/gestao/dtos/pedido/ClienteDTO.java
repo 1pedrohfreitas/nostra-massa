@@ -12,5 +12,12 @@ public class ClienteDTO {
 	private Long id;
 	private String nome;
 	private String telefone;
-	private EnderecoDTO endereco;
+	private String bairro;
+	private String rua;
+	private String numero;
+	private String bloco;
+	private String apartamento;
+	private String complemento;
+	private String enderecoDescricao;
+	private Double taxaEntrega = 0d;
 }

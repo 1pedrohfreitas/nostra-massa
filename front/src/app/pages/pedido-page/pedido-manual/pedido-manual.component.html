@@ -111,14 +111,14 @@
     
     <div>
         <app-modal-endereco
+            [idCliente]="idCliente"
             [(showModal)]="showModalEndereco"
-            [enderecoInput]="endereco"
-            (returnEndereco)="atualizaEndereco($event)"
-            [(showModal)]="showModalEndereco">
+            (showModalChange)="getDadosClienteByTelefone()"
+            >
         </app-modal-endereco>
         <app-modal-item-pizza
             [idPedido]="pedido.id"
-            [itemPedidoPizza]="itemPedidoPizza"
+            [idItem]="idItem"
             (dadosItemChange)="carregaDadosPedidoGeral()"
             [(showModal)]="showModalItemPizza">
         </app-modal-item-pizza>
@@ -126,7 +126,7 @@
         
         <app-modal-item-bebida 
             [idPedido]="pedido.id"
-            [itemPedidoBebida]="itemPedidoBebida"
+            [idItem]="idItem"
             (dadosItemChange)="carregaDadosPedidoGeral()" 
             [(showModal)]="showModalItemBebida">
         </app-modal-item-bebida>

@@ -1,5 +1,5 @@
 <div class="modal-container" *ngIf="showModal">
-    <div class="modal-conteudo">
+    <div class="modal-conteudo" *ngIf="showConteudo" >
         <div class="row row-space-bottom">
                 <div class="col-2">
                     <app-input  (valueChange)="setQuantidade($event)" [value]="itemPedidoBebida.quantidade.toString()" label="Quantidade" [type]="'number'"></app-input>

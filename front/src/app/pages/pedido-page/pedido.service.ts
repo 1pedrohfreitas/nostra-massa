@@ -29,6 +29,10 @@ export class PedidoService {
   adicionaItemPedido(idPedido : number , item : PedidoItemDTO){
     return this._apiService.post('pedido/itemPedido/'+idPedido,item)
   }
+  //Novo
+  getItemPedido(idItem : number){
+    return this._apiService.get('pedido/itemPedido/'+idItem)
+  }
   removeItemPedido(idPedido : number ,idItem : number){
     return this._apiService.delete('pedido/itemPedido/'+idPedido+'/'+idItem)
   }

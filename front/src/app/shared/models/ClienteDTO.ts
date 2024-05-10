@@ -1,25 +1,21 @@
 export class ClienteDTO {
-    id?: number;
-    nome?: string;
-    telefone?: string;
-    endereco?: EnderecoDTO;
-}
-
-export class EnderecoDTO {
     id: number = 0;
-    bairro: BairroDTO = new BairroDTO;
-    rua: RuaDTO = new RuaDTO;
+    nome: string = '';
+    telefone: string = '';
+    bairro: string = '';
+    rua: string = '';
     numero : string = '';
     bloco: string = '';
     apartamento: string = '';
     complemento: string = '';
     enderecoDescricao: string = '';
+    taxaEntrega: number = 0;
 }
 
 export class BairroDTO {
     id: number = 0;
     nome: string = '';
-    valorTaxa: number = 0;
+    taxaEntrega: number = 0;
 }
 
 export class RuaDTO {

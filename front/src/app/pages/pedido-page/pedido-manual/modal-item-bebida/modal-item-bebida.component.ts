@@ -12,8 +12,10 @@ import { PedidoService } from '../../pedido.service';
 })
 export class ModalItemBebidaComponent {
   @Input() showModal: boolean = false;
+  @Input() idItem: number = 0;
   @Input() idPedido: number = 0;
-  @Input() itemPedidoBebida: PedidoItemDTO = {
+  showConteudo = false;
+  itemPedidoBebida: PedidoItemDTO = {
     id: 0,
     idPedido: this.idPedido,
     descricao: '',
@@ -68,22 +70,52 @@ export class ModalItemBebidaComponent {
     if (changes['idPedido']) {
       this.idPedido = changes['idPedido'].currentValue;
     }
-    if (changes['itemPedidoBebida']) {
-      this.itemPedidoBebida = changes['itemPedidoBebida'].currentValue
-      this.optionDefaultBebida = {
-        option : this.itemPedidoBebida.nome,
-        value: this.itemPedidoBebida.nome
+    if (changes['idItem']) {
+      this.idItem = changes['idItem'].currentValue;
+    }
+    if (changes['showModal']) {
+      this.showModal = changes['showModal'].currentValue;
+      if (this.showModal) {
+        this.getDadosId();
       }
-      if(this.optionDefaultBebida != undefined){
-        this.setBebida(this.optionDefaultBebida);
+    }
+  }
+
+  getDadosId() {
+    this._pedidoService.getItemPedido(this.idItem).then((response) => {
+      this.itemPedidoBebida = response
+      if(this.itemPedidoBebida.nome == ''){
+        this.itemPedidoBebida =  {
+          id: 0,
+          idPedido: this.idPedido,
+          descricao: '',
+          tipo: 'Bebida',
+          valor: 0,
+          tamanho: '2L',
+          quantidade: 1,
+          nome: 'COCA-COLA'
+        } 
       }
-      this.optionDefaultTamanho = {
-        option : this.itemPedidoBebida.tamanho,
-        value : this.itemPedidoBebida.tamanho
-      }
-      if(this.optionDefaultTamanho != undefined){
-        this.setTamanhoItem(this.optionDefaultTamanho);
-      }
+      console.log(response)
+      this.preencheDados();
+      this.showConteudo = true;
+    })
+  }
+
+  preencheDados() {
+    this.optionDefaultBebida = {
+      option : this.itemPedidoBebida.nome,
+      value: this.itemPedidoBebida.nome
+    }
+    if(this.optionDefaultBebida != undefined){
+      this.setBebida(this.optionDefaultBebida);
+    }
+    this.optionDefaultTamanho = {
+      option : this.itemPedidoBebida.tamanho,
+      value : this.itemPedidoBebida.tamanho
+    }
+    if(this.optionDefaultTamanho != undefined){
+      this.setTamanhoItem(this.optionDefaultTamanho);
     }
   }
 
@@ -94,9 +126,12 @@ export class ModalItemBebidaComponent {
       if (bebidaDTO.tamanhoValor != undefined) {
         this.listaTamanhoItem = this._localStorageService.converteListaItemParaOption(bebidaDTO.tamanhoValor, 'tamanho', 'tamanho', false)
       }
-
     }
-    this.calculaValorItem();
+    if(this.listaTamanhoItem.length > 0){
+      this.setTamanhoItem(this.listaTamanhoItem[0]);
+    }
+    
+    // this.calculaValorItem();
   }
 
   setQuantidade(item: string) {
@@ -124,6 +159,7 @@ export class ModalItemBebidaComponent {
 
   onCloseModal() {
     this.showModal = false;
+    this.showConteudo = false;
     this.showModalChange.emit(this.showModal);
     this.dadosItemChange.emit(this.itemPedidoBebida);
     this.itemPedidoBebida = {

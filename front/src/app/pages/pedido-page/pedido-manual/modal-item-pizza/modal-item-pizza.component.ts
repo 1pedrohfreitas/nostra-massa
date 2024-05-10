@@ -13,7 +13,9 @@ import { LocalStorageServiceService } from '../../../../services/local-storage-s
 export class ModalItemPizzaComponent {
 
   @Input() showModal: boolean = false;
-  @Input() itemPedidoPizza: PedidoItemDTO = new PedidoItemDTO;
+  showConteudo: boolean = false;
+  itemPedidoPizza: PedidoItemDTO = new PedidoItemDTO;
+  @Input() idItem: number = 0;
   @Input() idPedido: number = 0;
   @Output() showModalChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() dadosItemChange: EventEmitter<PedidoItemDTO> = new EventEmitter<PedidoItemDTO>();
@@ -23,10 +25,10 @@ export class ModalItemPizzaComponent {
 
   sabores: InputSelectOption[] = [];
   saboresPizza: PizzaSaborDTO[] = []
-  acrescimosPizza1 : Map<string, PizzaAcrescimoDTO> = new Map();
-  acrescimosPizza2 : Map<string, PizzaAcrescimoDTO> = new Map();
-  ingredientesPizza1 : Map<string, PizzaAcrescimoDTO> = new Map();
-  ingredientesPizza2 : Map<string, PizzaAcrescimoDTO> = new Map();
+  acrescimosPizza1: Map<string, PizzaAcrescimoDTO> = new Map();
+  acrescimosPizza2: Map<string, PizzaAcrescimoDTO> = new Map();
+  ingredientesPizza1: Map<string, PizzaAcrescimoDTO> = new Map();
+  ingredientesPizza2: Map<string, PizzaAcrescimoDTO> = new Map();
 
   quantidadeSabores: string = '1'
   sabor1SelectDefault: InputSelectOption = new InputSelectOption;
@@ -66,28 +68,28 @@ export class ModalItemPizzaComponent {
   ) {
     this.preencheListas()
   }
-  preencheListas(){
+  preencheListas() {
     this.sabores = this._localStorageService.converteListaItemParaOption(
       this._localStorageService.listaPizzas, 'nome', 'id', false
     )
-    
+
     this.saboresPizza = this._localStorageService.listaPizzas
     if (this.itemPedidoPizza.pedidoItemPizza == undefined) {
       this.itemPedidoPizza.pedidoItemPizza = '';
       this.saboresPizza.push(this.saboresPizza[0])
-      
+
     }
     this._localStorageService.listaPizzaAcrescimo.forEach(item => {
       this.acrescimosPizza1.set(item.nome.toString(), JSON.parse(JSON.stringify(item)));
       this.acrescimosPizza2.set(item.nome.toString(), JSON.parse(JSON.stringify(item)));
     });
   }
-  resetaAcrescimoPizza1(){
+  resetaAcrescimoPizza1() {
     this._localStorageService.listaPizzaAcrescimo.forEach(item => {
       this.acrescimosPizza1.set(item.nome.toString(), JSON.parse(JSON.stringify(item)));
     });
   }
-  resetaAcrescimoPizza2(){
+  resetaAcrescimoPizza2() {
     this._localStorageService.listaPizzaAcrescimo.forEach(item => {
       this.acrescimosPizza2.set(item.nome.toString(), JSON.parse(JSON.stringify(item)));
     });
@@ -97,79 +99,97 @@ export class ModalItemPizzaComponent {
     if (changes['idPedido']) {
       this.idPedido = changes['idPedido'].currentValue;
     }
-    if (changes['itemPedidoPizza']) {
-      this.itemPedidoPizza = changes['itemPedidoPizza'].currentValue
-      
-      if (this.itemPedidoPizza.nome == '') {
-        this.itemPedidoPizza.tamanho = 'GG';
-        this.itemPedidoPizza.quantidade = 1;
-      }
-      this.optionDefaultTamanho = {
-        option: this.itemPedidoPizza.tamanho,
-        value: this.itemPedidoPizza.tamanho
-      };
-      if (this.itemPedidoPizza.pedidoItemPizza != undefined) {
-        const saboresItem: PizzaSaborDTO[] = JSON.parse(this.itemPedidoPizza.pedidoItemPizza);
-        this.quantidadeSabores = saboresItem.length.toString()
-        this.optionDefaultQuantidadeSabores = {
-          option : this.quantidadeSabores,
-          value : this.quantidadeSabores
-        }
-        if (saboresItem.length > 0) {
-          this.pizzaSabor1 = saboresItem[0];
-          this.sabor1SelectDefault = {
-            option: this.pizzaSabor1.nome,
-            value: this.pizzaSabor1.id.toString()
-          }
-          const retirarItens : PizzaSaborIngredienteDTO[] =  this.pizzaSabor1.pizzaSaborIngredientesRetirar
-          const acrescimosItens : PizzaSaborIngredienteDTO[] = this.pizzaSabor1.pizzasAcrescimos
-          this.changeSaborPizza(1,{
-            option: this.pizzaSabor1.nome,
-            value: this.pizzaSabor1.id.toString()
-          });
-          if(retirarItens != undefined){
-            retirarItens.forEach((value)=>{
-              this.ingredientesPizza1.set(JSON.parse(JSON.stringify(value.nome)) , JSON.parse(JSON.stringify(value)))
-            });
-          }
-          this.changeRetirar(1);
-          if(acrescimosItens != undefined){
-            acrescimosItens.forEach((value)=>{
-              this.acrescimosPizza1.set(JSON.parse(JSON.stringify(value.nome)) , JSON.parse(JSON.stringify(value)))
-            });
-          }          
-          this.changeAcrescimo(1)
-        }
-
-        if (saboresItem.length > 1) {
-          this.pizzaSabor2 = saboresItem[1];
-          this.sabor2SelectDefault = {
-            option: this.pizzaSabor1.nome,
-            value: this.pizzaSabor1.id.toString()
-          }
-          const retirarItens : PizzaSaborIngredienteDTO[] =  this.pizzaSabor2.pizzaSaborIngredientesRetirar
-          const acrescimosItens : PizzaSaborIngredienteDTO[] = this.pizzaSabor2.pizzasAcrescimos
-          this.changeSaborPizza(2,{
-            option: this.pizzaSabor2.nome,
-            value: this.pizzaSabor2.id.toString()
-          });
-          if(retirarItens != undefined){
-            retirarItens.forEach((value)=>{
-              this.ingredientesPizza2.set(JSON.parse(JSON.stringify(value.nome)) , JSON.parse(JSON.stringify(value)))
-            });
-          }
-          this.changeRetirar(2);
-          if(acrescimosItens != undefined){
-            acrescimosItens.forEach((value)=>{
-              this.acrescimosPizza2.set(JSON.parse(JSON.stringify(value.nome)) , JSON.parse(JSON.stringify(value)))
-            });
-          }          
-          this.changeAcrescimo(2)
-        }
+    if (changes['idItem']) {
+      this.idItem = changes['idItem'].currentValue;
+    }
+    if (changes['showModal']) {
+      this.showModal = changes['showModal'].currentValue;
+      if (this.showModal) {
+        this.getDadosId();
       }
     }
   }
-  
+
+  getDadosId() {
+    this._pedidoService.getItemPedido(this.idItem).then((response) => {
+      this.itemPedidoPizza = response
+      console.log(response)
+      this.preencheDados();
+      this.showConteudo = true;
+    })
+  }
+
+  preencheDados() {
+    if (this.itemPedidoPizza.nome == '') {
+      this.itemPedidoPizza.tamanho = 'GG';
+      this.itemPedidoPizza.quantidade = 1;
+    }
+    this.optionDefaultTamanho = {
+      option: this.itemPedidoPizza.tamanho,
+      value: this.itemPedidoPizza.tamanho
+    };
+    if (this.itemPedidoPizza.pedidoItemPizza != undefined) {
+      const saboresItem: PizzaSaborDTO[] = JSON.parse(this.itemPedidoPizza.pedidoItemPizza);
+      this.quantidadeSabores = saboresItem.length.toString();
+      console.log(saboresItem)
+      this.optionDefaultQuantidadeSabores = {
+        option: this.quantidadeSabores,
+        value: this.quantidadeSabores
+      }
+      if (saboresItem.length > 0) {
+        this.pizzaSabor1 = saboresItem[0];
+        this.sabor1SelectDefault = {
+          option: this.pizzaSabor1.nome,
+          value: this.pizzaSabor1.id.toString()
+        }
+        const retirarItens: PizzaSaborIngredienteDTO[] = JSON.parse(JSON.stringify(this.pizzaSabor1.pizzaSaborIngredientesRetirar)) 
+        const acrescimosItens: PizzaSaborIngredienteDTO[] = JSON.parse(JSON.stringify(this.pizzaSabor1.pizzasAcrescimos));
+        this.changeSaborPizza(1, {
+          option: this.pizzaSabor1.nome,
+          value: this.pizzaSabor1.id.toString()
+        });
+        if (retirarItens != undefined) {
+          retirarItens.forEach((value) => {
+            this.ingredientesPizza1.set(JSON.parse(JSON.stringify(value.nome)), JSON.parse(JSON.stringify(value)))
+          });
+        }
+        this.changeRetirar(1);
+        if (acrescimosItens != undefined) {
+          acrescimosItens.forEach((value) => {
+            this.acrescimosPizza1.set(JSON.parse(JSON.stringify(value.nome)), JSON.parse(JSON.stringify(value)))
+          });
+        }
+        this.changeAcrescimo(1)
+      }
+
+      if (saboresItem.length > 1) {
+        this.pizzaSabor2 = saboresItem[1];
+        this.sabor2SelectDefault = {
+          option: this.pizzaSabor2.nome,
+          value: this.pizzaSabor2.id.toString()
+        }
+        const retirarItens: PizzaSaborIngredienteDTO[] = JSON.parse(JSON.stringify(this.pizzaSabor2.pizzaSaborIngredientesRetirar)) 
+        const acrescimosItens: PizzaSaborIngredienteDTO[] = JSON.parse(JSON.stringify(this.pizzaSabor2.pizzasAcrescimos));
+        this.changeSaborPizza(2, {
+          option: this.pizzaSabor2.nome,
+          value: this.pizzaSabor2.id.toString()
+        });
+        if (retirarItens != undefined) {
+          retirarItens.forEach((value) => {
+            this.ingredientesPizza2.set(JSON.parse(JSON.stringify(value.nome)), JSON.parse(JSON.stringify(value)))
+          });
+        }
+        this.changeRetirar(2);
+        if (acrescimosItens != undefined) {
+          acrescimosItens.forEach((value) => {
+            this.acrescimosPizza2.set(JSON.parse(JSON.stringify(value.nome)), JSON.parse(JSON.stringify(value)))
+          });
+        }
+        this.changeAcrescimo(2)
+      }
+    }
+  }
+
 
   calculaValorItem() {
     let valorSabor1 = 0;
@@ -207,22 +227,22 @@ export class ModalItemPizzaComponent {
     let pizzasAcrescimosToda: Map<string, PizzaAcrescimoDTO> = new Map();
     let pizzasAcrescimos1: Map<string, PizzaAcrescimoDTO> = new Map();
     let pizzasAcrescimos2: Map<string, PizzaAcrescimoDTO> = new Map();
-    
+
     this.pizzaSabor1.pizzasAcrescimos = Object.values(this.pizzaSabor1.pizzasAcrescimos);
-    this.pizzaSabor1.pizzasAcrescimos.forEach((value)=>{
+    this.pizzaSabor1.pizzasAcrescimos.forEach((value) => {
       pizzasAcrescimos1.set(JSON.parse(JSON.stringify(value.nome)), JSON.parse(JSON.stringify(value)));
     })
-    
-    if(this.quantidadeSabores == '1'){
-      pizzasAcrescimos1.forEach((value,key)=>{
-        pizzasAcrescimosToda.set(JSON.parse(JSON.stringify(key)),JSON.parse(JSON.stringify(value)))
+
+    if (this.quantidadeSabores == '1') {
+      pizzasAcrescimos1.forEach((value, key) => {
+        pizzasAcrescimosToda.set(JSON.parse(JSON.stringify(key)), JSON.parse(JSON.stringify(value)))
       })
       pizzasAcrescimos1 = new Map()
     }
-    if(this.quantidadeSabores == '2'){
+    if (this.quantidadeSabores == '2') {
       this.pizzaSabor2.pizzasAcrescimos = Object.values(this.pizzaSabor2.pizzasAcrescimos);
-      this.pizzaSabor2.pizzasAcrescimos.forEach((value)=>{
-        pizzasAcrescimos2.set(JSON.parse(JSON.stringify(value.nome)), JSON.parse(JSON.stringify(value)) );
+      this.pizzaSabor2.pizzasAcrescimos.forEach((value) => {
+        pizzasAcrescimos2.set(JSON.parse(JSON.stringify(value.nome)), JSON.parse(JSON.stringify(value)));
       })
       this._localStorageService.listaPizzaAcrescimo.forEach((value) => {
         if (pizzasAcrescimos1.has(JSON.parse(JSON.stringify(value.nome))) && pizzasAcrescimos2.has(JSON.parse(JSON.stringify(value.nome)))) {
@@ -245,25 +265,25 @@ export class ModalItemPizzaComponent {
     acrescimos.forEach((value) => {
       switch (this.itemPedidoPizza.tamanho) {
         case 'GG':
-            if (toda) {
-              valor = valor + (value.tamanhoGiganteToda != undefined ? value.tamanhoGiganteToda : 0);
-            } else {
-              valor = valor + (value.tamanhoGiganteMetade != undefined ? value.tamanhoGiganteMetade : 0);
-            }
+          if (toda) {
+            valor = valor + (value.tamanhoGiganteToda != undefined ? value.tamanhoGiganteToda : 0);
+          } else {
+            valor = valor + (value.tamanhoGiganteMetade != undefined ? value.tamanhoGiganteMetade : 0);
+          }
           break;
         case 'G':
-            if (toda) {
-              valor = valor + (value.tamanhoGrandeToda != undefined ? value.tamanhoGrandeToda : 0);
-            } else {
-              valor = valor + (value.tamanhoGrandeMetade != undefined ? value.tamanhoGrandeMetade : 0);
-            }
+          if (toda) {
+            valor = valor + (value.tamanhoGrandeToda != undefined ? value.tamanhoGrandeToda : 0);
+          } else {
+            valor = valor + (value.tamanhoGrandeMetade != undefined ? value.tamanhoGrandeMetade : 0);
+          }
           break;
         case 'M':
-            if (toda) {
-              valor = valor + (value.tamanhoMediaToda != undefined ? value.tamanhoMediaToda : 0);
-            } else {
-              valor = valor + (value.tamanhoMediaMetade != undefined ? value.tamanhoMediaMetade : 0);
-            }
+          if (toda) {
+            valor = valor + (value.tamanhoMediaToda != undefined ? value.tamanhoMediaToda : 0);
+          } else {
+            valor = valor + (value.tamanhoMediaMetade != undefined ? value.tamanhoMediaMetade : 0);
+          }
           break;
         default:
           break;
@@ -283,21 +303,22 @@ export class ModalItemPizzaComponent {
   }
 
   handleChangeQuatidadeSabores(event: InputSelectOption) {
+    console.log('handleChangeQuatidadeSabores')
     if (this.quantidadeSabores == '1' && event.value == '2') {
-      
+
       this.pizzaSabor2 = JSON.parse(JSON.stringify(this.pizzaSabor1));
 
       this.sabor2SelectDefault = {
         option: this.pizzaSabor2.nome,
         value: this.pizzaSabor2.id.toString()
       }
-      this.changeSaborPizza(2,{
+      this.changeSaborPizza(2, {
         option: this.pizzaSabor2.nome,
         value: this.pizzaSabor2.id.toString()
       })
       this.ingredientesPizza2 = new Map();
-      this.ingredientesPizza1.forEach((value,key)=>{
-          this.ingredientesPizza2.set(JSON.parse(JSON.stringify(key)),JSON.parse(JSON.stringify(value)));
+      this.ingredientesPizza1.forEach((value, key) => {
+        this.ingredientesPizza2.set(JSON.parse(JSON.stringify(key)), JSON.parse(JSON.stringify(value)));
       })
     }
     if (event.value == '1' && this.quantidadeSabores == '2') {
@@ -314,18 +335,18 @@ export class ModalItemPizzaComponent {
         this.pizzaSabor1 = JSON.parse(JSON.stringify(sabor));
         this.pizzaSabor1.pizzaSaborIngredientes = Object.values(this.pizzaSabor1.pizzaSaborIngredientes);
         this.ingredientesPizza1 = new Map();
-        this.pizzaSabor1.pizzaSaborIngredientes.forEach((value)=>{
-          this.ingredientesPizza1.set(JSON.parse(JSON.stringify(value.nome)),JSON.parse(JSON.stringify(value)));
+        this.pizzaSabor1.pizzaSaborIngredientes.forEach((value) => {
+          this.ingredientesPizza1.set(JSON.parse(JSON.stringify(value.nome)), JSON.parse(JSON.stringify(value)));
         })
         this.resetaAcrescimoPizza1();
-        
+
       }
       if (idLado == 2) {
         this.pizzaSabor2 = JSON.parse(JSON.stringify(sabor));
         this.pizzaSabor2.pizzaSaborIngredientes = Object.values(this.pizzaSabor2.pizzaSaborIngredientes);
         this.ingredientesPizza2 = new Map();
-        this.pizzaSabor2.pizzaSaborIngredientes.forEach((value)=>{
-          this.ingredientesPizza2.set(JSON.parse(JSON.stringify(value.nome)),JSON.parse(JSON.stringify(value)));
+        this.pizzaSabor2.pizzaSaborIngredientes.forEach((value) => {
+          this.ingredientesPizza2.set(JSON.parse(JSON.stringify(value.nome)), JSON.parse(JSON.stringify(value)));
         })
         this.resetaAcrescimoPizza2();
       }
@@ -336,16 +357,16 @@ export class ModalItemPizzaComponent {
   changeRetirar(idLado: number) {
     if (idLado == 1) {
       this.pizzaSabor1.pizzaSaborIngredientesRetirar = [];
-      this.ingredientesPizza1.forEach((value,key)=>{
-        if(value.habilitado){
+      this.ingredientesPizza1.forEach((value, key) => {
+        if (value.habilitado) {
           this.pizzaSabor1.pizzaSaborIngredientesRetirar.push(JSON.parse(JSON.stringify(value)))
         }
       });
     }
     if (idLado == 2) {
       this.pizzaSabor2.pizzaSaborIngredientesRetirar = [];
-      this.ingredientesPizza1.forEach((value,key)=>{
-        if(value.habilitado){
+      this.ingredientesPizza2.forEach((value, key) => {
+        if (value.habilitado) {
           this.pizzaSabor2.pizzaSaborIngredientesRetirar.push(JSON.parse(JSON.stringify(value)))
         }
       })
@@ -354,89 +375,91 @@ export class ModalItemPizzaComponent {
   changeAcrescimo(idLado: number) {
     if (idLado == 1) {
       this.pizzaSabor1.pizzasAcrescimos = [];
-      this.acrescimosPizza1.forEach((value,key)=>{
-        if(value.habilitado){
+      this.acrescimosPizza1.forEach((value, key) => {
+        if (value.habilitado) {
           this.pizzaSabor1.pizzasAcrescimos.push(JSON.parse(JSON.stringify(value)))
         }
       });
     }
     if (idLado == 2) {
       this.pizzaSabor2.pizzasAcrescimos = [];
-      this.acrescimosPizza2.forEach((value,key)=>{
-        if(value.habilitado){
+      this.acrescimosPizza2.forEach((value, key) => {
+        if (value.habilitado) {
           this.pizzaSabor2.pizzasAcrescimos.push(JSON.parse(JSON.stringify(value)))
         }
       })
     }
     this.calculaValorItem();
   }
-  preencheDescricaoRetirar(sabor : PizzaSaborDTO) : string{
+  preencheDescricaoRetirar(sabor: PizzaSaborDTO): string {
     let descricao = '';
-    if(sabor.pizzaSaborIngredientesRetirar != undefined && sabor.pizzaSaborIngredientesRetirar.length > 0){
+    if (sabor.pizzaSaborIngredientesRetirar != undefined && sabor.pizzaSaborIngredientesRetirar.length > 0) {
       descricao = '=========RETIRAR==========\r\n';
-      sabor.pizzaSaborIngredientesRetirar.forEach((value)=>{
+      sabor.pizzaSaborIngredientesRetirar.forEach((value) => {
         descricao = `${descricao} - ${value.nome} \r\n`
       });
     }
-    console.log(descricao)
     return descricao;
   }
 
-  preencheDescricaoAcrescimo(sabor : PizzaSaborDTO) : string{
+  preencheDescricaoAcrescimo(sabor: PizzaSaborDTO): string {
     let descricao = '';
-    if(sabor.pizzasAcrescimos != undefined && sabor.pizzasAcrescimos.length > 0){
+    if (sabor.pizzasAcrescimos != undefined && sabor.pizzasAcrescimos.length > 0) {
       descricao = '=========ACRESCIMO========\r\n';
-      sabor.pizzasAcrescimos.forEach((value)=>{
+      sabor.pizzasAcrescimos.forEach((value) => {
         descricao = `${descricao} - ${value.nome} \r\n`
       });
     }
-    console.log(descricao)
     return descricao;
   }
 
   save() {
     this.itemPedidoPizza.descricao = '';
-    const pedidoItemPizza : PizzaSaborDTO[]= []
-    const sabor1Dados : PizzaSaborDTO = JSON.parse(JSON.stringify(this.pizzaSabor1))
-    const sabor2Dados : PizzaSaborDTO = JSON.parse(JSON.stringify(this.pizzaSabor2))
-    if(this.quantidadeSabores == '1'){
-      console.log(this.itemPedidoPizza)
+    const pedidoItemPizza: PizzaSaborDTO[] = []
+    const sabor1Dados: PizzaSaborDTO = JSON.parse(JSON.stringify(this.pizzaSabor1))
+    const sabor2Dados: PizzaSaborDTO = JSON.parse(JSON.stringify(this.pizzaSabor2))
+    if (this.quantidadeSabores == '1') {
       this.itemPedidoPizza.nome = sabor1Dados.nome
-      this.itemPedidoPizza.descricao = 
-      this.preencheDescricaoRetirar(sabor1Dados)
-      +this.preencheDescricaoAcrescimo(sabor1Dados);
+      this.itemPedidoPizza.descricao =
+        this.preencheDescricaoRetirar(sabor1Dados)
+        + '===========================\r\n'
+        + this.preencheDescricaoAcrescimo(sabor1Dados);
       pedidoItemPizza.push(sabor1Dados);
-      console.log(sabor1Dados)
-      console.log(this.itemPedidoPizza)
+
+      this.itemPedidoPizza.descricao = this.itemPedidoPizza.quantidade + ' x '
+        + this.itemPedidoPizza.nome + ' - '
+        + this.itemPedidoPizza.tamanho + ' = '
+        + this.itemPedidoPizza.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+        + '\r\n'
+        + this.itemPedidoPizza.descricao;
     }
 
-    if(this.quantidadeSabores == '2'){
+    if (this.quantidadeSabores == '2') {
       this.itemPedidoPizza.nome = `${sabor1Dados.nome} / ${sabor2Dados.nome}`
-      this.itemPedidoPizza.descricao = 
-      sabor1Dados.nome
-      +'\r\n'
-      +this.preencheDescricaoRetirar(sabor1Dados)
-      +this.preencheDescricaoAcrescimo(sabor1Dados)
-      +sabor2Dados.nome
-      +'\r\n'
-      this.preencheDescricaoRetirar(sabor2Dados)
-      +this.preencheDescricaoAcrescimo(sabor2Dados);
+      this.itemPedidoPizza.descricao =
+        ' Sabor 1: ->' + sabor1Dados.nome
+        + '\r\n'
+        + this.preencheDescricaoRetirar(sabor1Dados)
+        + this.preencheDescricaoAcrescimo(sabor1Dados)
+        + ' Sabor 2: ->' + sabor2Dados.nome
+        + '\r\n'
+        + this.preencheDescricaoRetirar(sabor2Dados)
+        + this.preencheDescricaoAcrescimo(sabor2Dados);
 
       pedidoItemPizza.push(sabor1Dados);
       pedidoItemPizza.push(sabor2Dados);
+
+      this.itemPedidoPizza.descricao = this.itemPedidoPizza.quantidade
+        + ' x MEIO A MEIO - '
+        + this.itemPedidoPizza.tamanho + ' = '
+        + this.itemPedidoPizza.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+        + '\r\n'
+        + this.itemPedidoPizza.descricao;
     }
-    
-    this.itemPedidoPizza.descricao = this.itemPedidoPizza.quantidade + ' x '
-      + this.itemPedidoPizza.nome + ' - '
-      + this.itemPedidoPizza.tamanho + ' = '
-      + this.itemPedidoPizza.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-      + '\r\n'
-      + this.itemPedidoPizza.descricao;
-    
-      console.log(this.itemPedidoPizza)
-    
+
     this.itemPedidoPizza.pedidoItemPizza = JSON.stringify(pedidoItemPizza);
     this.itemPedidoPizza.tipo = 'Pizza'
+    console.log(this.itemPedidoPizza)
     this._pedidoService.adicionaItemPedido(Number(this.idPedido), this.itemPedidoPizza).then((response) => {
       this.onCloseModal();
     });
@@ -444,8 +467,9 @@ export class ModalItemPizzaComponent {
 
   onCloseModal() {
     this.showModal = false;
+    this.showConteudo = false;
     this.showModalChange.emit(this.showModal);
     this.dadosItemChange.emit(this.itemPedidoPizza);
   }
-  openModal() {this.showModal = true;}
+  openModal() { this.showModal = true; }
 }

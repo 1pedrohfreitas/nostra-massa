@@ -1,5 +1,4 @@
-import { ClienteDTO, EnderecoDTO } from "./ClienteDTO";
-import { PizzaAcrescimoDTO, PizzaSaborDTO } from "./PizzaDTO";
+import { PizzaSaborDTO } from "./PizzaDTO";
 
 export class PedidoDTO {
     id: number = 0;
