@@ -19,8 +19,8 @@ export class PedidoDTO {
 	complemento?: string = '';
     observacao?: string = '';
     idCliente?: number;
-    clienteTelefone?: string = '';
-    clienteNome?: string = '';
+    clienteTelefone: string = '';
+    clienteNome: string = '';
     itensPedido: PedidoItemDTO[] = [];
     pedidoRelatorio: string = '';
 }

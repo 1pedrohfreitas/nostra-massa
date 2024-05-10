@@ -108,20 +108,16 @@ export class PedidoManualComponent {
     if (this.pedido.clienteNome == undefined || this.pedido.clienteNome == ''
       || this.pedido.clienteNome.length < 3) {
       alert('Nome Obrigatorio')
-    }
-
-    if (this.pedido.clienteTelefone == undefined || this.pedido.clienteTelefone == ''
+    } else if (this.pedido.clienteTelefone == undefined || this.pedido.clienteTelefone == ''
       || this.pedido.clienteTelefone.length < 8) {
       alert('Telefone Obrigatorio')
-    }
-
-    if (this.pedido.clienteNome != undefined && this.pedido.clienteTelefone != undefined
-      && this.pedido.clienteNome != '' && this.pedido.clienteTelefone != '' && this.pedido.clienteNome.length > 3 && this.pedido.clienteTelefone.length > 8) {
+    } else {
       let cliente = new ClienteDTO
       cliente.nome = this.pedido.clienteNome;
       cliente.telefone = this.pedido.clienteTelefone;
 
       this._clientesService.adicionaCliente(cliente).then((response) => {
+        this.idCliente = response.id
         this.gravarPedido();
       })
     }
