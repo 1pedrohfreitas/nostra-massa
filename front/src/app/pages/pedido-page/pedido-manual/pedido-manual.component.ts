@@ -243,6 +243,9 @@ export class PedidoManualComponent {
     if (this.pedido.apartamento != undefined && this.pedido.apartamento != '') {
       pedidoReport = pedidoReport + 'Apartamento: ' + this.pedido.apartamento + '\r\n';
     }
+    if (this.pedido.complemento != undefined && this.pedido.complemento != '') {
+      pedidoReport = pedidoReport + 'Complemento: ' + this.pedido.complemento + '\r\n';
+    }
     pedidoReport = pedidoReport + '========================\r\n';
 
     this.pedido.itensPedido.forEach((value) => {
@@ -262,7 +265,7 @@ export class PedidoManualComponent {
         pedidoReport = pedidoReport + '======____Pizza:'+(index + 1)+'____=====\r\n'+ value.descricao + '\r\n'
           + '\r\n'
           + '\r\n'
-          + '=======================\r\n';
+          + '====================\r\n';
       })
     }
     if (itensPedidoBebida.length > 0) {
@@ -271,7 +274,7 @@ export class PedidoManualComponent {
         pedidoReport = pedidoReport + value.descricao + '\r\n'
           + '\r\n'
           + '\r\n'
-          + '=======================\r\n';
+          + '====================\r\n';
       })
     }
 
