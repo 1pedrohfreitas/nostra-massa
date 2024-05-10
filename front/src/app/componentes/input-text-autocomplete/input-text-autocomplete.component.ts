@@ -36,14 +36,12 @@ export class InputTextAutocompleteComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['optionDefault']) {
       this.optionDefault = changes['optionDefault'].currentValue
-      console.log(changes['optionDefault'])
       if(this.optionDefault != undefined){
         this.selectOption(this.optionDefault);
       }
     }
     if (changes['userInput']) {
       this.userInput = changes['userInput'].currentValue
-      console.log(changes['userInput'])
     }
   }
   selectOption(optionValue: InputSelectOption) {

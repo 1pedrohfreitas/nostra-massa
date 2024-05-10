@@ -44,7 +44,6 @@ export class ModalEnderecoComponent {
     if(this.idCliente != 0){
       this._clienteService.getDadosClienteById(this.idCliente).then((response)=>{
         this.cliente = response
-        console.log(response)
         this.showConteudo = true;
       })
     }

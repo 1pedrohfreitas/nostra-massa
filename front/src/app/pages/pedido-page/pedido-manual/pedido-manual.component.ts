@@ -88,7 +88,7 @@ export class PedidoManualComponent {
           this.pedido.clienteNome = response.nome;
           this.pedido.enderecoDescricao = response.enderecoDescricao
 
-          this.pedido.rua = response.nome;
+          this.pedido.rua = response.rua;
           this.pedido.bairro = response.bairro;
           this.pedido.numero = response.numero;
           this.pedido.complemento = response.complemento;
@@ -155,7 +155,6 @@ export class PedidoManualComponent {
   }
 
   openModalItem(itemPedido: PedidoItemDTO, tipo: string) {
-    console.log(itemPedido)
     if (itemPedido.nome != '') {
       this.tipoItemModal = tipo
     }
@@ -193,9 +192,7 @@ export class PedidoManualComponent {
       if (response != undefined && response != null) {
         this.pedido = response;
         this.desabilitaCampoIDPedido = true;
-        console.log(this.pedido)
         if (this.pedido.clienteTelefone != undefined) {
-          console.log(1)
           this.getDadosClienteByTelefone();
         } else {
           this.calculaValorPedido();
@@ -211,7 +208,6 @@ export class PedidoManualComponent {
       this._pedidoService.getDadosPedido(this.pedido.id).then((response) => {
         if (response != undefined && response != null) {
           this.pedido = response;
-          console.log(this.pedido)
           if (response.itensPedido == null || response.itensPedido == undefined) {
             this.pedido.itensPedido = []
           }
@@ -234,24 +230,24 @@ export class PedidoManualComponent {
     const itensPedidoBebida: PedidoItemDTO[] = [];
 
     let pedidoReport = `      Pedido: ${this.pedido.idPedido} \r\n`
-      + '===========================\r\n'
+      + '========================\r\n'
       + `Data/Hora : ${new Date(this.pedido.dataPedido).toLocaleString()}\r\n`
-      + '===========================\r\n'
+      + '========================\r\n'
       + `Nome: ${this.pedido.clienteNome}\r\n`
-      + '===========================\r\n'
+      + '========================\r\n'
       + `Telefone: ${this.pedido.clienteTelefone}\r\n`
-      + '===========================\r\n'
+      + '========================\r\n'
       + `End: ${this.pedido.rua}\r\n`
       + `N: ${this.pedido.numero}\r\n`
       + `Bairro: ${this.pedido.bairro}\r\n`;
     if (this.pedido.bloco != undefined && this.pedido.bloco != '') {
-      pedidoReport = pedidoReport + 'Bloco: ' + this.pedido.bloco;
+      pedidoReport = pedidoReport + 'Bloco: ' + this.pedido.bloco + '\r\n';
     }
 
     if (this.pedido.apartamento != undefined && this.pedido.apartamento != '') {
-      pedidoReport = pedidoReport + 'Apartamento: ' + this.pedido.apartamento;
+      pedidoReport = pedidoReport + 'Apartamento: ' + this.pedido.apartamento + '\r\n';
     }
-    pedidoReport = pedidoReport + '===========================\r\n';
+    pedidoReport = pedidoReport + '========================\r\n';
 
     this.pedido.itensPedido.forEach((value) => {
       if (value.tipo == 'Pizza') {
@@ -265,28 +261,28 @@ export class PedidoManualComponent {
     });
 
     if (itensPedidoPizza.length > 0) {
-      pedidoReport = pedidoReport + '==========Pizzas============\r\n'
+      pedidoReport = pedidoReport + '==========Pizzas=========\r\n'
       itensPedidoPizza.forEach((value, index) => {
         pedidoReport = pedidoReport + '======____Pizza:'+(index + 1)+'____=====\r\n'+ value.descricao + '\r\n'
           + '\r\n'
           + '\r\n'
-          + '==========================\r\n';
+          + '=======================\r\n';
       })
     }
     if (itensPedidoBebida.length > 0) {
-      pedidoReport = pedidoReport + '==========Bebidas===========\r\n'
+      pedidoReport = pedidoReport + '==========Bebidas========\r\n'
       itensPedidoBebida.forEach((value) => {
         pedidoReport = pedidoReport + value.descricao + '\r\n'
           + '\r\n'
           + '\r\n'
-          + '==========================\r\n';
+          + '=======================\r\n';
       })
     }
 
     pedidoReport = `${pedidoReport}Taxa de Entrega: ${this.pedido.valorTaxa.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\r\n`
-      + '===========================\r\n'
+      + '========================\r\n'
       + `Valor Pedido: ${this.pedido.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\r\n`
-      + '===========================\r\n';
+      + '========================\r\n';
     if (this.pedido.observacao != null) {
       pedidoReport = `${pedidoReport}Observação: ${this.pedido.observacao}`;
     }
@@ -304,8 +300,7 @@ export class PedidoManualComponent {
     } 
   }
   openModalEndereco() {
-    console.log(this.idCliente)
-    this.showModalEndereco = true;
+     this.showModalEndereco = true;
   }
 
   calculaValorPedido() {

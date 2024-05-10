@@ -91,7 +91,6 @@ export class ClientePageComponent {
   getListaClientes(){
     this._clientesService.getListaClientes().then((response) => {
       this.listaClientes = response.content
-      console.log(response)
     })
   }
 }

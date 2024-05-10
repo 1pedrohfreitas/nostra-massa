@@ -96,7 +96,6 @@ export class ModalItemBebidaComponent {
           nome: 'COCA-COLA'
         } 
       }
-      console.log(response)
       this.preencheDados();
       this.showConteudo = true;
     })
