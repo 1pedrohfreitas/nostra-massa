@@ -37,6 +37,8 @@ export class PedidoManualComponent {
   desabilitaCampoIDPedido = false;
   enderecoPedido = '';
 
+  optionDefaultTipoPagamento?: InputSelectOption;
+
   listaSelectTipo: InputSelectOption[] = [
     {
       option: 'Pizza',
@@ -46,6 +48,26 @@ export class PedidoManualComponent {
     {
       option: 'Bebida',
       value: 'Bebida'
+    },
+  ]
+
+  listaTipoPagamentoOptions :InputSelectOption[] = [
+    {
+      option: 'GERAL',
+      value: 'GERAL',
+      defaultValue: true
+    },
+    {
+      option: 'DINHEIRO',
+      value: 'DINHEIRO'
+    },
+    {
+      option: 'CARTAO',
+      value: 'CARTAO',
+    },
+    {
+      option: 'PIX',
+      value: 'PIX'
     },
   ]
   constructor(
@@ -130,6 +152,11 @@ export class PedidoManualComponent {
     }
   }
 
+  setTipoPagamento(tipoDePagamento : InputSelectOption){
+    this.pedido.tipoPagamento = tipoDePagamento.value
+  }
+
+  //Parte de item
   setTipoItem(tipo: string) {
     this.tipoItemModal = tipo
   }
@@ -202,10 +229,22 @@ export class PedidoManualComponent {
   carregaDadosPedidoGeral() {
     if (this.pedido.id != undefined && this.pedido.id != 0) {
       this._pedidoService.getDadosPedido(this.pedido.id).then((response) => {
+        
         if (response != undefined && response != null) {
-          this.pedido = response;
+          this.pedido = JSON.parse(JSON.stringify(response));
           if (response.itensPedido == null || response.itensPedido == undefined) {
             this.pedido.itensPedido = []
+          }
+          
+          if (this.pedido.tipoPagamento != null && this.pedido.tipoPagamento != undefined) {
+            
+           this.optionDefaultTipoPagamento ={
+            option: response.tipoPagamento,
+            value: response.tipoPagamento
+           }
+          } else {
+            console.log('erro')
+            this.pedido.tipoPagamento = 'GERAL'
           }
           this.desabilitaCampoIDPedido = true;
         }
@@ -222,15 +261,23 @@ export class PedidoManualComponent {
     }
   }
   geraArquivoRelatorio(): string {
+    const dataFormatada = new Date(this.pedido.dataPedido).toLocaleString('pt-BR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: 'numeric',
+      minute: 'numeric',
+    }).replace(',','');
+    
     const itensPedidoPizza: PedidoItemDTO[] = [];
     const itensPedidoBebida: PedidoItemDTO[] = [];
 
     let pedidoReport = `      Pedido: ${this.pedido.idPedido} \r\n`
       + '========================\r\n'
-      + `Data/Hora : ${new Date(this.pedido.dataPedido).toLocaleString()}\r\n`
+      + `Data/Hora: ${dataFormatada}\r\n`
+      + `Pagemento: ${this.pedido.tipoPagamento}\r\n`
       + '========================\r\n'
       + `Nome: ${this.pedido.clienteNome}\r\n`
-      + '========================\r\n'
       + `Telefone: ${this.pedido.clienteTelefone}\r\n`
       + '========================\r\n'
       + `End: ${this.pedido.rua}\r\n`

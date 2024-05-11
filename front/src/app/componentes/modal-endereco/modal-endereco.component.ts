@@ -11,7 +11,7 @@ import { ClientesService } from '../../pages/cliente-page/clientes.service';
 })
 export class ModalEnderecoComponent {
   
-  @Input() idCliente : number = 0;
+  @Input() telefoneCliente : string = '';
   @Input() showModal : boolean = false;
   showConteudo : boolean = false;
   @Output() showModalChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -29,20 +29,20 @@ export class ModalEnderecoComponent {
     this.listaBairros = this._localStorageService.converteListaItemParaOption(this._localStorageService.listaBairros,'nome','id',false);
   }
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['idCliente']) {
-      this.idCliente = changes['idCliente'].currentValue
+    if (changes['telefoneCliente']) {
+      this.telefoneCliente = changes['telefoneCliente'].currentValue
     }
     if (changes['showModal']) {
       this.showModal = changes['showModal'].currentValue;
-      if(this.showModal && this.idCliente != 0){
-        this.getDadosClienteById();
+      if(this.showModal && this.telefoneCliente != ''){
+        this.getDadosClienteByTelefone();
       }
       
     }
   }
-  getDadosClienteById(){
-    if(this.idCliente != 0){
-      this._clienteService.getDadosClienteById(this.idCliente).then((response)=>{
+  getDadosClienteByTelefone(){
+    if(this.telefoneCliente != ''){
+      this._clienteService.getDadosClienteByTelefone(this.telefoneCliente).then((response)=>{
         this.cliente = response
         this.showConteudo = true;
       })

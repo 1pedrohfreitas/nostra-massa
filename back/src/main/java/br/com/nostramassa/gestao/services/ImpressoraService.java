@@ -183,8 +183,20 @@ public class ImpressoraService {
 		if(parametros.isImprimir()) {
 			print(nomeArquivo);			
 		}
+		//excluindoArquivoPdf(nomeArquivo);
 
 		return "Imprimindo";
+	}
+	
+	private void excluindoArquivoPdf(String nomeArquivo) {
+		File arquivo = new File(nomeArquivo);
+		if(arquivo.exists()) {
+			if (arquivo.delete()) {
+                System.out.println("Arquivo excluído com sucesso.");
+            } else {
+                System.out.println("Falha ao excluir o arquivo.");
+            }
+		}
 	}
 	
 }

@@ -6,7 +6,7 @@ export class PedidoDTO {
     dataPedido: string = '';
     entrega : boolean= true;
     apalito : boolean = false;
-    tipoPagamento?: string = '';
+    tipoPagamento: string = '';
     status?: string = '';
     valor: number = 0;
     valorTaxa: number = 0;

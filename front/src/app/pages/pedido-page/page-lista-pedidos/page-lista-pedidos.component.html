@@ -29,8 +29,8 @@
                 <td style="width: 20px;"><button (click)="goToEditItem(item.id)">Abrir</button></td>
                 <td style="width: 40px;">{{item.clienteNome}} - {{item.clienteTelefone}}</td>
                 <td style="width: 20px;">{{item.status}}</td>
-                <td style="width: 20px;">{{item.dataPedido | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
-                <td style="width: 20px;">{{item.enderecoDescricao}}</td>
+                <td style="width: 20px;">{{item.dataPedido | date : 'dd/MM/yyyy HH:mm'}}</td>
+                <td style="width: 20px;">{{!item.entrega ? 'BUSCAR' : item.enderecoDescricao}}</td>
               </tr>
             </tbody>
           </table>

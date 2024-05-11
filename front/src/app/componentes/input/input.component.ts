@@ -11,6 +11,7 @@ export class InputComponent {
   @Input() id: string = '';
   @Input() type: 'text' | 'number'= 'text';
   @Input() readonly: boolean = false;
+  @Input() upperCase: boolean = false;
 
   @Input() value: any = '';
   @Output() valueChange = new EventEmitter<string>();
@@ -23,6 +24,12 @@ export class InputComponent {
     }
   }
   onValueChange(event: any) {
-    this.valueChange.emit(event.target.value);
+    let valor : string = event.target.value;
+    if(valor != undefined && this.upperCase){
+      this.valueChange.emit(valor.toUpperCase());
+    } else {
+      this.valueChange.emit(valor);
+    }
+    
   }
 }

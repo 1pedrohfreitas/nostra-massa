@@ -42,7 +42,7 @@ public class Pedido {
 	
 	@Column(name = "tipopagamento")
 	@Enumerated(EnumType.STRING)
-	private TipoDePagamentoEnum tipoPagamento;
+	private TipoDePagamentoEnum tipoPagamento = TipoDePagamentoEnum.GERAL;
 	
 	@Column(name = "valor")
 	private Double valor = 0d;
