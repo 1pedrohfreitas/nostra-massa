@@ -1,6 +1,7 @@
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/models/pedido/PizzaAcrescimo.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/models/pedido/PizzaSabor.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/pedido/BebidaTamanhoValorDTO.java
+/home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/relatorio/RelatorioBasicoDTO.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/models/pedido/Bebida.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/controllers/ProdutosController.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/repositories/BebidaRepository.java
@@ -15,7 +16,6 @@
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/pedido/PizzaAcrescimoDTO.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/pedido/DetalhePedidoItemDTO.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/services/PedidoService.java
-/home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/repositories/EnderecoRepository.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/pedido/PedidoDTO.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/enums/TipoDePagamentoEnum.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/pedido/BairroDTO.java
@@ -23,7 +23,6 @@
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/enums/StatusPedidoEnum.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/pedido/PizzaSaborDTO.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/models/pedido/PedidoItem.java
-/home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/controllers/PrintController.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/repositories/PizzaIngredienteRepository.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/pedido/ClienteDTO.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/services/ParametroService.java
@@ -47,9 +46,13 @@
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/repositories/PizzaSaborRepository.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/SistemaDeGestaoNostraMassaApplication.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/controllers/ClienteController.java
+/home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/controllers/RelatorioController.java
+/home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/services/TelegramService.java
+/home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/controllers/TelegramController.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/repositories/PizzaSaborIngredienteRepository.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/pedido/PizzaDTO.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/pedido/RuaDTO.java
+/home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/TelegramMessagemDTO.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/util/ConverterDTOUtil.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/pedido/PizzaSaborIngredienteDTO.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/services/FrontGetDataService.java
@@ -57,4 +60,3 @@
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/pedido/BebidaDTO.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/models/cliente/Rua.java
 /home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/dtos/ResponseDTO.java
-/home/pedro/Projetos/nostra-massa/back/src/main/java/br/com/nostramassa/gestao/models/cliente/Endereco.java

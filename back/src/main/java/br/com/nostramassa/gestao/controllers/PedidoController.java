@@ -114,13 +114,13 @@ public class PedidoController {
 		return new ResponseDTO<String>().ok("OK", null);
 	}
 	
-	@PostMapping(path = "/imprimir", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(path = "/imprimirPedido", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<String>> imprimirPedido(
 			@RequestBody PedidoDTO pedido
 			) {
 		pedido.setStatus(StatusPedidoEnum.CONCLUIDO);
 		pedidoService.atualiza(pedido);
-		impressoraService.geraRelatorio(pedido);
+		impressoraService.geraPedido(pedido);
 		return new ResponseDTO<String>().ok("Imprimindo", null);
 	}
 	

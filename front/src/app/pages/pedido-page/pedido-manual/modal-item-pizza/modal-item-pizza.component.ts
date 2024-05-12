@@ -433,6 +433,23 @@ export class ModalItemPizzaComponent {
   }
 
   save() {
+    let tamanho = 'Gigante';
+
+    switch (this.itemPedidoPizza.tamanho) {
+      case 'GG':
+          tamanho = 'GIGANTE'
+        break;
+      case 'G':
+          tamanho = 'GRANDE'
+        break;
+      case 'M':
+          tamanho = 'MEDIA'
+        break;
+    
+      default:
+        break;
+    }
+
     this.itemPedidoPizza.descricao = '';
     const pedidoItemPizza: PizzaSaborDTO[] = []
     const sabor1Dados: PizzaSaborDTO = JSON.parse(JSON.stringify(this.pizzaSabor1))
@@ -441,14 +458,14 @@ export class ModalItemPizzaComponent {
       this.itemPedidoPizza.nome = sabor1Dados.nome
       this.itemPedidoPizza.descricao =
         this.preencheDescricaoRetirar(sabor1Dados)
-        + '===========================\r\n'
+        + '=======================\r\n'
         + this.preencheDescricaoAcrescimo(sabor1Dados);
       pedidoItemPizza.push(sabor1Dados);
 
       this.itemPedidoPizza.descricao = this.itemPedidoPizza.quantidade + ' x '
-        + this.itemPedidoPizza.nome + ' - '
-        + this.itemPedidoPizza.tamanho + ' = '
-        + this.itemPedidoPizza.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+        + this.itemPedidoPizza.nome + '\r\n'
+        + 'Tamanho: ' + tamanho + '\r\n'
+        + 'Valor: ' + this.itemPedidoPizza.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
         + '\r\n'
         + this.itemPedidoPizza.descricao;
     }
@@ -456,11 +473,11 @@ export class ModalItemPizzaComponent {
     if (this.quantidadeSabores == '2') {
       this.itemPedidoPizza.nome = `${sabor1Dados.nome} / ${sabor2Dados.nome}`
       this.itemPedidoPizza.descricao =
-        ' MEIO: ->' + sabor1Dados.nome
+        'MEIO: ->' + sabor1Dados.nome
         + '\r\n'
         + this.preencheDescricaoRetirar(sabor1Dados)
         + this.preencheDescricaoAcrescimo(sabor1Dados)
-        + ' MEIO: ->' + sabor2Dados.nome
+        + 'MEIO: ->' + sabor2Dados.nome
         + '\r\n'
         + this.preencheDescricaoRetirar(sabor2Dados)
         + this.preencheDescricaoAcrescimo(sabor2Dados);
@@ -469,9 +486,9 @@ export class ModalItemPizzaComponent {
       pedidoItemPizza.push(sabor2Dados);
 
       this.itemPedidoPizza.descricao = this.itemPedidoPizza.quantidade
-        + ' x MEIO A MEIO - '
-        + this.itemPedidoPizza.tamanho + ' = '
-        + this.itemPedidoPizza.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+        + ' x MEIO A MEIO' + '\r\n'
+        + 'Tamanho: ' + tamanho + '\r\n'
+        + 'Valor: ' + this.itemPedidoPizza.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
         + '\r\n'
         + this.itemPedidoPizza.descricao;
     }

@@ -275,7 +275,7 @@ export class PedidoManualComponent {
     let pedidoReport = `      Pedido: ${this.pedido.idPedido} \r\n`
       + '========================\r\n'
       + `Data/Hora: ${dataFormatada}\r\n`
-      + `Pagemento: ${this.pedido.tipoPagamento}\r\n`
+      + `Pagamento: ${this.pedido.tipoPagamento}\r\n`
       + '========================\r\n'
       + `Nome: ${this.pedido.clienteNome}\r\n`
       + `Telefone: ${this.pedido.clienteTelefone}\r\n`
@@ -310,7 +310,6 @@ export class PedidoManualComponent {
       pedidoReport = pedidoReport + '==========Pizzas=========\r\n'
       itensPedidoPizza.forEach((value, index) => {
         pedidoReport = pedidoReport + '======____Pizza:'+(index + 1)+'____=====\r\n'+ value.descricao + '\r\n'
-          + '\r\n'
           + '\r\n'
           + '====================\r\n';
       })

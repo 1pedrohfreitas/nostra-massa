@@ -3,7 +3,7 @@
         <app-input-select  (optionSelected)="setDataFilter($event)" label="Data Referência" [options]="datasPedidos"></app-input-select>
     </div>
     <div class="col-3">
-        <button>Buscar</button>
+        <button (click)="gerarRelatorioDiario()">Gerar Relatório Diário</button>
     </div>
 </div>
 <div class="row row-space-bottom" >

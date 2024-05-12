@@ -42,7 +42,7 @@ export class PedidoService {
   }
 
   salvarEImprimir(pedido : PedidoDTO) : Promise<PedidoDTO> {
-    return this._apiService.post('pedido/imprimir',pedido);
+    return this._apiService.post('pedido/imprimirPedido',pedido);
   }
 
   getDatasReferencias():Promise<Page<string>>{

@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.com.nostramassa.gestao.dtos.pedido.PedidoDTO;
@@ -141,12 +140,15 @@ public class PedidoService {
 
 	public Page<String> getDatasPedidos() {
 		Pageable pageable = PageRequest.of(0, 10000);
-		return pedidoRepository.getAllDatasReferencia(pageable);
+		
+		List<String> resultado = pedidoRepository.getAllDatasReferencia(); 
+		Page<String> pageDTO = new PageImpl<>(resultado, pageable, resultado.size());
+		return pageDTO;
 	}
 
 	public Page<PedidoDTO> getPedidosByData(String dataReferencia) {
 		DateTimeFormatter parser = DateTimeFormatter.ofPattern("uuuu-MM-dd");
-		Pageable pageable = PageRequest.of(0, 10000, Sort.by(Sort.Direction.DESC, "datapedido"));
+		Pageable pageable = PageRequest.of(0, 10000);
 		LocalDateTime inicio = LocalDate.parse(dataReferencia, parser).atStartOfDay();
 		LocalDateTime fim = inicio.plusDays(1);
 		List<Pedido> pedidos = pedidoRepository.getPedidosByDatasReferencia(inicio, fim);
