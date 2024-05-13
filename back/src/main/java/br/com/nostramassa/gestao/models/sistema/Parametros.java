@@ -24,4 +24,13 @@ public class Parametros {
 	@Column(name = "impressora")
 	private String impressora;
 	
+	@Column(name = "telegram")
+	private boolean telegram;
+	
+	@Column(name = "telegram_api")
+	private String telegramApiToken;
+	
+	@Column(name = "telegram_chatbot_name")
+	private String telegramChatbotName;
+	
 }

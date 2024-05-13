@@ -6,6 +6,7 @@ import { PedidoService } from '../pedido.service';
 import { LocalStorageServiceService } from '../../../services/local-storage-service.service';
 import { Router } from '@angular/router';
 import { RelatorioServiceService } from '../../../services/relatorio-service.service';
+import { TelegramServiceService } from '../../../services/telegram-service.service';
 
 @Component({
   selector: 'app-page-lista-pedidos',
@@ -24,7 +25,8 @@ export class PageListaPedidosComponent {
     private _pedidoService: PedidoService,
     private _localStorage: LocalStorageServiceService,
     private router: Router,
-    private _relatorioService: RelatorioServiceService
+    private _relatorioService: RelatorioServiceService,
+    private _telegramService : TelegramServiceService
   ){
     this._pedidoService.getDatasReferencias().then((response)=>{
       
@@ -52,6 +54,7 @@ export class PageListaPedidosComponent {
 
   gerarRelatorioDiario(){
     let nomeRelatorio = `RelatorioDiario_${this.dataReferencia.replaceAll('-','_')}`;
+    this._telegramService.enviaTexto('1080114657',this.geraArquivoRelatorio())
     this._relatorioService.gerarRelatorio(nomeRelatorio,this.geraArquivoRelatorio()).then((response)=>{
 
     })
@@ -60,13 +63,15 @@ export class PageListaPedidosComponent {
     let report = `Relatório Diario - ${this.dataReferencia} \r\n`
       + '========================\r\n';
       let valorTotal = 0;
-      console.log(this.listaPedidos)
       this.listaPedidos.reverse().forEach((value)=>{
         report = report + `Pedido: ${value.idPedido}\r\n`
         + `Valor: ${value.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\r\n`
         + `Status: ${value.status}\r\n`
         + '========================\r\n';
-        valorTotal = valorTotal + value.valor
+        if(value.status != 'CANCELADO'){
+          valorTotal = valorTotal + value.valor
+        }
+        
       })
       report = report + `Valor Total: ${valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
     return report;

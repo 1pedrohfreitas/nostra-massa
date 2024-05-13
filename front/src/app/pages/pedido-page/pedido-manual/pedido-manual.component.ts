@@ -243,7 +243,6 @@ export class PedidoManualComponent {
             value: response.tipoPagamento
            }
           } else {
-            console.log('erro')
             this.pedido.tipoPagamento = 'GERAL'
           }
           this.desabilitaCampoIDPedido = true;
@@ -279,10 +278,16 @@ export class PedidoManualComponent {
       + '========================\r\n'
       + `Nome: ${this.pedido.clienteNome}\r\n`
       + `Telefone: ${this.pedido.clienteTelefone}\r\n`
-      + '========================\r\n'
-      + `End: ${this.pedido.rua}\r\n`
-      + `N: ${this.pedido.numero}\r\n`
-      + `Bairro: ${this.pedido.bairro}\r\n`;
+      + '========================\r\n';
+      if(this.pedido.entrega){
+        pedidoReport = pedidoReport + `End: ${this.pedido.rua}\r\n`
+        + `N: ${this.pedido.numero}\r\n`
+        + `Bairro: ${this.pedido.bairro}\r\n`;
+      }
+      if(!this.pedido.entrega){
+        pedidoReport = pedidoReport + `BUSCAR\r\n`;
+      }
+      
     if (this.pedido.bloco != undefined && this.pedido.bloco != '') {
       pedidoReport = pedidoReport + 'Bloco: ' + this.pedido.bloco + '\r\n';
     }

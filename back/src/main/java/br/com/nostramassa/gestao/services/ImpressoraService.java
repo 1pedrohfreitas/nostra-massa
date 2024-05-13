@@ -93,6 +93,7 @@ public class ImpressoraService {
 		return dateFormat.format(Date.from(valor.toInstant()));
 	}
 	public String geraRelatorio(String nomeRelatorio, String conteudo) {
+		Parametros parametros = parametroService.getParametros();
 		String nomeArquivo = String.format("%s.pdf",nomeRelatorio);
 		File pastaPedidos = new File("relatorios");
 		if (!pastaPedidos.exists()) {
@@ -103,6 +104,10 @@ public class ImpressoraService {
 		params.put("CONTEUDO", conteudo);
 
 		buildJarperReport(nomeArquivo, params);
+		
+		if(parametros.isImprimir()) {
+			print(nomeArquivo);			
+		}
 		
 		return nomeRelatorio;
 	}
@@ -126,7 +131,6 @@ public class ImpressoraService {
 		if(parametros.isImprimir()) {
 			print(nomeArquivo);			
 		}
-		//excluindoArquivoPdf(nomeArquivo);
 
 		return "Imprimindo";
 	}

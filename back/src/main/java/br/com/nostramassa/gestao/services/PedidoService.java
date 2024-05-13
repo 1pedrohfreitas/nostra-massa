@@ -31,6 +31,9 @@ public class PedidoService {
 
 	@Autowired
 	private PedidoItemRepository pedidoItemRepository;
+	
+	@Autowired
+	private TelegramService telegramService;
 
 	public PedidoDTO criarPedido() {
 		PedidoDTO pedidoDTO = new PedidoDTO();
@@ -53,6 +56,7 @@ public class PedidoService {
 		pedido = pedidoRepository.save(pedido);
 		pedidoDTO.setId(pedido.getId());
 		pedidoDTO = ConverterDTOUtil.pedidoToPedidoDTO(pedido);
+		
 		return pedidoDTO;
 	}
 
