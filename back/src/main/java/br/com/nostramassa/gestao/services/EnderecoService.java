@@ -31,6 +31,8 @@ public class EnderecoService {
 			ruaDTO.setNome(item.getNome());
 			lista.add(ruaDTO);
 		});
+		
+		
 		return new PageImpl<>(lista, pageable, lista.size());
 	}
 	public Page<BairroDTO> getBairros(Pageable pageable) {
@@ -41,6 +43,22 @@ public class EnderecoService {
 			bairroDTO.setNome(item.getNome());
 			bairroDTO.setTaxaEntrega(item.getValorTaxa());
 			lista.add(bairroDTO);
+		});
+		return new PageImpl<>(lista, pageable, lista.size());
+	}
+	public Page<String> autoCompleteRua(Pageable pageable, String itemFiltro) {
+		List<String> lista = new ArrayList<>();
+		ruasRepository.getAutoComplete(pageable, itemFiltro).forEach(item -> {
+			lista.add(item.getNome());
+		});
+		
+		
+		return new PageImpl<>(lista, pageable, lista.size());
+	}
+	public Page<String> autoCompleteBairro(Pageable pageable, String itemFiltro) {
+		List<String> lista = new ArrayList<>();
+		bairrosRepository.getAutoComplete(pageable,itemFiltro).forEach(item -> {
+			lista.add(item.getNome());
 		});
 		return new PageImpl<>(lista, pageable, lista.size());
 	}

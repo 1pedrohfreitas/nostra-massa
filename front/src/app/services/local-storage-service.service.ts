@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
-import { InputSelectOption } from '../componentes/input-select/input-select';
 import { BairroDTO, RuaDTO } from '../shared/models/ClienteDTO';
 import { FrontDataServiceDTO } from '../shared/dtos/FrontDataServiceDTO';
 import { BebidaDTO } from '../shared/models/BebidaDTO';
 import { PizzaAcrescimoDTO, PizzaSaborDTO } from '../shared/models/PizzaDTO';
+import { InputSelectOption } from 'pedrohfreitas-lib';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageServiceService {
 
-
-  listaTelefones : string[]= []
   listaRuas : RuaDTO[] = []
   listaBairros : BairroDTO[]= []
   listaBebidas : BebidaDTO[] = []

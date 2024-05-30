@@ -1,158 +1,108 @@
 <div class="modal-container" *ngIf="showModal">
     <div class="modal-conteudo" *ngIf="showConteudo" >
-        <div class="row-unique row-space-bottom" id="pedido-corpo">
-            <div class="col-auto">
-                <div class="row-unique" id="pedido-item">
-                    <div class="col-auto" id="pedido-item-header">
-                        <div class="row row-space-bottom">
-                            <div class="col-3">
-                                <app-input  (valueChange)="setQuantidade($event)" [value]="itemPedidoPizza.quantidade.toString()" label="Quantidade" [type]="'number'"></app-input>
-                            </div>
-                            <div class="col-3">
-                                <app-input [readonly]="true" label="Valor:" id="item-valor" [value]="itemPedidoPizza.valor.toString()"></app-input>
-                            </div>
-                            <div class="col-4">
-                                <app-input-select [optionDefault]="optionDefaultTamanho" (optionSelected)="setTamanhoItem($event)" label="Tamanho" [options]="listaSelectTamanhoPizza"></app-input-select>
-                            </div>
-                            <div class="col-5">
-                                <app-input-select
-                                     label="Quantidade Sabores"
-                                     [options]="listaSelectQuantidadeSabores"
-                                     [optionDefault]="optionDefaultQuantidadeSabores"
-                                     (optionSelected)="handleChangeQuatidadeSabores($event)"
-                                ></app-input-select>
-                             </div>
-                        </div>
-                        <div class="row-unique row-space-bottom">
-                            <div class="col-auto-50">
-                                <div class="col-auto">
-                                    <div class="row">
-                                        <div class="col-auto">
-                                            <app-input-select [optionDefault]="sabor1SelectDefault" (optionSelected)="changeSaborPizza(1,$event)" label="Sabor:" [options]="sabores"></app-input-select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-auto">
-                                            <fieldset class="col-auto">
-                                                <legend>
-                                                    <h2>Retirar</h2>
-                                                </legend>
-                                                <div class="row-unique">
-                                                    <div class="col-auto">
-                                                        <div class="row-unique">
-                                                            <div *ngFor="let ingrediente of ingredientesPizza1| keyvalue" class="col-5">
-                                                                <app-input-checkbox
-                                                                    [id]="'1-ingrediente-'+ingrediente.value.nome.replaceAll(' ','')"
-                                                                    [label]="ingrediente.value.nome"
-                                                                    [(value)]="ingrediente.value.habilitado"
-                                                                    (valueChange)="changeRetirar(1)"
-                                                                    >
-                                                                </app-input-checkbox>
-                                                            </div>
-                                                        </div>
-                                    
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-auto">
-                                            <fieldset class="col-auto">
-                                                <legend>
-                                                    <h2>Acrescimo</h2>
-                                                </legend>
-                                                <div class="row-unique">
-                                                    <div class="col-auto">
-                                                        <div class="row-unique">
-                                                            <div *ngFor="let acrescimo of acrescimosPizza1| keyvalue" class="col-5">
-                                                                <app-input-checkbox
-                                                                    [id]="'1-acrescimo-'+acrescimo.value.nome.replaceAll(' ','')"
-                                                                    [label]="acrescimo.key"
-                                                                    [value]="acrescimo.value.habilitado"
-                                                                    [(value)]="acrescimo.value.habilitado"
-                                                                    (valueChange)="changeAcrescimo(1)"
-                                                                    >
-                                                                </app-input-checkbox>
-                                                            </div>
-                                                        </div>
-                                    
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-auto-50" *ngIf="quantidadeSabores == '2'">
-                                <div class="col-auto">
-                                    <div class="row">
-                                        <div class="col-auto">
-                                            <app-input-select [optionDefault]="sabor2SelectDefault" (optionSelected)="changeSaborPizza(2,$event)" label="Sabor:" [options]="sabores"></app-input-select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-auto">
-                                            <fieldset class="col-auto">
-                                                <legend>
-                                                    <h2>Retirar</h2>
-                                                </legend>
-                                                <div class="row-unique">
-                                                    <div class="col-auto">
-                                                        <div class="row-unique">
-                                                            <div *ngFor="let ingrediente of ingredientesPizza2| keyvalue" class="col-5">
-                                                                <app-input-checkbox
-                                                                    [id]="'2-ingrediente-'+ingrediente.value.nome.replaceAll(' ','')"
-                                                                    [label]="ingrediente.value.nome"
-                                                                    [(value)]="ingrediente.value.habilitado"
-                                                                    (valueChange)="changeRetirar(2)"
-                                                                    >
-                                                                </app-input-checkbox>
-                                                            </div>
-                                                        </div>
-                                    
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-auto">
-                                            <fieldset class="col-auto">
-                                                <legend>
-                                                    <h2>Acrescimo</h2>
-                                                </legend>
-                                                <div class="row-unique">
-                                                    <div class="col-auto">
-                                                        <div class="row-unique">
-                                                            <div *ngFor="let acrescimo of acrescimosPizza2| keyvalue" class="col-5">
-                                                                <app-input-checkbox
-                                                                    [id]="'2-acrescimo-'+acrescimo.value.nome.replaceAll(' ','')"
-                                                                    [label]="acrescimo.key"
-                                                                    [value]="acrescimo.value.habilitado"
-                                                                    [(value)]="acrescimo.value.habilitado"
-                                                                    (valueChange)="changeAcrescimo(2)"
-                                                                    >
-                                                                </app-input-checkbox>
-                                                            </div>
-                                                        </div>
-                                    
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    
+        <div class="row">
+            <app-fieldset label="Dados Item" class="col-auto">
+                <div class="col-3">
+                    <app-input  (valueChange)="setQuantidade($event)" [value]="itemPedidoPizza.quantidade.toString()" label="Quantidade" [type]="'number'" />
                 </div>
+                <div class="col-3">
+                    <app-input [readonly]="true" label="Valor:" id="item-valor" [value]="itemPedidoPizza.valor.toString()" />
+                </div>
+                <div class="col-4">
+                    <app-input-select [value]="optionDefaultTamanho" (valueChange)="setTamanhoItem($event)" label="Tamanho" [options]="listaSelectTamanhoPizza"></app-input-select>
+                </div>
+                <div class="col-5">
+                    <app-input-select
+                         label="Quantidade Sabores"
+                         [options]="listaSelectQuantidadeSabores"
+                         [value]="optionDefaultQuantidadeSabores"
+                         (valueChange)="handleChangeQuatidadeSabores($event)"
+                    ></app-input-select>
+                 </div>
+            </app-fieldset>
+            <app-fieldset label="Ações" class="col-4">
+                    <div class="col-button">
+                        <app-button-action (click)="save()" type="salvar" />
+                    </div>
+                    <div class="col-button">
+                        <app-button-action (click)="onCloseModal()" type="x" />
+                    </div>
+            </app-fieldset>
+        </div>
+        <div class="row-unique">
+            <div class="col-auto-50">
+                <app-input-select [value]="sabor1SelectDefault" (valueChange)="changeSaborPizza(1,$event)" label="Sabor:" [options]="sabores"></app-input-select>
+            </div>
+            <div class="col-auto-50">
+                <app-input-select  *ngIf="quantidadeSabores == '2'" [value]="sabor2SelectDefault" (valueChange)="changeSaborPizza(2,$event)" label="Sabor:" [options]="sabores"></app-input-select>    
             </div>
         </div>
-        <div class="col-2">
-            <button (click)="save()">Salvar</button>
+        <div class="row-unique">
+            <div class="col-auto-50">
+                <app-fieldset label="Retirar" *ngIf="pizzaSabor1.nome != ''">
+                    <div class="row-unique">
+                        <div *ngFor="let ingrediente of ingredientesPizza1| keyvalue" class="col-5">
+                            <app-input-checkbox
+                                [id]="'1-ingrediente-'+ingrediente.value.nome.replaceAll(' ','')"
+                                [label]="ingrediente.value.nome"
+                                [(value)]="ingrediente.value.habilitado"
+                                (valueChange)="changeRetirar(1)"
+                                >
+                            </app-input-checkbox>
+                        </div>
+                    </div>
+                </app-fieldset>
+            </div>
+            <div class="col-auto-50" *ngIf="quantidadeSabores == '2'">
+                <app-fieldset label="Retirar" *ngIf="pizzaSabor1.nome != ''">
+                <div class="row-unique">
+                    <div *ngFor="let ingrediente of ingredientesPizza2| keyvalue" class="col-5">
+                        <app-input-checkbox
+                            [id]="'2-ingrediente-'+ingrediente.value.nome.replaceAll(' ','')"
+                            [label]="ingrediente.value.nome"
+                            [(value)]="ingrediente.value.habilitado"
+                            (valueChange)="changeRetirar(2)"
+                            >
+                            </app-input-checkbox>
+                        </div>
+                    </div>
+                </app-fieldset>
+            </div>
         </div>
+        <div class="row-unique">
+            <div class="col-auto-50">
+                <app-fieldset label="Acrescimo" *ngIf="pizzaSabor1.nome != ''">
+                    <div class="row-unique">
+                        <div *ngFor="let acrescimo of acrescimosPizza1| keyvalue" class="col-5">
+                            <app-input-checkbox
+                                [id]="'1-acrescimo-'+acrescimo.value.nome.replaceAll(' ','')"
+                                [label]="acrescimo.key"
+                                [value]="acrescimo.value.habilitado"
+                                [(value)]="acrescimo.value.habilitado"
+                                (valueChange)="changeAcrescimo(1)"
+                                >
+                            </app-input-checkbox>
+                        </div>
+                    </div>
+                </app-fieldset>
+            </div>
+            <div class="col-auto-50" *ngIf="quantidadeSabores == '2'">
+                <app-fieldset label="Acrescimo" *ngIf="pizzaSabor2.nome != ''">
+                <div class="row-unique">
+                    <div *ngFor="let acrescimo of acrescimosPizza2| keyvalue" class="col-5">
+                        <app-input-checkbox
+                            [id]="'2-acrescimo-'+acrescimo.value.nome.replaceAll(' ','')"
+                            [label]="acrescimo.key"
+                            [value]="acrescimo.value.habilitado"
+                            [(value)]="acrescimo.value.habilitado"
+                            (valueChange)="changeAcrescimo(2)"
+                            >
+                        </app-input-checkbox>
+                    </div>
+                    </div>
+                </app-fieldset>
+            </div>
+        </div>
+       
     </div>
 </div>

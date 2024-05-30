@@ -150,12 +150,12 @@ public class PedidoService {
 		return pageDTO;
 	}
 
-	public Page<PedidoDTO> getPedidosByData(String dataReferencia) {
+	public Page<PedidoDTO> getPedidosByData(String dataReferencia, Pageable pageable) {
 		DateTimeFormatter parser = DateTimeFormatter.ofPattern("uuuu-MM-dd");
-		Pageable pageable = PageRequest.of(0, 10000);
+		
 		LocalDateTime inicio = LocalDate.parse(dataReferencia, parser).atStartOfDay();
 		LocalDateTime fim = inicio.plusDays(1);
-		List<Pedido> pedidos = pedidoRepository.getPedidosByDatasReferencia(inicio, fim);
+		Page<Pedido> pedidos = pedidoRepository.getPedidosByDatasReferencia(inicio, fim,pageable);
 		List<PedidoDTO> listaPedido = new ArrayList<>();
 		pedidos.forEach(item -> {
 			PedidoDTO pedidoDTO = ConverterDTOUtil.pedidoToPedidoDTO(item);
@@ -168,6 +168,18 @@ public class PedidoService {
 	public Page<PedidoDTO> getAll(Pageable pageable) {
 
 		Page<Pedido> page = pedidoRepository.getAllPedidos(pageable);
+		List<PedidoDTO> listaPedido = new ArrayList<>();
+		page.getContent().forEach(item -> {
+			PedidoDTO pedidoDTO = ConverterDTOUtil.pedidoToPedidoDTO(item);
+			listaPedido.add(pedidoDTO);
+		});
+		Page<PedidoDTO> pageDTO = new PageImpl<>(listaPedido, pageable, page.getTotalElements());
+		return pageDTO;
+	}
+	
+	public Page<PedidoDTO> getPedidosByTelefone(Pageable pageable, String telefone) {
+
+		Page<Pedido> page = pedidoRepository.getAllPedidosByTelefone(pageable, telefone);
 		List<PedidoDTO> listaPedido = new ArrayList<>();
 		page.getContent().forEach(item -> {
 			PedidoDTO pedidoDTO = ConverterDTOUtil.pedidoToPedidoDTO(item);

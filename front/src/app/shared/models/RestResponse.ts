@@ -19,3 +19,9 @@ export class Notificacao{
     titulo: string = '';
     mensagem: string = '';
 }
+
+export class PageResquest{
+    size ?: number = 20;
+    page ?: number = 0;
+    sort ?: string = '';
+}

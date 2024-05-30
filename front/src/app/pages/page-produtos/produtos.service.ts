@@ -46,6 +46,10 @@ export class ProdutosService {
     return this._apiService.delete('produto/bebida/'+ id);
   }
 
+  getListaTamanhoDeBebidas() : Promise<Page<string>>{
+    return this._apiService.get('produto/bebidaTamanho');
+  }
+
   getListaDeBebidas() : Promise<Page<BebidaDTO>>{
     return this._apiService.get('produto/bebida');
   }
@@ -90,10 +94,6 @@ export class ProdutosService {
 
   getListaDeIngredientes() : Promise<Page<PizzaSaborIngredienteDTO>>{
     return this._apiService.get('produto/ingrediente');
-  }
-
-  atualizaIngrediente(id : number, ingrediente : PizzaSaborIngredienteDTO) : Promise<PizzaSaborIngredienteDTO>{
-    return this._apiService.put('produto/ingrediente/'+ id,ingrediente);
   }
 
 }

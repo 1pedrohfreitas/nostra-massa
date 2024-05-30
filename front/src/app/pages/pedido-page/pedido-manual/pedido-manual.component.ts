@@ -1,29 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { SharedModule } from '../../../shared/shared.module';
 import { PedidoService } from '../pedido.service';
 import { ClientesService } from '../../cliente-page/clientes.service';
-import { InputSelectOption } from '../../../componentes/input-select/input-select';
 import { LocalStorageServiceService } from '../../../services/local-storage-service.service';
 import { PedidoDTO, PedidoItemDTO } from '../../../shared/models/PedidoDTO';
 import { PedidoModule } from '../pedido.module';
 import { ActivatedRoute } from '@angular/router';
 import { ClienteDTO } from '../../../shared/models/ClienteDTO';
+import { InputSelectOption } from 'pedrohfreitas-lib';
 
 @Component({
   selector: 'app-pedido-manual',
   standalone: true,
   imports: [CommonModule, SharedModule, PedidoModule],
-  templateUrl: './pedido-manual.component.html',
-  styleUrl: './pedido-manual.component.scss'
+  templateUrl: './pedido-manual.component.html'
 })
 export class PedidoManualComponent {
+  pageTitulo = 'Pedido: '
+
+
   pedido: PedidoDTO = new PedidoDTO;
   idCliente: number = 0;
   idItem: number = 0;
   itemPedidoPizza: PedidoItemDTO = new PedidoItemDTO
   itemPedidoBebida: PedidoItemDTO = new PedidoItemDTO;
-  tipoItemModal: string = 'Pizza';
 
   previa = '';
 
@@ -101,6 +102,7 @@ export class PedidoManualComponent {
   }
 
   getDadosClienteByTelefone() {
+    console.log(this.pedido)
     if (this.pedido.clienteTelefone != undefined && this.pedido.clienteTelefone != '') {
       this._clientesService.getDadosClienteByTelefone(this.pedido.clienteTelefone).then((response) => {
         if (response != null) {
@@ -156,16 +158,12 @@ export class PedidoManualComponent {
     this.pedido.tipoPagamento = tipoDePagamento.value
   }
 
-  //Parte de item
-  setTipoItem(tipo: string) {
-    this.tipoItemModal = tipo
-  }
-
-  adicionaItemPedido() {
+  adicionaItemPedido(tipo : 'Pizza' | 'Bebida') {
     if (this.pedido.itensPedido == null) {
       this.pedido.itensPedido = []
     }
     const novoItem: PedidoItemDTO = new PedidoItemDTO
+    novoItem.tipo = tipo
     this.pedido.itensPedido.push(novoItem);
     this.itemPedidoBebida = JSON.parse(JSON.stringify(novoItem));
     this.itemPedidoPizza = JSON.parse(JSON.stringify(novoItem));
@@ -177,17 +175,15 @@ export class PedidoManualComponent {
     })
   }
 
-  openModalItem(itemPedido: PedidoItemDTO, tipo: string) {
-    if (itemPedido.nome != '') {
-      this.tipoItemModal = tipo
-    }
+  openModalItem(itemPedido: PedidoItemDTO) {
+
     this.idItem = itemPedido.id
 
-    if (this.tipoItemModal == 'Pizza') {
+    if (itemPedido.tipo == 'Pizza') {
       this.itemPedidoPizza = JSON.parse(JSON.stringify(itemPedido));
       this.showModalItemPizza = true;
     }
-    if (this.tipoItemModal == 'Bebida') {
+    if (itemPedido.tipo == 'Bebida') {
       if (this.itemPedidoBebida.nome == '') {
         this.itemPedidoBebida = {
           nome: 'COCA-COLA',
@@ -206,7 +202,7 @@ export class PedidoManualComponent {
 
       this.showModalItemBebida = true;
     }
-    this.tipoItemModal = 'Pizza'
+    // this.tipoItemModal = 'Pizza'
   }
 
   novoPedido() {
@@ -231,7 +227,12 @@ export class PedidoManualComponent {
       this._pedidoService.getDadosPedido(this.pedido.id).then((response) => {
         
         if (response != undefined && response != null) {
+          
           this.pedido = JSON.parse(JSON.stringify(response));
+          
+          this.pageTitulo = 'Pedido: '+ (this.pedido.idPedido != null ? this.pedido.idPedido : '');
+          
+          
           if (response.itensPedido == null || response.itensPedido == undefined) {
             this.pedido.itensPedido = []
           }

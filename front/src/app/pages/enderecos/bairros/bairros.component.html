@@ -1,60 +1,40 @@
-<div class="row">
-    <h1>Cadastro de Bairros</h1>
-</div>
-<div class="row row-space-bottom">
-    <div class="col-auto">
-        <div class="row row-space-bottom ">
-            <div class="col-2">
-                <app-input label="ID:" [readonly]="true" id="id" [(value)]="id"></app-input>
-            </div>
-            <div class="col-7">
-                <app-input
-                 label="Bairro:"
-                  id="bairro"
-                  [(value)]="nome"></app-input>
-            </div>
-            <div class="col-4">
-                <app-input
-                 label="Valor taxa:"
-                  id="valor-taxa"
-                  [(value)]="valorTaxa"></app-input>
-            </div>
-            <div *ngIf="id != null && id != ''" class="col-3">
-                <button (click)="excluir()">
-                    Excluir
-                </button>
-            </div>
+<app-page titulo="Cadastros de Bairros">
+    <div class="row no-print">
+        <div class="col-8">
+            <app-input-text-autocomplete id="bairro" label="Bairro:" [options]="listaBairros" />
         </div>
-        
-        <div class="row">
-            <div class="col-3">
-                <button (click)="adicionar()">Salvar</button>
-            </div>
+        <div class="col-button">
+            <app-button-action type="lupa" />
         </div>
     </div>
-</div>
-<div class="row row-space-bottom" >
-    <h1>Lista de Ingredientes</h1>
-</div>
-<div class="row">
-    <div class="col-20">
-        <table>
-            <thead>
-              <tr>
-                <th style="width: 20px;">ID:</th>
-                <th style="width: 20px;">Ação:</th>
-                <th style="width: 40px;">Nome:</th>
-                <th style="width: 40px;">Valor Taxa:</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of listaItem">
-                <td style="width: 20px;">{{item.id}}</td>
-                <td style="width: 20px;"><Button>Editar</Button></td>
-                <td style="width: 40px;">{{item.nome}}</td>
-                <td style="width: 40px;">{{item.taxaEntrega}}</td>
-              </tr>
-            </tbody>
-          </table>
+    <div class="row">
+        <app-fieldset label="Dados Bairro">
+            <div class="col-auto">
+                <div class="row">
+                    <div class="col-auto">
+                        <app-input label="Bairro:" [(value)]="bairro.nome" />
+                    </div>
+                    <div class="col-3">
+                        <app-input label="Valor Taxa:" type="number" [value]="bairro.taxaEntrega.toString()" />
+                    </div>
+                    <div class="col-4 no-print">
+                        <app-fieldset label="Ações">
+                            <div class="col-button">
+                                <app-button-action type="salvar" />
+                            </div>
+
+                        </app-fieldset>
+                    </div>
+                </div>
+            </div>
+        </app-fieldset>
     </div>
-</div>
+
+    <div class="row no-print">
+        <app-fieldset [label]="'Bairros Cadastrados: ' + tableData.length">
+            <app-table [headers]="tableCabecalho" [columns]="tableColunas" [columnSize]="tableColunasSize"
+                [data]="tableData" [actionButtons]="tableActionsButtons"
+                (actionDataClick)="tableActionDataClick($event)" />
+        </app-fieldset>
+    </div>
+</app-page>

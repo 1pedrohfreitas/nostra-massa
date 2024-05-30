@@ -30,9 +30,7 @@ public class ClienteController {
 
 	@GetMapping(path = "", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Page<ClienteDTO>>> getClientes(Pageable pageable) {
-		if (pageable == null) {
-			pageable = PageRequest.of(0, 10000);
-		}
+		
 		Page<ClienteDTO> cliente = clienteService.getClientes(pageable);
 		return new ResponseDTO<Page<ClienteDTO>>().ok(cliente, null);
 	}

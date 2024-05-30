@@ -50,7 +50,30 @@ export class PedidoService {
   }
 
   getListaPedidos(data : string):Promise<Page<PedidoDTO>>{
-    return this._apiService.get('pedido/datas/'+data)
+    return new Promise((resolve,reject)=>{
+      let dataPage :Page<PedidoDTO> = new Page;
+      const dataContent :PedidoDTO[] = []
+      this._apiService.get('pedido/datas/'+data).then(response =>{
+        console.log(response)
+        if(response != undefined){
+          dataPage = response
+          response.content.forEach((value : PedidoDTO)=>{
+            const dataFormatada = new Date(value.dataPedido).toLocaleString('pt-BR', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: 'numeric',
+              minute: 'numeric',
+            }).replace(',','');
+            value.dataPedido = dataFormatada
+            value.enderecoDescricao = !value.entrega ? 'BUSCAR' : value.enderecoDescricao
+            dataContent.push(value)
+          })
+          dataPage.content = dataContent;
+        }
+        resolve(dataPage)
+      })
+    })
   }
 
   

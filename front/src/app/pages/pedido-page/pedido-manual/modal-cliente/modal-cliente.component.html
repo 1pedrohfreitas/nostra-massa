@@ -6,7 +6,7 @@
             <div class="col-2">
                 <app-input-text-autocomplete
                  [options]="listaTelefones"
-                 (optionSelected)="handleTelefone($event)"
+                 (valueChange)="handleTelefone($event)"
                    label="Telefone:" id="pedido-telefone">
             </app-input-text-autocomplete>
             </div>
@@ -14,7 +14,7 @@
                 <app-input [readonly]="clientePedidoByTelefone"
                  label="Cliente:"
                   id="pedido-cliente"
-                  [(value)]="clientePedido"></app-input>
+                  [(value)]="clientePedido" />
             </div>
             <div class="col-auto">
                 <div class="row">

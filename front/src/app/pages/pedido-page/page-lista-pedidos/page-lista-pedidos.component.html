@@ -1,38 +1,19 @@
-<div class="row">
-    <div class="col-3">
-        <app-input-select  (optionSelected)="setDataFilter($event)" label="Data Referência" [options]="datasPedidos"></app-input-select>
+<app-page titulo="Lista de Pedidos">
+  <div class="row">
+    <div class="col-5">
+        <app-input-select (valueChange)="setDataFilter($event)" label="Data Referência" [options]="datasPedidos"></app-input-select>
     </div>
     <div class="col-3">
         <button (click)="gerarRelatorioDiario()">Gerar Relatório Diário</button>
     </div>
-</div>
-<div class="row row-space-bottom" >
-    <h1>Lista de Pedidos</h1>
-</div>
-<div class="row">
-    <div class="col-auto">
-        <table>
-            <!-- <caption>Título da tabela</caption> -->
-            <thead>
-              <tr>
-                <th style="width: 20px;">ID:</th>
-                <th style="width: 20px;">Ação:</th>
-                <th style="width: 40px;">Cliente:</th>
-                <th style="width: 20px;">Status:</th>
-                <th style="width: 20px;">Data:</th>
-                <th style="width: 200px;">Endereço:</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of listaPedidos">
-                <td style="width: 20px;">{{item.idPedido}}</td>
-                <td style="width: 20px;"><button (click)="goToEditItem(item.id)">Abrir</button></td>
-                <td style="width: 40px;">{{item.clienteNome}} - {{item.clienteTelefone}}</td>
-                <td style="width: 20px;">{{item.status}}</td>
-                <td style="width: 20px;">{{item.dataPedido | date : 'dd/MM/yyyy HH:mm'}}</td>
-                <td style="width: 20px;">{{!item.entrega ? 'BUSCAR' : item.enderecoDescricao}}</td>
-              </tr>
-            </tbody>
-          </table>
-    </div>
-</div>
+  </div>
+  <div class="row">
+    <app-table
+      [headers]="tableHeader"
+      [columns]="tableColuns"
+      [columnSize]="tableColunsSize"
+      [data]="tableData"
+      [actionButtons]="tableActions"
+      (actionDataClick)="tableActionDataClick($event)" ></app-table>
+  </div>
+</app-page>

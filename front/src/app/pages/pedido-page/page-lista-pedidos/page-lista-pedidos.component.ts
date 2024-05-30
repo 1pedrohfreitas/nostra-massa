@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { SharedModule } from '../../../shared/shared.module';
-import { InputSelectOption } from '../../../componentes/input-select/input-select';
 import { PedidoDTO } from '../../../shared/models/PedidoDTO';
 import { PedidoService } from '../pedido.service';
 import { LocalStorageServiceService } from '../../../services/local-storage-service.service';
 import { Router } from '@angular/router';
 import { RelatorioServiceService } from '../../../services/relatorio-service.service';
 import { TelegramServiceService } from '../../../services/telegram-service.service';
+import { ButtonAction, ButtonActionClick, InputSelectOption } from 'pedrohfreitas-lib';
 
 @Component({
   selector: 'app-page-lista-pedidos',
@@ -20,6 +20,18 @@ export class PageListaPedidosComponent {
   listaPedidos : PedidoDTO[] = [];
   quantidadeItems : number = 0
   dataReferencia : string = '';
+  
+  tableHeader = ['ID','Cliente','Status','Data','Endereço']
+  tableColuns = ['idPedido','clienteNome','status','dataPedido','endereco']
+  tableColunsSize = ['5','20','15','15','40']
+  tableData : any [] = []
+  tableActions : ButtonAction[] = [
+    {
+      action: 'detalhe',
+      icon: 'lupa',
+      disable: false
+    },
+  ]
 
   constructor(
     private _pedidoService: PedidoService,
@@ -38,16 +50,33 @@ export class PageListaPedidosComponent {
             
     })
   }
+  tableActionDataClick(action : ButtonActionClick){
+    console.log(action)
+    this.goToEditItem(action.data.id)
+  }
 
-  goToEditItem(idPedido : number | undefined){
+  goToEditItem(idPedido : number){
     this.router.navigate(['/pedido/manual',{
       idPedido : idPedido
     }])
   }
 
   setDataFilter(dataSelect : InputSelectOption){
+    console.log(dataSelect)
     this._pedidoService.getListaPedidos(dataSelect.value).then((response)=>{
-      this.listaPedidos = response.content
+      console.log(response)
+      this.tableData = [];
+      response.content.forEach(item =>{
+        
+        this.tableData.push({
+          id : item.id,
+          idPedido : item.idPedido,
+          clienteNome : item.clienteNome,
+          status: item.status,
+          dataPedido : item.dataPedido,
+          endereco : item.entrega ? item.enderecoDescricao : "Buscar"
+        })
+      })
       this.quantidadeItems = response.totalElements;
     })
   }

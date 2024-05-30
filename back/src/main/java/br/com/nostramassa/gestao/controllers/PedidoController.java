@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,10 +42,18 @@ public class PedidoController {
 		Page<PedidoDTO> pedidos = pedidoService.getAll(pageable);
 		return new ResponseDTO<Page<PedidoDTO>>().ok(pedidos, null);
 	}
+	
 	@GetMapping(path = "/{id}")
 	public ResponseEntity<ResponseDTO<PedidoDTO>> busca(
 			@PathVariable Long id) {
 		return new ResponseDTO<PedidoDTO>().ok(pedidoService.getDadosPedido(id), null);
+	}
+	
+	@GetMapping(path = "/telefone/{telefone}")
+	public ResponseEntity<ResponseDTO<Page<PedidoDTO>>> getPedidoByTelefone(
+			@PathVariable String telefone,
+			Pageable pageable) {
+		return new ResponseDTO<Page<PedidoDTO>>().ok(pedidoService.getPedidosByTelefone(pageable,telefone), null);
 	}
 	
 	@PutMapping(path = "/cancela/{id}")
@@ -77,8 +86,9 @@ public class PedidoController {
 	
 	@GetMapping(path = "/datas/{dataReferencia}")
 	public ResponseEntity<ResponseDTO<Page<PedidoDTO>>> buscaPedidosbyFiltro(
-			@PathVariable String dataReferencia) {
-		return new ResponseDTO<Page<PedidoDTO>>().ok(pedidoService.getPedidosByData(dataReferencia), null);
+			@PathVariable String dataReferencia,
+			Pageable pageable) {
+		return new ResponseDTO<Page<PedidoDTO>>().ok(pedidoService.getPedidosByData(dataReferencia, pageable), null);
 	}
 	
 	@PostMapping(path = "/novo", produces = { MediaType.APPLICATION_JSON_VALUE })

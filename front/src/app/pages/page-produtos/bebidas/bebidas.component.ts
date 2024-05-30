@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { SharedModule } from '../../../shared/shared.module';
-import { tamanhoBebidas } from './bebidas';
 import { BebidaDTO, BebidaTamanhoValorDTO } from '../../../shared/models/BebidaDTO';
 import { ProdutosService } from '../produtos.service';
+import { ButtonAction, ButtonActionClick } from 'pedrohfreitas-lib';
 
 @Component({
   selector: 'app-bebidas',
@@ -12,37 +12,84 @@ import { ProdutosService } from '../produtos.service';
   styleUrl: './bebidas.component.scss'
 })
 export class BebidasComponent {
-  id : number = 0
-  nome: string = '';
-  valor = '0';
-  tamanho = '';
-  tamanhoBebidas = tamanhoBebidas
 
-  listaItem : BebidaDTO[] = [];
+  bebidaDTO: BebidaDTO = new BebidaDTO
+
+  tamanhoBebidas: string[] = []
+  // = tamanhoBebidas
+
+  tableCabecalho: any[] = [];
+  tableColunas: any[] = [];
+  tableColunasSize: any[] = [];
+  tableData: any[] = [];
+  tableActionsButtons: ButtonAction[] = [
+    {
+      action: 'detalhe',
+      icon: 'lupa',
+      disable: false
+    },
+  ]
 
   constructor(
-    private _produtoService : ProdutosService
-  ){
-    this._produtoService.getListaDeBebidas().then((response)=>{
-      this.listaItem = response.content
+    private _produtoService: ProdutosService
+  ) {
+    this.getListaTamanhoBebidas()
+  }
+
+  getListaTamanhoBebidas() {
+    
+    
+    this._produtoService.getListaTamanhoDeBebidas().then((response) => {
+      let cabecalho : any[] = []
+      cabecalho.push('Nome')
+      let colunas = []
+      colunas.push('nome')
+      let colunasSize = []
+      colunasSize.push('50')
+      response.content.forEach(value => {
+        cabecalho.push(value);
+        colunas.push(value);
+        colunasSize.push('10');
+        this.tamanhoBebidas.push(value);
+      })
+      this.tableCabecalho = cabecalho
+      this.tableColunas = colunas
+      this.tableColunasSize = colunasSize
+
+    }).then((value)=>{
+      this.getListaDeBebidas();
     })
   }
 
-  getValorBebidaByTamanho(tamanho : string , listaTamanhoValor :BebidaTamanhoValorDTO[] | undefined):string{
-    if(!listaTamanhoValor){
-      return '';
-    }
-    let dado = listaTamanhoValor.find(item => item.tamanho && item.tamanho == tamanho)
-    if(dado && dado.valor){
-      return dado.valor.toString();
-    }
-    return '';
+  getListaDeBebidas() {
+    this._produtoService.getListaDeBebidas().then((response) => {
+      let data : any[] = []
+      response.content.forEach(value => {
+        let item: any = {
+          id: value.id,
+          nome: value.nome
+        }
+        this.tamanhoBebidas.forEach(tb => {
+          item[tb] = value.tamanhoValor.find(tv => tv.tamanho == tb) != undefined ? value.tamanhoValor.find(tv => tv.tamanho == tb)?.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '';
+        })
+        data.push(item);
+      })
+      this.tableData = data
+      console.log(this.tableCabecalho)
+      console.log(this.tableData)
+      console.log(this.tableColunas)
+      console.log(this.tableColunasSize)
+    })
   }
 
-  adicionar(){
+  tableActionDataClick(action: ButtonActionClick) {
+    this.bebidaDTO = action.data
+  }
+
+  adicionar() {
 
   }
-  excluir(){
+  excluir() {
 
   }
 }

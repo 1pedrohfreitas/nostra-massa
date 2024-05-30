@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { InputSelectOption } from '../../../../componentes/input-select/input-select';
 import { LocalStorageServiceService } from '../../../../services/local-storage-service.service';
 import { GetDadosServiceService } from '../../../../services/get-dados-service.service';
 import { ClientesService } from '../../../cliente-page/clientes.service';
@@ -11,7 +10,7 @@ import { ClienteDTO } from '../../../../shared/models/ClienteDTO';
   styleUrl: './modal-cliente.component.scss'
 })
 export class ModalClienteComponent {
-  listaTelefones: InputSelectOption[] = [];
+  listaTelefones: string[] = [];
   clientePedidoByTelefone: boolean = false;
   clienteEnderecoDescricao : string = '';
   showItemEndereco: boolean = false;
@@ -49,7 +48,6 @@ export class ModalClienteComponent {
     private _clientesService: ClientesService,
     private _getDadosService: GetDadosServiceService
   ){
-    this.listaTelefones = this._localStorageService.converteListaItemParaOption(this._localStorageService.listaTelefones, '', '', true);
   }
 
   getDadosClienteByTelefone(telefone: string) {
@@ -70,13 +68,12 @@ export class ModalClienteComponent {
 
     this._clientesService.adicionaCliente(cliente).then((response) => {
       this._getDadosService.getDadosGeral();
-      this.listaTelefones = this._localStorageService.converteListaItemParaOption(this._localStorageService.listaTelefones, '', '', true);
     })
   }
-  handleTelefone(telefoneSelecionado: InputSelectOption) {
-    this.telefonePedido = telefoneSelecionado.option;
-    if (telefoneSelecionado?.value != undefined && telefoneSelecionado.option != '') {
-      this.getDadosClienteByTelefone(telefoneSelecionado.value);
+  handleTelefone(telefoneSelecionado: string) {
+    this.telefonePedido = telefoneSelecionado;
+    if (telefoneSelecionado != undefined && telefoneSelecionado != '') {
+      this.getDadosClienteByTelefone(telefoneSelecionado);
     }
     this.validaDadosHabilitaEndereco()
   }

@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { InputSelectOption } from '../../../../componentes/input-select/input-select';
 import { LocalStorageServiceService } from '../../../../services/local-storage-service.service';
 import { PedidoItemDTO, PedidoItemPizzaDTO } from '../../../../shared/models/PedidoDTO';
 import { BebidaDTO } from '../../../../shared/models/BebidaDTO';
 import { PedidoService } from '../../pedido.service';
+import { InputSelectOption } from 'pedrohfreitas-lib';
 
 @Component({
   selector: 'app-modal-item-bebida',

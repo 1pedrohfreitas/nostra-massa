@@ -1,130 +1,118 @@
-<div id="container">
+<app-page [titulo]="pageTitulo">
     <div class="row">
-        <div class="col-2">
-            <app-input [readonly]="true" [value]="pedido.idPedido" [type]="'number'" label="Pedido"></app-input>
+        <div class="col-auto">
+            <app-fieldset label="Dados Pedido">
+                <div *ngIf="desabilitaCampoIDPedido" class="col-5">
+                    <app-input [readonly]="true" [value]="pedido.dataPedido" specialType="dd_mm_yy_hh_mm" label="Data / Hora Pedido" />
+                </div>
+                <div *ngIf="desabilitaCampoIDPedido" class="col-3">
+                    <app-input [readonly]="true" [value]="pedido.valor" specialType="real" label="Valor:"/>
+                </div>
+                <div class="col-4">
+                    <app-input-select [value]="optionDefaultTipoPagamento" (valueChange)="setTipoPagamento($event)" label="Tipo Pagamento" [options]="listaTipoPagamentoOptions" />
+                </div>
+                <div class="col-2">
+                    <app-input-checkbox id="entrega-checkbox" label="Entrega" [(value)]="pedido.entrega" (valueChange)="changeEntrega()"/>
+                </div>
+                <div class="col-3">
+                    <app-input [readonly]="true" [value]="pedido.valorTaxa" label="Taxa:" specialType="real"/>
+                </div>
+            </app-fieldset>
         </div>
-        <div *ngIf="desabilitaCampoIDPedido" class="col-3">
-            <app-input [readonly]="true" [value]="pedido.dataPedido | date : 'dd/MM/yyyy HH:mm'"
-                label="Data / Hora Pedido"></app-input>
-        </div>
-        <div *ngIf="desabilitaCampoIDPedido" class="col-3">
-            <app-input [readonly]="true"
-                [value]="pedido.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })"
-                label="Valor:"></app-input>
-        </div>
-        <div *ngIf="desabilitaCampoIDPedido" class="col-2">
-            <button (click)="imprimir()"> Imprimir</button>
-        </div>
-        <div *ngIf="desabilitaCampoIDPedido" class="col-2">
-            <button (click)="cancelaPedido()"> Cancelar Pedido</button>
-        </div>
-        <div *ngIf="!desabilitaCampoIDPedido || pedido.status == 'CONCLUIDO'" class="col-2">
-            <button (click)="novoPedido()">Novo Pedido</button>
-        </div>
-        <div *ngIf="this.pedido.id != 0" class="col-2">
-            <button (click)="mostrarEmNovaAba()">Previa do Pedido</button>
+        <div class="col-4">
+            <app-fieldset label="Ações">
+                <div *ngIf="desabilitaCampoIDPedido" class="col-button">
+                    <app-button-action type="imprimir" (click)="imprimir()" />
+                </div>
+                <div *ngIf="desabilitaCampoIDPedido" class="col-button">
+                    <app-button-action type="x" (click)="cancelaPedido()" />
+                </div>
+                <div *ngIf="!desabilitaCampoIDPedido || pedido.status == 'CONCLUIDO'" class="col-button">
+                    <app-button-action type="novo-pedido" (click)="novoPedido()" />
+                </div>
+                <div *ngIf="this.pedido.id != 0" class="col-button">
+                    <app-button-action type="imprimir-previa" (click)="mostrarEmNovaAba()" />
+                </div>
+            </app-fieldset>
         </div>
     </div>
-    <div *ngIf="desabilitaCampoIDPedido" class="row">
+    <div class="row">
         <div class="col-auto">
-            <div class="row">
-
-                <div class="col-1">
-                    <h2>Cliente:</h2>
-                </div>
+            <app-fieldset label="Dados Cliente">
                 <div class="col-3">
                     <app-input label="Telefone:" id="pedido-telefone" [(value)]="pedido.clienteTelefone">
                     </app-input>
                 </div>
-                <div class="col-2">
-                    <button (click)="getDadosClienteByTelefone()">Pesquisar</button>
+                <div class="col-button">
+                    <app-button-action type="lupa" (click)="getDadosClienteByTelefone()" />
                 </div>
                 <div class="col-4">
-                    <app-input [(value)]="pedido.clienteNome" label="Nome" (valueChange)="gravarPedido()"></app-input>
+                    <app-input [(value)]="pedido.clienteNome" label="Nome" (valueChange)="gravarPedido()" />
                 </div>
-                <div *ngIf="showSalvarCliente" class="col-2">
-                    <button (click)="adicionarCliente()">Cadastrar Usuario</button>
+                <div *ngIf="showSalvarCliente" class="col-1">
+                    <app-button-action type="usuario-adicinar" (click)="adicionarCliente()" />
                 </div>
-                <div>
-                    <app-input-checkbox id="entrega-checkbox" label="Entrega" [(value)]="pedido.entrega"
-                        (valueChange)="changeEntrega()">
-                    </app-input-checkbox>
+                <div class="col-button">
+                    <app-button-action type="casa" (click)="openModalEndereco()" />
                 </div>
-                <div class="col-4">
-                    <app-input-select [optionDefault]="optionDefaultTipoPagamento"
-                        (optionSelected)="setTipoPagamento($event)" label="Tipo Pagamento"
-                        [options]="listaTipoPagamentoOptions">
-                    </app-input-select>
+                <div class="col-auto">
+                    <app-input [readonly]="true" [value]="pedido.enderecoDescricao" label="Endereço" />
                 </div>
-
-            </div>
-        </div>
-    </div>
-    <div *ngIf="desabilitaCampoIDPedido && pedido.entrega" class="row">
-        <div class="col-1">
-            <h2>Endereço:</h2>
-        </div>
-        <div class="col-2">
-            <button (click)="openModalEndereco()">Preenche Endereço</button>
-        </div>
-        <div *ngIf="pedido.enderecoDescricao != undefined && pedido.enderecoDescricao.length > 0" class="col-11">
-            <app-input [readonly]="true" [value]="pedido.enderecoDescricao" label="Endereço"></app-input>
-        </div>
-        <div *ngIf="pedido.enderecoDescricao != undefined && pedido.enderecoDescricao.length > 0" class="col-3">
-            <app-input [readonly]="true"
-                [value]="pedido.valorTaxa.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })"
-                label="Taxa:"></app-input>
-        </div>
-    </div>
-    
-    <div *ngIf="desabilitaCampoIDPedido" class="row">
-        <div class="col-20">
-            <app-input label="Observação:" [upperCase]="true" [(value)]="pedido.observacao" (valueChange)="gravarPedido()"></app-input>
+                    
+            </app-fieldset>
         </div>
     </div>
     <div *ngIf="desabilitaCampoIDPedido" class="row">
-        <div class="col-3">
-            <button (click)="adicionaItemPedido()">Adicionar Item</button>
+        <div class="col-20">
+            <app-input label="Observação:" [upperCase]="true" [(value)]="pedido.observacao"
+                (valueChange)="gravarPedido()" />
         </div>
     </div>
-    <div *ngIf="desabilitaCampoIDPedido">
-        <div *ngFor="let item of pedido.itensPedido; let index = index" class="row">
-            <div class="col-1">
-                <button (click)="removerItemPedido(item.id)">Excluir</button>
-            </div>
-            <div class="col-1">
-                <button (click)="openModalItem(item, item.tipo)">Editar</button>
-            </div>
-            <div class="col-1">
-                <h2>Item {{index + 1}}:</h2>
-            </div>
-            <div class="col-2" *ngIf="item.descricao == ''">
-                <app-input-select (valueChange)="setTipoItem($event)" id="item-select-{{index + 1}}-tipo" label="Tipos"
-                    [options]="listaSelectTipo"></app-input-select>
-            </div>
-            <div class="col-2" *ngIf="item.descricao != ''">
-                <app-input [readonly]="true" [value]="item.tipo" id="item-{{index + 1}}-tipo" label="Tipo"></app-input>
-            </div>
-            <div class="col-2">
-                <app-input [readonly]="true" [value]="item.quantidade" label="Quan." [type]="'number'"
-                    id="item-{{index + 1}}-quantidade"></app-input>
-            </div>
-            <div class="col-5">
-                <app-input [readonly]="true" [value]="item.nome != undefined ? item.nome : ''" label="Descrição"
-                    id="item-{{index + 1}}-descricao"></app-input>
-            </div>
-            <div class="col-2">
-                <app-input [readonly]="true" [value]="item.tamanho != undefined ? item.tamanho : ''"
-                    id="item-{{index + 1}}-tamanho" label="Tamanho"></app-input>
-            </div>
-            <div class="col-2">
-                <app-input [readonly]="true"
-                    [value]="item.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })" label="Valor"
-                    id="item-{{index + 1}}-valor"></app-input>
-            </div>
+    <div *ngIf="desabilitaCampoIDPedido" class="row">
+        <div class="col-button">
+            <app-button-action type="pizza" (click)="adicionaItemPedido('Pizza')" />
+        </div>
+        <div class="col-button">
+            <app-button-action type="refrigerante" (click)="adicionaItemPedido('Bebida')" />
         </div>
     </div>
-
+    <div class="row">
+        <div class="col-auto">
+            <app-fieldset label="Itens Pedido" *ngIf="desabilitaCampoIDPedido">
+                <div *ngFor="let item of pedido.itensPedido; let index = index" class="row">
+                    <div class="col-button">
+                        <app-button-action type="remover" (click)="removerItemPedido(item.id)" />
+                    </div>
+                    <div class="col-button">
+                        <app-button-action type="editar" (click)="openModalItem(item)" />
+                    </div>
+                    <div class="col-1">
+                        <h2>Item {{index + 1}}:</h2>
+                    </div>
+                    <div class="col-2">
+                        <app-input [readonly]="true" [value]="item.tipo" id="item-{{index + 1}}-tipo" label="Tipo" />
+                    </div>
+                    <div class="col-2">
+                        <app-input [readonly]="true" [value]="item.quantidade" label="Quan." [type]="'number'"
+                            id="item-{{index + 1}}-quantidade" />
+                    </div>
+                    <div class="col-auto">
+                        <app-input [readonly]="true" [value]="item.nome != undefined ? item.nome : ''" label="Descrição"
+                            id="item-{{index + 1}}-descricao" />
+                    </div>
+                    <div class="col-2">
+                        <app-input [readonly]="true" [value]="item.tamanho != undefined ? item.tamanho : ''"
+                            id="item-{{index + 1}}-tamanho" label="Tamanho" />
+                    </div>
+                    <div class="col-2">
+                        <app-input [readonly]="true"
+                            [value]="item.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })" label="Valor"
+                            id="item-{{index + 1}}-valor" />
+                    </div>
+                </div>
+            </app-fieldset>
+        </div>
+    </div>
     <div>
         <app-modal-endereco [telefoneCliente]="pedido.clienteTelefone" [(showModal)]="showModalEndereco"
             (showModalChange)="getDadosClienteByTelefone()">
@@ -140,4 +128,4 @@
         <app-previa-pedido [previa]="previa" [(showModal)]="showModalPrevia">
         </app-previa-pedido>
     </div>
-</div>
+</app-page>

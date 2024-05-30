@@ -1,53 +1,61 @@
-<div class="row">
-    <h1>Cadastro de Acréscimos</h1>
-</div>
-<div class="row row-space-bottom">
-    <div class="col-1">
-        <app-input label="ID:" id="id" [(value)]="id"></app-input>
+<app-page titulo="Cadastros de Acréscimos">
+    <div class="row no-print">
+        <div class="col-8">
+            <app-input id="acrescimo" label="Acréscimo:" [(value)]="pizzaAcrescimo.nome"/>
+        </div>
+        <div class="col-button">
+            <app-button-action type="lupa" />
+        </div>
     </div>
-    <div class="col-4">
-        <app-input label="Acrescimo:" id="acrescimo" [(value)]="nome"></app-input>
+    <div class="row">
+        <app-fieldset label="Dados Acréscimo">
+            <div class="col-auto">
+                <div class="row">
+                    <div class="col-auto">
+                        <app-input label="Acréscimo:" [(value)]="pizzaAcrescimo.nome" />
+                    </div>
+                    
+                    <div class="col-4 no-print">
+                        <app-fieldset label="Ações">
+                            <div class="col-button">
+                                <app-button-action type="salvar" />
+                            </div>
+
+                        </app-fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <app-fieldset label="Cadastro de Valores">
+                        <div class="col-2">
+                            <app-input label="M Metade:" type="number" [(value)]="pizzaAcrescimo.tamanhoMediaMetade" />
+                        </div>
+                        <div class="col-2">
+                            <app-input label="G Metade:" type="number" [(value)]="pizzaAcrescimo.tamanhoGrandeMetade" />
+                        </div>
+                        <div class="col-2">
+                            <app-input label="GG Metade:" type="number" [(value)]="pizzaAcrescimo.tamanhoGiganteMetade" />
+                        </div>
+                        <div class="col-2">
+                            <app-input label="M Toda:" type="number" [(value)]="pizzaAcrescimo.tamanhoMediaToda" />
+                        </div>
+                        <div class="col-2">
+                            <app-input label="G Toda:" type="number" [(value)]="pizzaAcrescimo.tamanhoGrandeToda" />
+                        </div>
+                        <div class="col-2">
+                            <app-input label="GG Toda:" type="number" [(value)]="pizzaAcrescimo.tamanhoGiganteToda" />
+                        </div>
+                    </app-fieldset>
+                    
+                </div>
+            </div>
+        </app-fieldset>
     </div>
 
-    <div class="col-2">
-        <app-input label="Valor Metade:" id="valor-metade" type="number" [(value)]="valorMedade"></app-input>
+    <div class="row no-print">
+        <app-fieldset [label]="'Acréscimos Cadastrados: ' + tableData.length">
+            <app-table [headers]="tableCabecalho" [columns]="tableColunas" [columnSize]="tableColunasSize"
+                [data]="tableData" [actionButtons]="tableActionsButtons"
+                (actionDataClick)="tableActionDataClick($event)" />
+        </app-fieldset>
     </div>
-    <div class="col-2">
-        <app-input label="Valor Toda:" id="valor-toda" type="number" [(value)]="valorToda"></app-input>
-    </div>
-</div>
-<div class="row row-space-bottom">
-    <div class="col-3">
-        <button (click)="adicionar()">Salvar</button>
-    </div>
-    <div *ngIf="id != null && id != ''" class="col-3">
-        <button (click)="excluir()">
-            Excluir
-        </button>
-    </div>
-</div>
-<div class="row row-space-bottom">
-    <h1>Lista de Acréscimos</h1>
-</div>
-<div class="row">
-    <div class="col-3">
-        <table>
-            <thead>
-              <tr>
-                <th style="width: 20px;">Ação:</th>
-                <th style="width: 40px;">Nome:</th>
-                <th style="width: 40px;">Metade:</th>
-                <th style="width: 40px;">Toda:</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of listaItem">
-                <td style="width: 20px;"><Button>Editar</Button></td>
-                <td style="width: 40px;">{{item.nome}}</td>
-                <td style="width: 40px;">8</td>
-                <td style="width: 40px;">10</td>
-              </tr>
-            </tbody>
-          </table>
-    </div>
-</div>
+</app-page>

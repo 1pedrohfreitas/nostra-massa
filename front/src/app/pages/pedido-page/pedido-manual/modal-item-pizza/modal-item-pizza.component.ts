@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { InputSelectOption } from '../../../../componentes/input-select/input-select';
 import { PizzaAcrescimoDTO, PizzaSaborDTO, PizzaSaborIngredienteDTO } from '../../../../shared/models/PizzaDTO';
 import { PedidoItemDTO, PedidoItemPizzaDTO } from '../../../../shared/models/PedidoDTO';
 import { PedidoService } from '../../pedido.service';
 import { LocalStorageServiceService } from '../../../../services/local-storage-service.service';
+import { InputSelectOption } from 'pedrohfreitas-lib';
 
 @Component({
   selector: 'app-modal-item-pizza',
@@ -144,7 +144,7 @@ export class ModalItemPizzaComponent {
         this.pizzaSabor1 = saboresItem[0];
         this.sabor1SelectDefault = {
           option: this.pizzaSabor1.nome,
-          value: this.pizzaSabor1.id.toString()
+          value: this.pizzaSabor1.nome
         }
         let retirarItens: PizzaSaborIngredienteDTO[] = []
         if(this.pizzaSabor1.pizzaSaborIngredientesRetirar != undefined){
@@ -158,7 +158,7 @@ export class ModalItemPizzaComponent {
         
         this.changeSaborPizza(1, {
           option: this.pizzaSabor1.nome,
-          value: this.pizzaSabor1.id.toString()
+          value: this.pizzaSabor1.nome
         });
         if (retirarItens != undefined) {
           retirarItens.forEach((value) => {
@@ -178,7 +178,7 @@ export class ModalItemPizzaComponent {
         this.pizzaSabor2 = saboresItem[1];
         this.sabor2SelectDefault = {
           option: this.pizzaSabor2.nome,
-          value: this.pizzaSabor2.id.toString()
+          value: this.pizzaSabor2.nome
         }
         let retirarItens: PizzaSaborIngredienteDTO[] = []
         if(this.pizzaSabor2.pizzaSaborIngredientesRetirar != undefined){
@@ -192,7 +192,7 @@ export class ModalItemPizzaComponent {
         
         this.changeSaborPizza(2, {
           option: this.pizzaSabor2.nome,
-          value: this.pizzaSabor2.id.toString()
+          value: this.pizzaSabor2.nome
         });
         if (retirarItens != undefined) {
           retirarItens.forEach((value) => {
@@ -329,11 +329,11 @@ export class ModalItemPizzaComponent {
 
       this.sabor2SelectDefault = {
         option: this.pizzaSabor2.nome,
-        value: this.pizzaSabor2.id.toString()
+        value: this.pizzaSabor2.nome
       }
       this.changeSaborPizza(2, {
         option: this.pizzaSabor2.nome,
-        value: this.pizzaSabor2.id.toString()
+        value: this.pizzaSabor2.nome
       })
       this.ingredientesPizza2 = new Map();
       this.ingredientesPizza1.forEach((value, key) => {

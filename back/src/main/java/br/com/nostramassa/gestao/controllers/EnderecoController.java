@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +37,22 @@ public class EnderecoController {
 			pageable = PageRequest.of(0, 10000);
 		}
 		return new ResponseDTO<Page<BairroDTO>>().ok(enderecoService.getBairros(pageable), null);
+	}
+	
+	@GetMapping(path = "/rua/autoComplete/{rua}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ResponseDTO<Page<String>>> autoCompleteRua(Pageable pageable, @PathVariable String rua) {
+		if (pageable == null) {
+			pageable = PageRequest.of(0, 100);
+		}
+		return new ResponseDTO<Page<String>>().ok(enderecoService.autoCompleteRua(pageable, rua.replaceAll("_", " ")), null);
+	}
+	
+	@GetMapping(path = "/bairro/autoComplete/{bairro}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ResponseDTO<Page<String>>> autoCompleteBairro(Pageable pageable, @PathVariable String bairro) {
+		if (pageable == null) {
+			pageable = PageRequest.of(0, 100);
+		}
+		return new ResponseDTO<Page<String>>().ok(enderecoService.autoCompleteBairro(pageable, bairro.replaceAll("_", " ")), null);
 	}
 	
 }

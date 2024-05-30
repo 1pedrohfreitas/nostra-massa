@@ -21,9 +21,14 @@
     height: 50px;
     background: rgb(255, 136, 0);
 }
+#menu-area{
+    width: 100px;
+}
 #menu-lateral{
+    width: 100px;
     display: flex;
     flex-direction: row;
+    z-index: 1000;
 }
 nav {
     width: 90px;
@@ -62,7 +67,6 @@ nav ul li:hover{
 }
 
 #container-sub{
-    width: 100%;
     padding-top: 10px;
     padding-left: 10px;
 }

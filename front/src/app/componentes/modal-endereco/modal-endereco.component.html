@@ -1,53 +1,54 @@
 <div class="modal-container" *ngIf="showModal">
-    <div class="modal-conteudo" *ngIf="showConteudo" >
-            <div class="col-auto">
-                <div class="row row-space-bottom">
-                    <div class="col-auto">
-                       <app-input-text-autocomplete
-                       id="rua"
-                       label="Rua:"
-                       [options]="listaRuas"
-                       [userInput]="cliente.rua"
-                       (optionSelected)="handleRua($event)"
-                       ></app-input-text-autocomplete>
-                       
+    <div class="modal-conteudo" *ngIf="showConteudo">
+        <div class="row">
+            <app-fieldset label="Dados Item" class="col-auto">
+                <div class="col-auto">
+                    <div class="row row-space-bottom">
+                        <div class="col-auto">
+                            <app-input-text-autocomplete id="rua" label="Rua:" [options]="listaRuas"
+                                [value]="cliente.rua" (valueChange)="handleRua($event)" />
+
+                        </div>
+                        <div class="col-8">
+                            <app-input-text-autocomplete id="bairro" label="Bairro:" [value]="cliente.bairro"
+                                [options]="listaBairros" (valueChange)="handleBairro($event)" />
+                        </div>
+
                     </div>
-                    <div class="col-8">
-                        <app-input-text-autocomplete
-                       id="bairro"
-                       label="Bairro:"
-                       [userInput]="cliente.bairro"
-                       [options]="listaBairros"
-                       (optionSelected)="handleBairro($event)"
-                       ></app-input-text-autocomplete>
+                    <div class="row row-space-bottom">
+
+                        <div class="col-3">
+                            <app-input label="Número:" id="pedido-endereco-numero" [(value)]="cliente.numero" />
+                        </div>
+                        <div class="col-3">
+                            <app-input label="Bloco:" id="pedido-endereco-bloco" [(value)]="cliente.bloco" />
+                        </div>
+                        <div class="col-4">
+                            <app-input label="Apartamento" id="pedido-endereco-apartamento"
+                                [(value)]="cliente.apartamento" />
+                        </div>
+                        <div class="col-auto">
+                            <app-input label="Complemento:" id="pedido-endereco-complemento"
+                                [(value)]="cliente.complemento" />
+                        </div>
                     </div>
-                    
-                </div>
-                <div class="row row-space-bottom">
-                    
-                    <div class="col-2">
-                        <app-input label="Número:" id="pedido-endereco-numero" [(value)]="cliente.numero"></app-input>
-                    </div>
-                    <div class="col-2">
-                        <app-input label="Bloco:" id="pedido-endereco-bloco" [(value)]="cliente.bloco"></app-input>
-                    </div>
-                    <div class="col-2">
-                        <app-input label="Apartamento" id="pedido-endereco-apartamento" [(value)]="cliente.apartamento"></app-input>
-                    </div>
-                    <div class="col-auto">
-                        <app-input label="Complemento:" id="pedido-endereco-complemento" [(value)]="cliente.complemento"></app-input>
-                    </div>
-                </div>
-                <div class="row row-space-bottom" id="pedido-rodape">
-                    <div class="col-2">
-                        <app-input [readonly]="true" label="Taxa Entrega" id="pedido-taxa"
-                        [value]="cliente.taxaEntrega"
-                        ></app-input>
+                    <div class="row row-space-bottom" id="pedido-rodape">
+                        <div class="col-2">
+                            <app-input [readonly]="true" label="Taxa Entrega" id="pedido-taxa"
+                                [value]="cliente.taxaEntrega" />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-2">
-                <button (click)="save()">Gravar</button>
-            </div>
+            </app-fieldset>
+            <app-fieldset label="Ações" class="col-4">
+                <div class="col-button">
+                    <app-button-action (click)="save()" type="salvar" />
+                </div>
+                <div class="col-button">
+                    <app-button-action (click)="onCloseModal()" type="x" />
+                </div>
+            </app-fieldset>
+        </div>
+
     </div>
 </div>

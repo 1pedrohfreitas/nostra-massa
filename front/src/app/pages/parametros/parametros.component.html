@@ -8,10 +8,10 @@
 </div>
 <div class="row row-space-bottom">
     <div class="col-4">
-        <app-input-select  (optionSelected)="setImpressora($event)" label="Lista Impressoras" [options]="listaImpressoras"></app-input-select>
+        <app-input-select  (valueChange)="setImpressora($event)" label="Lista Impressoras" [options]="listaImpressoras"></app-input-select>
     </div>
     <div class="col-4">
-        <app-input label="Impressora Selecionada" [readonly]="true" [value]="parametros.impressora"></app-input>
+        <app-input label="Impressora Selecionada" [readonly]="true" [value]="parametros.impressora" />
     </div>
 </div>
 <div class="row">

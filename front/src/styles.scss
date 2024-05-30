@@ -1,22 +1,8 @@
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    color: black;
-}
-mat-form-field{
-    margin-bottom: -1.25em;
-}
+@import url('../node_modules/pedrohfreitas-lib/src/lib/styles/global.scss');
+
 app-header,
-app-input-text-autocomplete,
 app-item-pizza,
-app-modal-item-pizza-sabor,
-app-input-select,
-app-input-checkbox,
-app-input{
+app-modal-item-pizza-sabor{
     width: 100%;
 }
 

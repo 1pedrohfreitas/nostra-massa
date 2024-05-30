@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { InputSelectOption } from '../input-select/input-select';
 import { LocalStorageServiceService } from '../../services/local-storage-service.service';
 import { BairroDTO, ClienteDTO, RuaDTO } from '../../shared/models/ClienteDTO';
 import { ClientesService } from '../../pages/cliente-page/clientes.service';
+import { AutoCompleteServiceService } from '../../services/auto-complete-service.service';
 
 @Component({
   selector: 'app-modal-endereco',
@@ -18,15 +18,18 @@ export class ModalEnderecoComponent {
   
   cliente : ClienteDTO = new ClienteDTO;
 
-  listaRuas : InputSelectOption[] = [];
-  listaBairros : InputSelectOption[] = [];
+  listaRuas : string[] = [];
+  listaBairros : string[] = [];
   
   constructor(
     private _localStorageService : LocalStorageServiceService,
-    private _clienteService : ClientesService
+    private _clienteService : ClientesService,
+    private _autoCompleteService : AutoCompleteServiceService
   ){
-    this.listaRuas = this._localStorageService.converteListaItemParaOption(this._localStorageService.listaRuas,'nome','id',false);
-    this.listaBairros = this._localStorageService.converteListaItemParaOption(this._localStorageService.listaBairros,'nome','id',false);
+    
+    
+    // console.log(this.listaRuas)
+    
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes['telefoneCliente']) {
@@ -60,37 +63,48 @@ export class ModalEnderecoComponent {
   }
 
   save(){
-    this.cliente.taxaEntrega 
-    this.cliente.enderecoDescricao = this.cliente.rua + ', N: ' + this.cliente.numero;
-
-    if(this.cliente.bloco != null && this.cliente.bloco != ''){
-      this.cliente.enderecoDescricao = this.cliente.enderecoDescricao + ', Bloco: ' + this.cliente.bloco;
-    }
-
-    if(this.cliente.apartamento != null && this.cliente.apartamento != ''){
-      this.cliente.enderecoDescricao = this.cliente.enderecoDescricao + ', AP: ' + this.cliente.apartamento;
-    }
-    this.cliente.enderecoDescricao = this.cliente.enderecoDescricao + ', Bairro: ' + this.cliente.bairro;
-    if(this.cliente.complemento != null && this.cliente.complemento != ''){
-      this.cliente.enderecoDescricao = this.cliente.enderecoDescricao + ', Comp: ' + this.cliente.complemento;
-    }
     this._clienteService.adicionaCliente(this.cliente).then((response)=>{
       this.onCloseModal();
     })  
   }
 
-  handleBairro(inputSelecionado: InputSelectOption){
-    const bairroSelecionado: BairroDTO | undefined = this._localStorageService.listaBairros.find(opt => opt.id!= undefined && opt.nome === inputSelecionado.option);
-    if(bairroSelecionado != undefined){
-      this.cliente.bairro = bairroSelecionado.nome;
-      this.cliente.taxaEntrega = bairroSelecionado.taxaEntrega
+  handleBairro(value: string){
+    if(value == ''){
+      this.listaBairros = []
+    this._localStorageService.listaBairros.forEach(value=>{
+      this.listaBairros.push(value.nome);
+    });
+    } else {
+      this._autoCompleteService.autoCompleteBairro(value).then((response)=>{
+        this.listaBairros = response.content
+      });
     }
+    console.log(value)
+    console.log(this.listaBairros)
+    // const bairroSelecionado: BairroDTO | undefined = this._localStorageService.listaBairros.find(opt => opt.nome!= undefined && opt.nome === value);
+    // if(bairroSelecionado != undefined){
+    //   this.cliente.bairro = bairroSelecionado.nome;
+    //   this.cliente.taxaEntrega = bairroSelecionado.taxaEntrega
+    // }
   }
 
-  handleRua(inputSelecionado: InputSelectOption){
-    const ruaSelecionada: RuaDTO | undefined = this._localStorageService.listaRuas.find(opt => opt.id!= undefined && opt.id.toString() === inputSelecionado.value);
-    if(ruaSelecionada != undefined){
-      this.cliente.rua= ruaSelecionada.nome;
+  handleRua(value: string){
+    if(value == ''){
+      this.listaRuas = [];
+this._localStorageService.listaRuas.forEach(value=>{
+      this.listaRuas.push(value.nome);
+    });
+    } else {
+      this._autoCompleteService.autoCompleteRua(value).then((response)=>{
+        this.listaRuas = response.content
+      });
     }
+    console.log(value)
+    console.log(this.listaRuas)
+    
+    // const ruaSelecionada: RuaDTO | undefined = this._localStorageService.listaRuas.find(opt => opt.nome != undefined && opt.nome === value);
+    // if(ruaSelecionada != undefined){
+    //   this.cliente.rua= ruaSelecionada.nome;
+    // }
   }
 }

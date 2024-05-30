@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { ParametrosService } from './parametros.service';
-import { InputSelectOption } from '../../componentes/input-select/input-select';
 import { LocalStorageServiceService } from '../../services/local-storage-service.service';
 import { Parametros } from '../../shared/models/Parametros';
+import { InputSelectOption } from 'pedrohfreitas-lib';
 
 @Component({
   selector: 'app-parametros',
