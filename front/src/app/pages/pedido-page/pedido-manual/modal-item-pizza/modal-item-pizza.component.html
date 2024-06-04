@@ -3,10 +3,10 @@
         <div class="row">
             <app-fieldset label="Dados Item" class="col-auto">
                 <div class="col-3">
-                    <app-input  (valueChange)="setQuantidade($event)" [value]="itemPedidoPizza.quantidade.toString()" label="Quantidade" [type]="'number'" />
+                    <app-input  (valueChange)="setQuantidade($event)" [value]="itemPedidoPizza.quantidade" label="Quantidade" [type]="'number'" />
                 </div>
                 <div class="col-3">
-                    <app-input [readonly]="true" label="Valor:" id="item-valor" [value]="itemPedidoPizza.valor.toString()" />
+                    <app-input-money [readonly]="true" label="Valor:" id="item-valor" [value]="itemPedidoPizza.valor" />
                 </div>
                 <div class="col-4">
                     <app-input-select [value]="optionDefaultTamanho" (valueChange)="setTamanhoItem($event)" label="Tamanho" [options]="listaSelectTamanhoPizza"></app-input-select>

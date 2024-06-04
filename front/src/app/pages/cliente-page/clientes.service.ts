@@ -21,7 +21,6 @@ export class ClientesService {
   }
 
   getDadosClienteByTelefone(telefone : string) : Promise<ClienteDTO> {
-    console.log(telefone)
     return this._apiService.get('cliente/telefone/'+ telefone);
   }
   getDadosClienteById(id : number) : Promise<ClienteDTO> {
@@ -41,7 +40,6 @@ export class ClientesService {
     if(cliente.complemento != null && cliente.complemento != ''){
       cliente.enderecoDescricao = cliente.enderecoDescricao + ', Comp: ' + cliente.complemento;
     }
-    console.log(cliente)
     return this._apiService.post('cliente',cliente);
   }
   excluirCliente(id : number) : Promise<string> {

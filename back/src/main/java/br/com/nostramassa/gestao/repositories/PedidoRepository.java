@@ -7,9 +7,11 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import br.com.nostramassa.gestao.models.pedido.Pedido;
+import jakarta.transaction.Transactional;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Long>  {
 	
@@ -34,4 +36,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long>  {
 			+ "FROM pedido p\r\n"
 			+ "WHERE p.datapedido BETWEEN CURRENT_DATE AND (CURRENT_DATE + INTERVAL '1 DAY' - INTERVAL '1 SECOND') and p.idpedido = :idPedido order by p.id desc limit 1")
 	public Optional<Pedido> getPedidoNoite(Long idPedido);
+
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = "update pedido p set nome = :nome where p.telefone = :telefone")
+	public void atualizaNomeCliente(String nome, String telefone);
 }

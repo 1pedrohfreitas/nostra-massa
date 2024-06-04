@@ -75,10 +75,6 @@ export class BebidasComponent {
         data.push(item);
       })
       this.tableData = data
-      console.log(this.tableCabecalho)
-      console.log(this.tableData)
-      console.log(this.tableColunas)
-      console.log(this.tableColunasSize)
     })
   }
 

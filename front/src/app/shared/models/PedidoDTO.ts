@@ -9,7 +9,7 @@ export class PedidoDTO {
     tipoPagamento: string = '';
     status?: string = '';
     valor: number = 0;
-    valorTaxa: number = 0;
+    taxaEntrega: number = 0;
     enderecoDescricao?: string = '';
     bairro?: string = '';
 	rua?: string = '';
@@ -19,8 +19,8 @@ export class PedidoDTO {
 	complemento?: string = '';
     observacao?: string = '';
     idCliente?: number;
-    clienteTelefone: string = '';
-    clienteNome: string = '';
+    telefone: string = '';
+    nome: string = '';
     itensPedido: PedidoItemDTO[] = [];
     pedidoRelatorio: string = '';
 }

@@ -44,10 +44,8 @@ export class IngredientesComponent {
   }
 
   adicionar(){
-    console.log(this.pizzaSaborIngredienteDTO)
     if(this.pizzaSaborIngredienteDTO.nome != ''){
       this._produtoService.adicionaIngrediente(this.pizzaSaborIngredienteDTO).then((response)=>{
-        console.log(response);
         this.getListaIngredientes();
       });
     }

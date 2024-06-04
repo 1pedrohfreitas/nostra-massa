@@ -20,16 +20,13 @@ export class ModalEnderecoComponent {
 
   listaRuas : string[] = [];
   listaBairros : string[] = [];
+  taxaEntrega = 0;
   
   constructor(
     private _localStorageService : LocalStorageServiceService,
     private _clienteService : ClientesService,
     private _autoCompleteService : AutoCompleteServiceService
   ){
-    
-    
-    // console.log(this.listaRuas)
-    
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes['telefoneCliente']) {
@@ -69,18 +66,9 @@ export class ModalEnderecoComponent {
   }
 
   handleBairro(value: string){
-    if(value == ''){
-      this.listaBairros = []
-    this._localStorageService.listaBairros.forEach(value=>{
-      this.listaBairros.push(value.nome);
-    });
-    } else {
       this._autoCompleteService.autoCompleteBairro(value).then((response)=>{
         this.listaBairros = response.content
       });
-    }
-    console.log(value)
-    console.log(this.listaBairros)
     // const bairroSelecionado: BairroDTO | undefined = this._localStorageService.listaBairros.find(opt => opt.nome!= undefined && opt.nome === value);
     // if(bairroSelecionado != undefined){
     //   this.cliente.bairro = bairroSelecionado.nome;
@@ -89,18 +77,9 @@ export class ModalEnderecoComponent {
   }
 
   handleRua(value: string){
-    if(value == ''){
-      this.listaRuas = [];
-this._localStorageService.listaRuas.forEach(value=>{
-      this.listaRuas.push(value.nome);
-    });
-    } else {
       this._autoCompleteService.autoCompleteRua(value).then((response)=>{
         this.listaRuas = response.content
       });
-    }
-    console.log(value)
-    console.log(this.listaRuas)
     
     // const ruaSelecionada: RuaDTO | undefined = this._localStorageService.listaRuas.find(opt => opt.nome != undefined && opt.nome === value);
     // if(ruaSelecionada != undefined){

@@ -73,7 +73,13 @@
     
     <div class="row no-print">
         <app-fieldset [label]="'Clientes Diario: ' + tableClienteDiarioData.length">
-            <app-table [headers]="tableClienteDiarioCabecalho" [columns]="tableClienteDiarioColunas" [columnSize]="tableClienteDiarioColunasSize" [data]="tableClienteDiarioData" [actionButtons]="tableClienteDiarioActionsButtons" (actionDataClick)="tableClientesActionDataClick($event)" />
+            <app-table
+                [headers]="tableClienteDiarioCabecalho"
+                [columns]="tableClienteDiarioColunas"
+                [columnSize]="tableClienteDiarioColunasSize"
+                [data]="tableClienteDiarioData"
+                [actionButtons]="tableClienteDiarioActionsButtons"
+                (actionDataClick)="tableClientesActionDataClick($event)" />
         </app-fieldset>
     </div>
 </app-page>

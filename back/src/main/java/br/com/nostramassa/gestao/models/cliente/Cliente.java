@@ -44,7 +44,4 @@ public class Cliente {
 	
 	@Column(name = "enderecodescricao")
 	private String enderecoDescricao;
-	
-	@Column(name = "taxaentrega")
-	private Double taxaEntrega = 0d;
 }

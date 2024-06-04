@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,10 +22,11 @@ import br.com.nostramassa.gestao.models.pedido.Pedido;
 import br.com.nostramassa.gestao.models.pedido.PedidoItem;
 import br.com.nostramassa.gestao.repositories.PedidoItemRepository;
 import br.com.nostramassa.gestao.repositories.PedidoRepository;
-import br.com.nostramassa.gestao.util.ConverterDTOUtil;
 
 @Service
 public class PedidoService {
+	
+	private final ModelMapper mapper = new ModelMapper();
 
 	@Autowired
 	private PedidoRepository pedidoRepository;
@@ -44,7 +46,8 @@ public class PedidoService {
 
 			if (ultimoPedido.get().getStatus().equals(StatusPedidoEnum.ABERTO)) {
 				pedido = ultimoPedido.get();
-				return ConverterDTOUtil.pedidoToPedidoDTO(pedido);
+				pedidoDTO = mapper.map(pedido, PedidoDTO.class);
+				return pedidoDTO;
 			} else {
 				idPedido = ultimoPedido.get().getIdPedido() + 1;
 			}
@@ -55,14 +58,15 @@ public class PedidoService {
 		pedido.setDataPedido(LocalDateTime.now());
 		pedido = pedidoRepository.save(pedido);
 		pedidoDTO.setId(pedido.getId());
-		pedidoDTO = ConverterDTOUtil.pedidoToPedidoDTO(pedido);
+		
+		pedidoDTO = mapper.map(pedido, PedidoDTO.class);
 		
 		return pedidoDTO;
 	}
 
 	public PedidoDTO atualiza(PedidoDTO pedidoDTO) {
 		Pedido getPedido = pedidoRepository.findById(pedidoDTO.getId()).get();
-		Pedido pedido = ConverterDTOUtil.pedidoDTOToPedido(pedidoDTO);
+		Pedido pedido = mapper.map(pedidoDTO, Pedido.class);
 
 		pedido.setDataPedido(getPedido.getDataPedido());
 		if (pedidoDTO.getStatus() != null) {
@@ -82,7 +86,7 @@ public class PedidoService {
 			Pedido pedido = getPedido.get();
 			pedido.setStatus(StatusPedidoEnum.CANCELADO);
 			pedidoRepository.save(pedido);
-			pedidoDTO = ConverterDTOUtil.pedidoToPedidoDTO(pedido);
+			pedidoDTO = mapper.map(pedido, PedidoDTO.class);
 			return pedidoDTO;
 		}
 		return null;
@@ -92,23 +96,14 @@ public class PedidoService {
 		Optional<Pedido> pedidoBanco = pedidoRepository.findById(id);
 		PedidoDTO pedidoDTO = new PedidoDTO();
 		if(pedidoBanco.isPresent()) {
-			pedidoDTO = ConverterDTOUtil.pedidoToPedidoDTO(pedidoBanco.get());
+			pedidoDTO = mapper.map(pedidoBanco.get(), PedidoDTO.class);
 		}
 		pedidoDTO.setItensPedido(new ArrayList<>());
 		
 		List<PedidoItem> itensPedido = pedidoItemRepository.getItensPedido(id);
 		
 		for(var itemPedido : itensPedido) {
-			PedidoItemDTO pedidoItemDTO = new PedidoItemDTO();
-			pedidoItemDTO.setId(itemPedido.getId());
-			pedidoItemDTO.setNome(itemPedido.getNome());
-			pedidoItemDTO.setQuantidade(itemPedido.getQuantidade());
-			pedidoItemDTO.setTamanho(itemPedido.getTamanho());
-			pedidoItemDTO.setTipo(itemPedido.getTipo());
-			pedidoItemDTO.setValor(itemPedido.getValor());
-			pedidoItemDTO.setDescricao(itemPedido.getDescricao());
-			pedidoItemDTO.setPedidoItemPizza(itemPedido.getPedidoItemPizza());
-			pedidoDTO.getItensPedido().add(pedidoItemDTO);
+			pedidoDTO.getItensPedido().add(mapper.map(itemPedido, PedidoItemDTO.class));
 		}
 		
 		
@@ -119,25 +114,14 @@ public class PedidoService {
 		Optional<Pedido> pedidoBanco = pedidoRepository.getPedidoNoite(id);
 		PedidoDTO pedidoDTO = new PedidoDTO();
 		if (pedidoBanco.isPresent()) {
-			pedidoDTO = ConverterDTOUtil.pedidoToPedidoDTO(pedidoBanco.get());
-
+			pedidoDTO = mapper.map(pedidoBanco.get(), PedidoDTO.class);
 		}
 		pedidoDTO.setItensPedido(new ArrayList<>());
 
 		List<PedidoItem> itensPedido = pedidoItemRepository.getItensPedido(id);
 
 		for (PedidoItem item : itensPedido) {
-			PedidoItemDTO pedidoItemDTO = new PedidoItemDTO();
-			pedidoItemDTO.setDescricao(item.getDescricao());
-			pedidoItemDTO.setId(item.getId());
-			pedidoItemDTO.setIdPedido(item.getIdPedido());
-			pedidoItemDTO.setNome(item.getNome());
-			pedidoItemDTO.setQuantidade(item.getQuantidade());
-			pedidoItemDTO.setTamanho(item.getTamanho());
-			pedidoItemDTO.setTipo(item.getTipo());
-			pedidoItemDTO.setValor(item.getValor());
-			pedidoItemDTO.setPedidoItemPizza(item.getPedidoItemPizza());
-			pedidoDTO.getItensPedido().add(pedidoItemDTO);
+			pedidoDTO.getItensPedido().add(mapper.map(item, PedidoItemDTO.class));
 		}
 		return pedidoDTO;
 	}
@@ -158,7 +142,7 @@ public class PedidoService {
 		Page<Pedido> pedidos = pedidoRepository.getPedidosByDatasReferencia(inicio, fim,pageable);
 		List<PedidoDTO> listaPedido = new ArrayList<>();
 		pedidos.forEach(item -> {
-			PedidoDTO pedidoDTO = ConverterDTOUtil.pedidoToPedidoDTO(item);
+			PedidoDTO pedidoDTO = mapper.map(item, PedidoDTO.class);
 			listaPedido.add(pedidoDTO);
 		});
 		Page<PedidoDTO> pageDTO = new PageImpl<>(listaPedido, pageable, listaPedido.size());
@@ -170,7 +154,7 @@ public class PedidoService {
 		Page<Pedido> page = pedidoRepository.getAllPedidos(pageable);
 		List<PedidoDTO> listaPedido = new ArrayList<>();
 		page.getContent().forEach(item -> {
-			PedidoDTO pedidoDTO = ConverterDTOUtil.pedidoToPedidoDTO(item);
+			PedidoDTO pedidoDTO = mapper.map(item, PedidoDTO.class);
 			listaPedido.add(pedidoDTO);
 		});
 		Page<PedidoDTO> pageDTO = new PageImpl<>(listaPedido, pageable, page.getTotalElements());
@@ -182,7 +166,7 @@ public class PedidoService {
 		Page<Pedido> page = pedidoRepository.getAllPedidosByTelefone(pageable, telefone);
 		List<PedidoDTO> listaPedido = new ArrayList<>();
 		page.getContent().forEach(item -> {
-			PedidoDTO pedidoDTO = ConverterDTOUtil.pedidoToPedidoDTO(item);
+			PedidoDTO pedidoDTO = mapper.map(item, PedidoDTO.class);
 			listaPedido.add(pedidoDTO);
 		});
 		Page<PedidoDTO> pageDTO = new PageImpl<>(listaPedido, pageable, page.getTotalElements());

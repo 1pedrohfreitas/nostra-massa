@@ -55,4 +55,9 @@ public class EnderecoController {
 		return new ResponseDTO<Page<String>>().ok(enderecoService.autoCompleteBairro(pageable, bairro.replaceAll("_", " ")), null);
 	}
 	
+	@GetMapping(path = "/bairro/taxaEntrega/{bairro}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ResponseDTO<Double>> getTaxaDeEntrega(@PathVariable String bairro) {
+		return new ResponseDTO<Double>().ok(enderecoService.getTaxasDeEntrega(bairro.replaceAll("_", " ")), null);
+	}
+	
 }

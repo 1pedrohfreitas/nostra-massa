@@ -21,4 +21,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long>  {
 	@Query(value = "select * from cliente c where c.telefone = :telefone limit 1",nativeQuery = true)
 	public Optional<Cliente> getClienteByTelefone(String telefone);
 	
+	@Query(value = "select c.telefone from cliente c where c.telefone like %:item%",nativeQuery = true)
+	public Page<String> getAutoCompleteByTelefone(Pageable pageable, String item);
+	
 }

@@ -13,12 +13,16 @@ import org.springframework.stereotype.Service;
 import br.com.nostramassa.gestao.dtos.pedido.ClienteDTO;
 import br.com.nostramassa.gestao.models.cliente.Cliente;
 import br.com.nostramassa.gestao.repositories.ClienteRepository;
+import br.com.nostramassa.gestao.repositories.PedidoRepository;
 
 @Service
 public class ClienteService {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
 
 	public Page<ClienteDTO> getClientes(Pageable pageable) {
 		Page<Cliente> clienteBanco = clienteRepository.getClientes(pageable);
@@ -33,7 +37,6 @@ public class ClienteService {
 			clienteDTO.setEnderecoDescricao(cliente.getEnderecoDescricao());
 			clienteDTO.setNumero(cliente.getNumero());
 			clienteDTO.setRua(cliente.getRua());
-			clienteDTO.setTaxaEntrega(cliente.getTaxaEntrega());
 			clienteDTO.setNome(cliente.getNome());
 			clienteDTO.setTelefone(cliente.getTelefone());
 			clientesDTO.add(clienteDTO);
@@ -46,6 +49,7 @@ public class ClienteService {
 
 		if (existeCliente.isPresent()) {
 			cliente.setId(existeCliente.get().getId());
+			pedidoRepository.atualizaNomeCliente(cliente.getNome(), cliente.getTelefone());
 		}
 
 		Cliente clienteNovo = new Cliente();
@@ -57,11 +61,12 @@ public class ClienteService {
 		clienteNovo.setEnderecoDescricao(cliente.getEnderecoDescricao());
 		clienteNovo.setNumero(cliente.getNumero());
 		clienteNovo.setRua(cliente.getRua());
-		clienteNovo.setTaxaEntrega(cliente.getTaxaEntrega());
 		clienteNovo.setNome(cliente.getNome().toUpperCase());
 		clienteNovo.setTelefone(cliente.getTelefone());
 		clienteRepository.save(clienteNovo);
 		cliente.setId(clienteNovo.getId());
+		
+		
 
 		return cliente;
 	}
@@ -87,7 +92,6 @@ public class ClienteService {
 			clienteDTO.setEnderecoDescricao(cliente.get().getEnderecoDescricao());
 			clienteDTO.setNumero(cliente.get().getNumero());
 			clienteDTO.setRua(cliente.get().getRua());
-			clienteDTO.setTaxaEntrega(cliente.get().getTaxaEntrega());
 			clienteDTO.setNome(cliente.get().getNome());
 			clienteDTO.setTelefone(cliente.get().getTelefone());
 			return clienteDTO;
@@ -109,13 +113,22 @@ public class ClienteService {
 			clienteDTO.setEnderecoDescricao(cliente.get().getEnderecoDescricao());
 			clienteDTO.setNumero(cliente.get().getNumero());
 			clienteDTO.setRua(cliente.get().getRua());
-			clienteDTO.setTaxaEntrega(cliente.get().getTaxaEntrega());
 			clienteDTO.setNome(cliente.get().getNome());
 			clienteDTO.setTelefone(cliente.get().getTelefone());
 			return clienteDTO;
 		}
 
 		return null;
+	}
+	
+	public Page<String> autoCompleteTelefone(Pageable pageable, String itemFiltro) {
+		List<String> lista = new ArrayList<>();
+		clienteRepository.getAutoCompleteByTelefone(pageable, itemFiltro).forEach(item -> {
+			lista.add(item);
+		});
+		
+		
+		return new PageImpl<>(lista, pageable, lista.size());
 	}
 
 }

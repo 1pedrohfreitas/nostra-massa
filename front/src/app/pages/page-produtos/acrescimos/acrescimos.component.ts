@@ -30,7 +30,6 @@ export class AcrescimosComponent {
     private _produtoService : ProdutosService
   ){
     this._produtoService.getListaDeAcrescimos().then((response)=>{
-      console.log(response)
       this.tableData = [];
       response.content.forEach(value =>{
         this.tableData.push({

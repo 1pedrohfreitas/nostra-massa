@@ -20,9 +20,17 @@ export class PageListaPedidosComponent {
   listaPedidos : PedidoDTO[] = [];
   quantidadeItems : number = 0
   dataReferencia : string = '';
+
+  pageActionsButtons: ButtonAction[] = [
+    {
+      action: 'imprimir',
+      icon: 'imprimir',
+      disable: false
+    }
+  ]
   
   tableHeader = ['ID','Cliente','Status','Data','Endereço']
-  tableColuns = ['idPedido','clienteNome','status','dataPedido','endereco']
+  tableColuns = ['idPedido','nome','status','dataPedido','endereco']
   tableColunsSize = ['5','20','15','15','40']
   tableData : any [] = []
   tableActions : ButtonAction[] = [
@@ -51,9 +59,17 @@ export class PageListaPedidosComponent {
     })
   }
   tableActionDataClick(action : ButtonActionClick){
-    console.log(action)
     this.goToEditItem(action.data.id)
   }
+  actionButtonPageClick(action: ButtonActionClick) {
+    switch (action.action?.action) {
+      case 'imprimir':
+        this.gerarRelatorioDiario();
+        break;
+      default:
+        break;
+    }
+}
 
   goToEditItem(idPedido : number){
     this.router.navigate(['/pedido/manual',{
@@ -62,16 +78,14 @@ export class PageListaPedidosComponent {
   }
 
   setDataFilter(dataSelect : InputSelectOption){
-    console.log(dataSelect)
     this._pedidoService.getListaPedidos(dataSelect.value).then((response)=>{
-      console.log(response)
       this.tableData = [];
       response.content.forEach(item =>{
         
         this.tableData.push({
           id : item.id,
           idPedido : item.idPedido,
-          clienteNome : item.clienteNome,
+          nome : item.nome,
           status: item.status,
           dataPedido : item.dataPedido,
           endereco : item.entrega ? item.enderecoDescricao : "Buscar"

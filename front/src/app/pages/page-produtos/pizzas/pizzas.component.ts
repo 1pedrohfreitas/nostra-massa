@@ -23,7 +23,6 @@ export class PizzasComponent {
   ]
 
   tableActionDataClick(action : ButtonActionClick){
-    console.log(action)
   }
 
 }

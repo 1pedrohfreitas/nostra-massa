@@ -27,14 +27,14 @@ export class PedidoService {
   }
 
   adicionaItemPedido(idPedido : number , item : PedidoItemDTO){
-    return this._apiService.post('pedido/itemPedido/'+idPedido,item)
+    return this._apiService.post('pedido/itemPedido/'+idPedido,item);
   }
   //Novo
   getItemPedido(idItem : number){
-    return this._apiService.get('pedido/itemPedido/'+idItem)
+    return this._apiService.get('pedido/itemPedido/'+idItem);
   }
   removeItemPedido(idPedido : number ,idItem : number){
-    return this._apiService.delete('pedido/itemPedido/'+idPedido+'/'+idItem)
+    return this._apiService.delete('pedido/itemPedido/'+idPedido+'/'+idItem);
   }
   
   cancelaPedido(id : number) : Promise<PedidoDTO> {
@@ -46,7 +46,11 @@ export class PedidoService {
   }
 
   getDatasReferencias():Promise<Page<string>>{
-    return this._apiService.get('pedido/datas')
+    return this._apiService.get('pedido/datas');
+  }
+
+  getTaxaDeEntrega(bairro : string):Promise<number>{
+    return this._apiService.get('endereco/bairro/taxaEntrega/'+ bairro);
   }
 
   getListaPedidos(data : string):Promise<Page<PedidoDTO>>{
@@ -54,7 +58,6 @@ export class PedidoService {
       let dataPage :Page<PedidoDTO> = new Page;
       const dataContent :PedidoDTO[] = []
       this._apiService.get('pedido/datas/'+data).then(response =>{
-        console.log(response)
         if(response != undefined){
           dataPage = response
           response.content.forEach((value : PedidoDTO)=>{

@@ -9,7 +9,6 @@ export class ClienteDTO {
     apartamento: string = '';
     complemento: string = '';
     enderecoDescricao: string = '';
-    taxaEntrega: number = 0;
 }
 
 export class BairroDTO {

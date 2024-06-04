@@ -31,7 +31,7 @@ public class PedidoDTO {
 	
 	private Double valor;
 	
-	private Double valorTaxa;
+	private Double taxaEntrega;
 	
 	private String enderecoDescricao;
 	
@@ -39,9 +39,9 @@ public class PedidoDTO {
 	
 	private Long idCliente;
 	
-	private String clienteTelefone;
+	private String telefone;
 	
-	private String clienteNome;
+	private String nome;
 	
 	private String bairro;
 

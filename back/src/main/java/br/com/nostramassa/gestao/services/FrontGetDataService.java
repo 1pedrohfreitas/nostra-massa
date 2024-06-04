@@ -9,35 +9,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.nostramassa.gestao.dtos.FrontDataServiceDTO;
-import br.com.nostramassa.gestao.dtos.pedido.BairroDTO;
 import br.com.nostramassa.gestao.dtos.pedido.BebidaDTO;
 import br.com.nostramassa.gestao.dtos.pedido.BebidaTamanhoValorDTO;
 import br.com.nostramassa.gestao.dtos.pedido.PizzaAcrescimoDTO;
 import br.com.nostramassa.gestao.dtos.pedido.PizzaSaborDTO;
 import br.com.nostramassa.gestao.dtos.pedido.PizzaSaborIngredienteDTO;
-import br.com.nostramassa.gestao.dtos.pedido.RuaDTO;
 import br.com.nostramassa.gestao.models.pedido.PizzaIngrediente;
-import br.com.nostramassa.gestao.repositories.BairrosRepository;
 import br.com.nostramassa.gestao.repositories.BebidaRepository;
 import br.com.nostramassa.gestao.repositories.PizzaAcrescimoRepository;
 import br.com.nostramassa.gestao.repositories.PizzaIngredienteRepository;
 import br.com.nostramassa.gestao.repositories.PizzaSaborRepository;
-import br.com.nostramassa.gestao.repositories.RuasRepository;
 
 @Service
 public class FrontGetDataService {
 
-	private List<BairroDTO> bairros = new ArrayList<>();
-	private List<RuaDTO> ruas = new ArrayList<>();
 	private List<PizzaSaborDTO> pizzasSabor = new ArrayList<>();
 	private List<PizzaAcrescimoDTO> pizzasAcrescimos = new ArrayList<>();
 	private List<BebidaDTO> bebidas = new ArrayList<>();
-
-	@Autowired
-	private RuasRepository ruasRepository;
-
-	@Autowired
-	private BairrosRepository bairrosRepository;
 
 	@Autowired
 	private PizzaSaborRepository pizzaSaborRepository;
@@ -52,8 +40,6 @@ public class FrontGetDataService {
 	private PizzaAcrescimoRepository pizzaAcrescimoRepository;
 	
 	public void atualizaDadosInicializacao() {
-		atualizaRuas();
-		atualizaBairros();
 		atualizaPizzas();
 		atualizaBebidas();
 		atualizaAcrecimos();
@@ -62,8 +48,6 @@ public class FrontGetDataService {
 	public FrontDataServiceDTO getDataToFront() {
 		atualizaDadosInicializacao();
 		FrontDataServiceDTO frontDataServiceDTO = new FrontDataServiceDTO();
-		frontDataServiceDTO.setRuas(ruas);
-		frontDataServiceDTO.setBairros(bairros);
 		frontDataServiceDTO.setPizzasSabor(pizzasSabor);
 		frontDataServiceDTO.setBebidas(bebidas);
 		frontDataServiceDTO.setPizzasAcrescimos(pizzasAcrescimos);
@@ -71,27 +55,6 @@ public class FrontGetDataService {
 		return frontDataServiceDTO;
 	}
 
-	public void atualizaRuas() {
-		ruas = new ArrayList<>();
-		ruasRepository.findAll().forEach(item -> {
-			RuaDTO ruaDTO = new RuaDTO();
-			ruaDTO.setId(item.getId());
-			ruaDTO.setNome(item.getNome());
-			ruas.add(ruaDTO);
-		});
-	}
-
-	public void atualizaBairros() {
-		bairros = new ArrayList<>();
-		bairrosRepository.getBairrosOrderByMaisUtilizados().forEach(item -> {
-			BairroDTO bairroDTO = new BairroDTO();
-			bairroDTO.setId(item.getId());
-			bairroDTO.setNome(item.getNome());
-			bairroDTO.setTaxaEntrega(item.getValorTaxa());
-			bairros.add(bairroDTO);
-		});
-	}
-	
 	public void atualizaPizzas() {
 		pizzasSabor = new ArrayList<>();
 		pizzaSaborRepository.findAll().forEach(item -> {

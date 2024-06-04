@@ -10,8 +10,6 @@ import { InputSelectOption } from 'pedrohfreitas-lib';
 })
 export class LocalStorageServiceService {
 
-  listaRuas : RuaDTO[] = []
-  listaBairros : BairroDTO[]= []
   listaBebidas : BebidaDTO[] = []
   listaPizzas : PizzaSaborDTO[]= []
   listaPizzaAcrescimo : PizzaAcrescimoDTO[] = []
@@ -24,18 +22,10 @@ export class LocalStorageServiceService {
   frontDataServiceDTO = new FrontDataServiceDTO;
   
   handleLocalStorageDataFront(){
-    const storedListaRuas = localStorage.getItem('listaRuas');
-    const storedListaBairros = localStorage.getItem('listaBairros');
     const storedListaBebidas = localStorage.getItem('listaBebidas');
     const storedListaPizzas = localStorage.getItem('listaPizzaSabores');
     const storedListaPizzasAcrescimos = localStorage.getItem('listaPizzaAcrescimos');
     
-    if(storedListaRuas != null){
-      this.listaRuas = JSON.parse(storedListaRuas);
-    }
-    if(storedListaBairros != null){
-      this.listaBairros = JSON.parse(storedListaBairros);
-    }
     if(storedListaBebidas != null){
       this.listaBebidas = JSON.parse(storedListaBebidas);
     }

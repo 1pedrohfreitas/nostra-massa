@@ -8,7 +8,8 @@ import { PedidoDTO, PedidoItemDTO } from '../../../shared/models/PedidoDTO';
 import { PedidoModule } from '../pedido.module';
 import { ActivatedRoute } from '@angular/router';
 import { ClienteDTO } from '../../../shared/models/ClienteDTO';
-import { InputSelectOption } from 'pedrohfreitas-lib';
+import { ButtonAction, ButtonActionClick, InputSelectOption } from 'pedrohfreitas-lib';
+import { AutoCompleteServiceService } from '../../../services/auto-complete-service.service';
 
 @Component({
   selector: 'app-pedido-manual',
@@ -18,7 +19,28 @@ import { InputSelectOption } from 'pedrohfreitas-lib';
 })
 export class PedidoManualComponent {
   pageTitulo = 'Pedido: '
-
+  pageActionsButtons: ButtonAction[] = [
+    {
+      action: 'imprimir',
+      icon: 'imprimir',
+      disable: false
+    },
+    {
+      action: 'cancelar',
+      icon: 'x',
+      disable: false
+    },
+    {
+      action: 'previa',
+      icon: 'imprimir-previa',
+      disable: false
+    },
+    {
+      action: 'novo',
+      icon: 'novo-pedido',
+      disable: false
+    },
+  ]
 
   pedido: PedidoDTO = new PedidoDTO;
   idCliente: number = 0;
@@ -40,19 +62,8 @@ export class PedidoManualComponent {
 
   optionDefaultTipoPagamento?: InputSelectOption;
 
-  listaSelectTipo: InputSelectOption[] = [
-    {
-      option: 'Pizza',
-      value: 'Pizza',
-      defaultValue: true
-    },
-    {
-      option: 'Bebida',
-      value: 'Bebida'
-    },
-  ]
-
-  listaTipoPagamentoOptions :InputSelectOption[] = [
+  listaTelefones : string[] = []
+  listaTipoPagamentoOptions: InputSelectOption[] = [
     {
       option: 'GERAL',
       value: 'GERAL',
@@ -74,15 +85,34 @@ export class PedidoManualComponent {
   constructor(
     private _pedidoService: PedidoService,
     private _clientesService: ClientesService,
-    private _localStorageService: LocalStorageServiceService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private _autoCompleteService : AutoCompleteServiceService
   ) {
-    this._localStorageService.listaRuas;
     if (this.activatedRoute.snapshot.paramMap.get("idPedido") != undefined) {
       this.pedido.id = Number(this.activatedRoute.snapshot.paramMap.get("idPedido"));
     }
 
     this.carregaDadosPedidoGeral();
+  }
+
+  actionButtonPageClick(action: ButtonActionClick) {
+      switch (action.action?.action) {
+        case 'imprimir':
+          this.imprimir();
+          break;
+        case 'cancelar':
+          this.cancelaPedido();
+          break;
+        case 'novo':
+          this.novoPedido();
+          break;
+        case 'previa':
+          this.mostrarEmNovaAba();
+          break;
+  
+        default:
+          break;
+      }
   }
 
   cancelaPedido() {
@@ -93,7 +123,7 @@ export class PedidoManualComponent {
 
   changeEntrega() {
     if (!this.pedido.entrega) {
-      this.pedido.valorTaxa = 0;
+      this.pedido.taxaEntrega = 0;
       this.calculaValorPedido();
     }
     if (this.pedido.entrega) {
@@ -101,15 +131,22 @@ export class PedidoManualComponent {
     }
   }
 
+  handleTelefone(value : string){
+    this.pedido.telefone = value
+    this.listaTelefones = []
+    this._autoCompleteService.autoCompleteTelefone(value).then((response)=>{
+      this.listaTelefones = response.content
+    });
+  }
+
   getDadosClienteByTelefone() {
-    console.log(this.pedido)
-    if (this.pedido.clienteTelefone != undefined && this.pedido.clienteTelefone != '') {
-      this._clientesService.getDadosClienteByTelefone(this.pedido.clienteTelefone).then((response) => {
+    if (this.pedido.telefone != undefined && this.pedido.telefone != '') {
+      this._clientesService.getDadosClienteByTelefone(this.pedido.telefone).then((response) => {
         if (response != null) {
           if (response.id != undefined) {
             this.idCliente = response.id
           }
-          this.pedido.clienteNome = response.nome;
+          this.pedido.nome = response.nome;
           this.pedido.enderecoDescricao = response.enderecoDescricao
 
           this.pedido.rua = response.rua;
@@ -118,27 +155,33 @@ export class PedidoManualComponent {
           this.pedido.complemento = response.complemento;
           this.pedido.bloco = response.bloco;
           this.pedido.apartamento = response.apartamento;
-          this.pedido.valorTaxa = response.taxaEntrega
-          this.gravarPedido();
+           
+          this._pedidoService.getTaxaDeEntrega(response.bairro).then((responseTx)=>{
+            this.pedido.taxaEntrega = responseTx
+            this.gravarPedido();
+          })
+          
         } else {
           this.showSalvarCliente = true;
         }
         this.calculaValorPedido();
-      });
+      }
+      
+      );
     }
   }
 
   adicionarCliente() {
-    if (this.pedido.clienteNome == undefined || this.pedido.clienteNome == ''
-      || this.pedido.clienteNome.length < 3) {
+    if (this.pedido.nome == undefined || this.pedido.nome == ''
+      || this.pedido.nome.length < 3) {
       alert('Nome Obrigatorio')
-    } else if (this.pedido.clienteTelefone == undefined || this.pedido.clienteTelefone == ''
-      || this.pedido.clienteTelefone.length < 8) {
+    } else if (this.pedido.telefone == undefined || this.pedido.telefone == ''
+      || this.pedido.telefone.length < 8) {
       alert('Telefone Obrigatorio')
     } else {
       let cliente = new ClienteDTO
-      cliente.nome = this.pedido.clienteNome;
-      cliente.telefone = this.pedido.clienteTelefone;
+      cliente.nome = this.pedido.nome;
+      cliente.telefone = this.pedido.telefone;
 
       this._clientesService.adicionaCliente(cliente).then((response) => {
         this.idCliente = response.id
@@ -147,18 +190,11 @@ export class PedidoManualComponent {
     }
   }
 
-  handleTelefone(telefoneSelecionado: InputSelectOption) {
-    this.pedido.clienteTelefone = telefoneSelecionado.option;
-    if (telefoneSelecionado?.value != undefined && telefoneSelecionado.option != '') {
-      this.getDadosClienteByTelefone();
-    }
-  }
-
-  setTipoPagamento(tipoDePagamento : InputSelectOption){
+  setTipoPagamento(tipoDePagamento: InputSelectOption) {
     this.pedido.tipoPagamento = tipoDePagamento.value
   }
 
-  adicionaItemPedido(tipo : 'Pizza' | 'Bebida') {
+  adicionaItemPedido(tipo: 'Pizza' | 'Bebida') {
     if (this.pedido.itensPedido == null) {
       this.pedido.itensPedido = []
     }
@@ -211,7 +247,7 @@ export class PedidoManualComponent {
       if (response != undefined && response != null) {
         this.pedido = response;
         this.desabilitaCampoIDPedido = true;
-        if (this.pedido.clienteTelefone != undefined) {
+        if (this.pedido.telefone != undefined) {
           this.getDadosClienteByTelefone();
         } else {
           this.calculaValorPedido();
@@ -225,24 +261,18 @@ export class PedidoManualComponent {
   carregaDadosPedidoGeral() {
     if (this.pedido.id != undefined && this.pedido.id != 0) {
       this._pedidoService.getDadosPedido(this.pedido.id).then((response) => {
-        
+
         if (response != undefined && response != null) {
-          
           this.pedido = JSON.parse(JSON.stringify(response));
-          
-          this.pageTitulo = 'Pedido: '+ (this.pedido.idPedido != null ? this.pedido.idPedido : '');
-          
-          
+          this.pageTitulo = 'Pedido: ' + (this.pedido.idPedido != null ? this.pedido.idPedido : '');
           if (response.itensPedido == null || response.itensPedido == undefined) {
             this.pedido.itensPedido = []
           }
-          
           if (this.pedido.tipoPagamento != null && this.pedido.tipoPagamento != undefined) {
-            
-           this.optionDefaultTipoPagamento ={
-            option: response.tipoPagamento,
-            value: response.tipoPagamento
-           }
+            this.optionDefaultTipoPagamento = {
+              option: response.tipoPagamento,
+              value: response.tipoPagamento
+            }
           } else {
             this.pedido.tipoPagamento = 'GERAL'
           }
@@ -267,8 +297,8 @@ export class PedidoManualComponent {
       day: '2-digit',
       hour: 'numeric',
       minute: 'numeric',
-    }).replace(',','');
-    
+    }).replace(',', '');
+
     const itensPedidoPizza: PedidoItemDTO[] = [];
     const itensPedidoBebida: PedidoItemDTO[] = [];
 
@@ -277,18 +307,18 @@ export class PedidoManualComponent {
       + `Data/Hora: ${dataFormatada}\r\n`
       + `Pagamento: ${this.pedido.tipoPagamento}\r\n`
       + '========================\r\n'
-      + `Nome: ${this.pedido.clienteNome}\r\n`
-      + `Telefone: ${this.pedido.clienteTelefone}\r\n`
+      + `Nome: ${this.pedido.nome}\r\n`
+      + `Telefone: ${this.pedido.telefone}\r\n`
       + '========================\r\n';
-      if(this.pedido.entrega){
-        pedidoReport = pedidoReport + `End: ${this.pedido.rua}\r\n`
+    if (this.pedido.entrega) {
+      pedidoReport = pedidoReport + `End: ${this.pedido.rua}\r\n`
         + `N: ${this.pedido.numero}\r\n`
         + `Bairro: ${this.pedido.bairro}\r\n`;
-      }
-      if(!this.pedido.entrega){
-        pedidoReport = pedidoReport + `BUSCAR\r\n`;
-      }
-      
+    }
+    if (!this.pedido.entrega) {
+      pedidoReport = pedidoReport + `BUSCAR\r\n`;
+    }
+
     if (this.pedido.bloco != undefined && this.pedido.bloco != '') {
       pedidoReport = pedidoReport + 'Bloco: ' + this.pedido.bloco + '\r\n';
     }
@@ -315,7 +345,7 @@ export class PedidoManualComponent {
     if (itensPedidoPizza.length > 0) {
       pedidoReport = pedidoReport + '==========Pizzas=========\r\n'
       itensPedidoPizza.forEach((value, index) => {
-        pedidoReport = pedidoReport + '======____Pizza:'+(index + 1)+'____=====\r\n'+ value.descricao + '\r\n'
+        pedidoReport = pedidoReport + '======____Pizza:' + (index + 1) + '____=====\r\n' + value.descricao + '\r\n'
           + '\r\n'
           + '====================\r\n';
       })
@@ -330,7 +360,7 @@ export class PedidoManualComponent {
       })
     }
 
-    pedidoReport = `${pedidoReport}Taxa de Entrega: ${this.pedido.valorTaxa.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\r\n`
+    pedidoReport = `${pedidoReport}Taxa de Entrega: ${this.pedido.taxaEntrega.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\r\n`
       + '========================\r\n'
       + `Valor Pedido: ${this.pedido.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\r\n`
       + '========================\r\n';
@@ -348,16 +378,16 @@ export class PedidoManualComponent {
       this._pedidoService.salvarEImprimir(this.pedido).then((response) => {
         this.carregaDadosPedidoGeral();
       })
-    } 
+    }
   }
   openModalEndereco() {
-     this.showModalEndereco = true;
+    this.showModalEndereco = true;
   }
 
   calculaValorPedido() {
     let valor: number = 0
-    if (this.pedido.valorTaxa != undefined && this.pedido.valorTaxa != 0) {
-      valor = valor + this.pedido.valorTaxa
+    if (this.pedido.taxaEntrega != undefined && this.pedido.taxaEntrega != 0) {
+      valor = valor + this.pedido.taxaEntrega
     }
     if (this.pedido.itensPedido != undefined && this.pedido.itensPedido.length > 0) {
       this.pedido.itensPedido.forEach((item) => {

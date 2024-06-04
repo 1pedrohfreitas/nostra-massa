@@ -71,5 +71,12 @@ public class ClienteController {
 		msg.setTypeMsg("sucesso");
 		return new ResponseDTO<String>().ok(clienteService.excluirCliente(idCliente), Arrays.asList(msg));
 	}
+	@GetMapping(path = "/telefone/autoComplete/{telefone}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ResponseDTO<Page<String>>> autoCompleteTelefone(Pageable pageable, @PathVariable String telefone) {
+		if (pageable == null) {
+			pageable = PageRequest.of(0, 100);
+		}
+		return new ResponseDTO<Page<String>>().ok(clienteService.autoCompleteTelefone(pageable, telefone.replaceAll("_", " ")), null);
+	}
 
 }

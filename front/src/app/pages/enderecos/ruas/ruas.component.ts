@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { RuaDTO } from '../../../shared/models/ClienteDTO';
 import { SharedModule } from '../../../shared/shared.module';
 import { EnderecosService } from '../enderecos.service';
-import { LocalStorageServiceService } from '../../../services/local-storage-service.service';
 import { ButtonAction, ButtonActionClick } from 'pedrohfreitas-lib';
 
 @Component({
@@ -29,19 +28,14 @@ export class RuasComponent {
   ]
   
   constructor(
-    private _localStorageService: LocalStorageServiceService,
     private _enderecoService : EnderecosService
   ){
-    this._localStorageService.listaRuas.forEach(value=>{
-      this.listaRuas.push(value.nome);
-    });
     this._enderecoService.getListaDeRuas().then((response)=>{
       this.tableData = response.content;
     })
   }
 
   tableActionDataClick(action : ButtonActionClick){
-    console.log(action)
   }
   adicionar(){
 

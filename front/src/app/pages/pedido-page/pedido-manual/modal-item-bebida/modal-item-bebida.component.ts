@@ -7,8 +7,7 @@ import { InputSelectOption } from 'pedrohfreitas-lib';
 
 @Component({
   selector: 'app-modal-item-bebida',
-  templateUrl: './modal-item-bebida.component.html',
-  styleUrl: './modal-item-bebida.component.scss'
+  templateUrl: './modal-item-bebida.component.html'
 })
 export class ModalItemBebidaComponent {
   @Input() showModal: boolean = false;

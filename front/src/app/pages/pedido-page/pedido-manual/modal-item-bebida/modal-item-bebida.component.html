@@ -1,27 +1,37 @@
 <div class="modal-container" *ngIf="showModal">
-    <div class="modal-conteudo" *ngIf="showConteudo" >
+    <div class="modal-conteudo col-8" *ngIf="showConteudo" >
         <div class="row row-space-bottom">
-                <div class="col-2">
-                    <app-input  (valueChange)="setQuantidade($event)" [value]="itemPedidoBebida.quantidade.toString()" label="Quantidade" [type]="'number'" />
+            <app-fieldset label="Dados Bebidas" class="col-auto">
+                <div class="row row-space-bottom">
+                    <div class="col-auto">
+                        <app-input-select [value]="optionDefaultBebida" (valueChange)="setBebida($event)" label="Bebida"
+                            [options]="listaBebidasOptions"></app-input-select>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <app-input-select [value]="optionDefaultBebida" (valueChange)="setBebida($event)" label="Bebida" [options]="listaBebidasOptions"></app-input-select>
+                <div class="row row-space-bottom">
+                    <div class="col-auto">
+                        <app-input-select [value]="optionDefaultTamanho" (valueChange)="setTamanhoItem($event)"
+                            label="Tamanho" [options]="listaTamanhoItem"></app-input-select>
+                    </div>
                 </div>
-                <div class="col-3">
-                    <app-input-select [value]="optionDefaultTamanho" (valueChange)="setTamanhoItem($event)" label="Tamanho" [options]="listaTamanhoItem"></app-input-select>
+                <div class="row row-space-bottom">
+                    <div class="col-4">
+                        <app-input (valueChange)="setQuantidade($event)" [value]="itemPedidoBebida.quantidade"
+                            label="Quantidade" [type]="'number'" />
+                    </div>
+                    <div class="col-auto">
+                        <app-input-money [readonly]="true" [value]="itemPedidoBebida.valor" label="Valor" />
+                    </div>
                 </div>
-                <div class="col-2">
-                    <app-input [readonly]="true"  [value]="itemPedidoBebida.valor.toString()" label="Valor" />
+            </app-fieldset>
+            <app-fieldset label="Ações" class="col-3">
+                <div class="col-button">
+                    <app-button-action (click)="save()" type="salvar" />
                 </div>
+                <div class="col-button">
+                    <app-button-action (click)="onCloseModal()" type="x" />
+                </div>
+            </app-fieldset>
         </div>
-        <div class="row">
-            <div class="col-button">
-                <app-button-action (click)="save()" type="salvar" />
-            </div>
-            <div class="col-button">
-                <app-button-action (click)="onCloseModal()" type="x" />
-            </div>
-        </div>
-        
     </div>
 </div>

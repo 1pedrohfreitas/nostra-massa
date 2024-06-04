@@ -3,7 +3,6 @@ import { BairroDTO } from '../../../shared/models/ClienteDTO';
 import { EnderecosService } from '../enderecos.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { ButtonAction, ButtonActionClick } from 'pedrohfreitas-lib';
-import { LocalStorageServiceService } from '../../../services/local-storage-service.service';
 
 @Component({
   selector: 'app-bairros',
@@ -29,12 +28,8 @@ export class BairrosComponent {
   ]
   
   constructor(
-    private _localStorageService: LocalStorageServiceService,
     private _enderecoService : EnderecosService
   ){
-    this._localStorageService.listaBairros.forEach(value=>{
-      this.listaBairros.push(value.nome);
-    });
     this._enderecoService.getListaDeBairros().then((response)=>{
       this.tableData = [];
       response.content.forEach(value =>{
@@ -48,7 +43,6 @@ export class BairrosComponent {
   }
 
   tableActionDataClick(action : ButtonActionClick){
-    console.log(action)
   }
   adicionar(){
 

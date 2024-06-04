@@ -1,53 +1,37 @@
-<app-page [titulo]="pageTitulo">
-    <div class="row">
+<app-page [titulo]="pageTitulo" [actionButtons]="pageActionsButtons" (actionDataClick)="actionButtonPageClick($event)">
+    <div class="row" *ngIf="pedido.id != 0">
         <div class="col-auto">
             <app-fieldset label="Dados Pedido">
                 <div *ngIf="desabilitaCampoIDPedido" class="col-5">
-                    <app-input [readonly]="true" [value]="pedido.dataPedido" specialType="dd_mm_yy_hh_mm" label="Data / Hora Pedido" />
+                    <app-input-date-time [readonly]="true" inputType="yyyy-MM-DD HH:MM" [value]="pedido.dataPedido" label="Data / Hora Pedido" />
                 </div>
                 <div *ngIf="desabilitaCampoIDPedido" class="col-3">
-                    <app-input [readonly]="true" [value]="pedido.valor" specialType="real" label="Valor:"/>
+                    <app-input-money [readonly]="true" [value]="pedido.valor" label="Valor:"/>
                 </div>
                 <div class="col-4">
                     <app-input-select [value]="optionDefaultTipoPagamento" (valueChange)="setTipoPagamento($event)" label="Tipo Pagamento" [options]="listaTipoPagamentoOptions" />
                 </div>
-                <div class="col-2">
+                <div class="col-auto">
                     <app-input-checkbox id="entrega-checkbox" label="Entrega" [(value)]="pedido.entrega" (valueChange)="changeEntrega()"/>
                 </div>
                 <div class="col-3">
-                    <app-input [readonly]="true" [value]="pedido.valorTaxa" label="Taxa:" specialType="real"/>
-                </div>
-            </app-fieldset>
-        </div>
-        <div class="col-4">
-            <app-fieldset label="Ações">
-                <div *ngIf="desabilitaCampoIDPedido" class="col-button">
-                    <app-button-action type="imprimir" (click)="imprimir()" />
-                </div>
-                <div *ngIf="desabilitaCampoIDPedido" class="col-button">
-                    <app-button-action type="x" (click)="cancelaPedido()" />
-                </div>
-                <div *ngIf="!desabilitaCampoIDPedido || pedido.status == 'CONCLUIDO'" class="col-button">
-                    <app-button-action type="novo-pedido" (click)="novoPedido()" />
-                </div>
-                <div *ngIf="this.pedido.id != 0" class="col-button">
-                    <app-button-action type="imprimir-previa" (click)="mostrarEmNovaAba()" />
+                    <app-input-money [readonly]="true" [value]="pedido.taxaEntrega" label="Taxa:" />
                 </div>
             </app-fieldset>
         </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="pedido.id != 0">
         <div class="col-auto">
             <app-fieldset label="Dados Cliente">
                 <div class="col-3">
-                    <app-input label="Telefone:" id="pedido-telefone" [(value)]="pedido.clienteTelefone">
-                    </app-input>
+                    <app-input-text-autocomplete id="pedido-telefone" label="Telefone:" [value]="pedido.telefone"
+                                [options]="listaTelefones" (valueChange)="handleTelefone($event)" />
                 </div>
                 <div class="col-button">
                     <app-button-action type="lupa" (click)="getDadosClienteByTelefone()" />
                 </div>
                 <div class="col-4">
-                    <app-input [(value)]="pedido.clienteNome" label="Nome" (valueChange)="gravarPedido()" />
+                    <app-input [(value)]="pedido.nome" label="Nome" (valueChange)="gravarPedido()" />
                 </div>
                 <div *ngIf="showSalvarCliente" class="col-1">
                     <app-button-action type="usuario-adicinar" (click)="adicionarCliente()" />
@@ -62,13 +46,13 @@
             </app-fieldset>
         </div>
     </div>
-    <div *ngIf="desabilitaCampoIDPedido" class="row">
+    <div class="row row-space-bottom" *ngIf="pedido.id != 0">
         <div class="col-20">
             <app-input label="Observação:" [upperCase]="true" [(value)]="pedido.observacao"
                 (valueChange)="gravarPedido()" />
         </div>
     </div>
-    <div *ngIf="desabilitaCampoIDPedido" class="row">
+    <div class="row row-space-bottom" *ngIf="pedido.id != 0">
         <div class="col-button">
             <app-button-action type="pizza" (click)="adicionaItemPedido('Pizza')" />
         </div>
@@ -76,7 +60,7 @@
             <app-button-action type="refrigerante" (click)="adicionaItemPedido('Bebida')" />
         </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="pedido.id != 0">
         <div class="col-auto">
             <app-fieldset label="Itens Pedido" *ngIf="desabilitaCampoIDPedido">
                 <div *ngFor="let item of pedido.itensPedido; let index = index" class="row">
@@ -105,8 +89,8 @@
                             id="item-{{index + 1}}-tamanho" label="Tamanho" />
                     </div>
                     <div class="col-2">
-                        <app-input [readonly]="true"
-                            [value]="item.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })" label="Valor"
+                        <app-input-money [readonly]="true"
+                            [value]="item.valor" label="Valor"
                             id="item-{{index + 1}}-valor" />
                     </div>
                 </div>
@@ -114,7 +98,7 @@
         </div>
     </div>
     <div>
-        <app-modal-endereco [telefoneCliente]="pedido.clienteTelefone" [(showModal)]="showModalEndereco"
+        <app-modal-endereco [telefoneCliente]="pedido.telefone" [(showModal)]="showModalEndereco"
             (showModalChange)="getDadosClienteByTelefone()">
         </app-modal-endereco>
         <app-modal-item-pizza [idPedido]="pedido.id" [idItem]="idItem" (dadosItemChange)="carregaDadosPedidoGeral()"

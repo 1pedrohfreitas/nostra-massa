@@ -14,8 +14,12 @@ public class CarregaDadosMemoriaService implements ApplicationRunner {
 	@Autowired
 	private FrontGetDataService frontGetDataService;
 	
+	@Autowired
+	private EnderecoService enderecoService;
+	
 	public void carregaDados() {
 		frontGetDataService.atualizaDadosInicializacao();
+		enderecoService.atualizaTaxasDeEntrega();
 	}
 
 	@Override

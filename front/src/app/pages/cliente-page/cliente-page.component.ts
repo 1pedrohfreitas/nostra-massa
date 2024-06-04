@@ -1,11 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ClientesService } from './clientes.service';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { PedidoModule } from '../pedido-page/pedido.module';
-import { LocalStorageServiceService } from '../../services/local-storage-service.service';
 import { ClienteDTO } from '../../shared/models/ClienteDTO';
-import { PedidoDTO } from '../../shared/models/PedidoDTO';
 import { PedidoService } from '../pedido-page/pedido.service';
 import { ButtonAction, ButtonActionClick } from 'pedrohfreitas-lib';
 
@@ -20,13 +18,13 @@ export class ClientePageComponent {
 
   telefoneFiltro = '';
 
-  listaClientes : ClienteDTO[] = [];
+  // listaClientes : ClienteDTO[] = [];
   
   listaRuas : string[] = [];
   listaBairros : string[] = [];
 
   tableClienteDiarioCabecalho = ['Data / Hora:','Telefone','Nome','Endereço:'];
-  tableClienteDiarioColunas = ['dataPedido','clienteTelefone','clienteNome','enderecoDescricao'];
+  tableClienteDiarioColunas = ['dataPedido','telefone','nome','enderecoDescricao'];
   tableClienteDiarioColunasSize = ['10','15','15','50'];
   tableClienteDiarioData : any[] = [];
   tableClienteDiarioActionsButtons : ButtonAction[] = [
@@ -48,29 +46,29 @@ export class ClientePageComponent {
 
   cliente : ClienteDTO = new ClienteDTO;
 
+  dataRefencia : string = '1900-01-01'
+
   constructor(
     private _clientesService : ClientesService,
-    private _localStorageService: LocalStorageServiceService,
     private _pedidoService : PedidoService
   ){
-    this._localStorageService.listaRuas.forEach(value=>{
-      this.listaRuas.push(value.nome);
-    });
-    this._localStorageService.listaBairros.forEach(value=>{
-      this.listaBairros.push(value.nome);
-    });
-    this.getListaClientes();
     this._pedidoService.getDatasReferencias().then((response)=>{
       if(response.content.length > 0){
-        this._pedidoService.getListaPedidos(response.content[0]).then((response)=>{
-          this.tableClienteDiarioData = response.content;
-        })
+        this.dataRefencia = response.content[0];
+        this.getListaPedidos();
       }
     })
     
   }
+  getListaPedidos(){
+    if(this.dataRefencia != '1900-01-01'){
+      this._pedidoService.getListaPedidos(this.dataRefencia).then((response)=>{
+        this.tableClienteDiarioData = response.content;
+      })
+    }
+  }
   tableClientesActionDataClick(action : ButtonActionClick){
-    this.getDadosClienteByTelefone(action.data.clienteTelefone);
+    this.getDadosClienteByTelefone(action.data.telefone);
   }
   tableClientePedidosActionDataClick(action : ButtonActionClick){
   }
@@ -91,17 +89,11 @@ export class ClientePageComponent {
     if(this.cliente.nome != '' && this.cliente.telefone != '')
     this._clientesService.adicionaCliente(this.cliente).then((data)=>{
       this.cliente =  JSON.parse(JSON.stringify(data));
-      this.getListaClientes();
+      this.getListaPedidos();
+      this.cliente = new ClienteDTO
     })
   }
-  excluirCliente(){
-    // if(this.cliente.id != undefined){
-    //   this._clientesService.excluirCliente(this.cliente.id).then((response)=>{
-    //     this.getListaClientes();
-    //   })
-    // }
-  }
-
+  
   getDadosClienteByTelefone(telefone : string) {
       this._clientesService.getDadosClienteByTelefone(telefone).then((response) => {
         if (response != null) {
@@ -130,13 +122,6 @@ export class ClientePageComponent {
           valor : value.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
         })
       })
-      console.log(response.content)
-    })
-  }
-  getListaClientes(){
-    this._clientesService.getListaClientes().then((response) => {
-      this.listaClientes = response.content
-      this.cliente = new ClienteDTO
     })
   }
 }

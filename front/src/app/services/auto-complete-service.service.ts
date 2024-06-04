@@ -18,4 +18,8 @@ export class AutoCompleteServiceService {
   autoCompleteRua(conteudo : string) : Promise<Page<string>> {
     return this._apiService.get('endereco/rua/autoComplete/'+conteudo.toUpperCase().replaceAll(' ','_'));
   }
+
+  autoCompleteTelefone(conteudo : string) : Promise<Page<string>> {
+    return this._apiService.get('cliente/telefone/autoComplete/'+conteudo.toUpperCase().replaceAll(' ','_'));
+  }
 }
