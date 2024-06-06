@@ -1,16 +1,3 @@
-import { Component } from "@angular/core";
-import { HomeComponent } from "../pages/home/home.component";
-import { PedidoPageComponent } from "../pages/pedido-page/pedido-page.component";
-import { PedidoManualComponent } from "../pages/pedido-page/pedido-manual/pedido-manual.component";
-import { PageListaPedidosComponent } from "../pages/pedido-page/page-lista-pedidos/page-lista-pedidos.component";
-import { ClientePageComponent } from "../pages/cliente-page/cliente-page.component";
-import { PageProdutosComponent } from "../pages/page-produtos/page-produtos.component";
-import { PizzasComponent } from "../pages/page-produtos/pizzas/pizzas.component";
-import { ParametrosComponent } from "../pages/parametros/parametros.component";
-import { IngredientesComponent } from "../pages/page-produtos/ingredientes/ingredientes.component";
-import { AcrescimosComponent } from "../pages/page-produtos/acrescimos/acrescimos.component";
-import { BebidaDTO } from "./models/BebidaDTO";
-
 export class MenuDTO {
     nome: string = '';
     img: string = '';

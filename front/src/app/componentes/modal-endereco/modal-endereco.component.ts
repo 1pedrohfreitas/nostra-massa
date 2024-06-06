@@ -67,6 +67,7 @@ export class ModalEnderecoComponent {
 
   handleBairro(value: string){
       this._autoCompleteService.autoCompleteBairro(value).then((response)=>{
+        console.log(response)
         this.listaBairros = response.content
       });
     // const bairroSelecionado: BairroDTO | undefined = this._localStorageService.listaBairros.find(opt => opt.nome!= undefined && opt.nome === value);

@@ -12,7 +12,10 @@ export class AutoCompleteServiceService {
   ) { }
 
   autoCompleteBairro(conteudo : string) : Promise<Page<string>> {
-    return this._apiService.get('endereco/bairro/autoComplete/'+conteudo.toUpperCase().replaceAll(' ','_'));
+    if(conteudo == ''){
+      return this._apiService.get('endereco/bairroMaisUtilizados');  
+    }
+    return this._apiService.get('endereco/bairroMaisUtilizados/autoComplete/'+conteudo.toUpperCase().replaceAll(' ','_'));
   }
 
   autoCompleteRua(conteudo : string) : Promise<Page<string>> {

@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SharedModule } from '../../../shared/shared.module';
 import { PedidoService } from '../pedido.service';
 import { ClientesService } from '../../cliente-page/clientes.service';
-import { LocalStorageServiceService } from '../../../services/local-storage-service.service';
 import { PedidoDTO, PedidoItemDTO } from '../../../shared/models/PedidoDTO';
 import { PedidoModule } from '../pedido.module';
 import { ActivatedRoute } from '@angular/router';
@@ -23,22 +22,18 @@ export class PedidoManualComponent {
     {
       action: 'imprimir',
       icon: 'imprimir',
-      disable: false
     },
     {
       action: 'cancelar',
       icon: 'x',
-      disable: false
     },
     {
       action: 'previa',
       icon: 'imprimir-previa',
-      disable: false
     },
     {
       action: 'novo',
       icon: 'novo-pedido',
-      disable: false
     },
   ]
 
@@ -134,9 +129,11 @@ export class PedidoManualComponent {
   handleTelefone(value : string){
     this.pedido.telefone = value
     this.listaTelefones = []
-    this._autoCompleteService.autoCompleteTelefone(value).then((response)=>{
-      this.listaTelefones = response.content
-    });
+    if(value!= ''){
+      this._autoCompleteService.autoCompleteTelefone(value).then((response)=>{
+        this.listaTelefones = response.content
+      });
+    }
   }
 
   getDadosClienteByTelefone() {
@@ -200,9 +197,10 @@ export class PedidoManualComponent {
     }
     const novoItem: PedidoItemDTO = new PedidoItemDTO
     novoItem.tipo = tipo
-    this.pedido.itensPedido.push(novoItem);
+    // this.pedido.itensPedido.push(novoItem);
     this.itemPedidoBebida = JSON.parse(JSON.stringify(novoItem));
     this.itemPedidoPizza = JSON.parse(JSON.stringify(novoItem));
+    this.openModalItem(novoItem);
   }
 
   removerItemPedido(idItem: number) {
@@ -238,7 +236,6 @@ export class PedidoManualComponent {
 
       this.showModalItemBebida = true;
     }
-    // this.tipoItemModal = 'Pizza'
   }
 
   novoPedido() {

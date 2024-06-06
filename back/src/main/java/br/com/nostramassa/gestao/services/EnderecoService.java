@@ -48,6 +48,21 @@ public class EnderecoService {
 		});
 		return new PageImpl<>(lista, pageable, lista.size());
 	}
+	public Page<String> getBairrosMaisUtilizados(Pageable pageable) {
+		List<String> lista = new ArrayList<>();
+		bairrosRepository.getBairrosOrderByMaisUtilizados().forEach(item -> {
+			lista.add(item.getNome());
+		});
+		return new PageImpl<>(lista, pageable, lista.size());
+	}
+	
+	public Page<String> autoCompleteBairrosMaisUtilizados(Pageable pageable, String itemFiltro) {
+		List<String> lista = new ArrayList<>();
+		bairrosRepository.getBairrosOrderByMaisUtilizados(itemFiltro).forEach(item -> {
+			lista.add(item.getNome());
+		});
+		return new PageImpl<>(lista, pageable, lista.size());
+	}
 	public Page<String> autoCompleteRua(Pageable pageable, String itemFiltro) {
 		List<String> lista = new ArrayList<>();
 		ruasRepository.getAutoComplete(pageable, itemFiltro).forEach(item -> {
@@ -67,7 +82,7 @@ public class EnderecoService {
 	
 	public void atualizaTaxasDeEntrega() {
 		valorTaxaEntrega = new LinkedHashMap<>();
-		bairrosRepository.getBairrosOrderByMaisUtilizados().forEach(item -> {
+		bairrosRepository.findAll().forEach(item -> {
 			valorTaxaEntrega.put(item.getNome(), item.getValorTaxa());
 		});
 	}

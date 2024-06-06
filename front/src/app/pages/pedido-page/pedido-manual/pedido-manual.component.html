@@ -11,7 +11,7 @@
                 <div class="col-4">
                     <app-input-select [value]="optionDefaultTipoPagamento" (valueChange)="setTipoPagamento($event)" label="Tipo Pagamento" [options]="listaTipoPagamentoOptions" />
                 </div>
-                <div class="col-auto">
+                <div class="col-3">
                     <app-input-checkbox id="entrega-checkbox" label="Entrega" [(value)]="pedido.entrega" (valueChange)="changeEntrega()"/>
                 </div>
                 <div class="col-3">
@@ -31,7 +31,7 @@
                     <app-button-action type="lupa" (click)="getDadosClienteByTelefone()" />
                 </div>
                 <div class="col-4">
-                    <app-input [(value)]="pedido.nome" label="Nome" (valueChange)="gravarPedido()" />
+                    <app-input [(value)]="pedido.nome" label="Nome" />
                 </div>
                 <div *ngIf="showSalvarCliente" class="col-1">
                     <app-button-action type="usuario-adicinar" (click)="adicionarCliente()" />
