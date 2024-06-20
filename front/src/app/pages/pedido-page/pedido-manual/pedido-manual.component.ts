@@ -172,7 +172,6 @@ export class PedidoManualComponent {
               console.log(responseTx)
               this.pedido.taxaEntrega = responseTx
             }).then(()=>{
-              console.log('123')
               this.calculaValorPedido();
             })
           }
@@ -180,6 +179,8 @@ export class PedidoManualComponent {
           this.calculaValorPedido();
         }
         
+      }).then(()=>{
+        this.validaMostrarCampos();
       });
     }
   }
@@ -314,6 +315,7 @@ export class PedidoManualComponent {
   gravarPedido() {
     if (this.pedido.id != undefined) {
       this._pedidoService.atualizaDadosPedido(this.pedido.id, this.pedido).then((response) => {
+        this.validaMostrarCampos();
       })
     }
   }
@@ -438,7 +440,8 @@ export class PedidoManualComponent {
     } else {
       this.showNomeCliente = false;
     }
-    if(this.pedido.telefone != '' && this.pedido.nome !=''){
+    console.log(this.pedido)
+    if(this.pedido.telefone != '' && this.pedido.telefone != null && this.pedido.nome != '' && this.pedido.nome != null){
       this.showBotaoBuscarCliente = false;
       this.showBotaoRemoveCliente = true;
       this.showItensPedido = true;
