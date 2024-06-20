@@ -186,6 +186,8 @@ export class PedidoManualComponent {
   }
 
   adicionarCliente() {
+    this.pedido.nome = this.nome;
+    this.pedido.telefone = this.telefone;
     if (this.pedido.nome == undefined || this.pedido.nome == ''
       || this.pedido.nome.length < 3) {
       alert('Nome Obrigatorio')
