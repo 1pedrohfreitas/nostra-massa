@@ -271,6 +271,7 @@ export class PedidoManualComponent {
 
   novoPedido() {
     this.idCliente = 0;
+    this.removerCliente();
     this._pedidoService.criarPedido().then((response) => {
       if (response != undefined && response != null) {
         this.preencheDadosPedido(response);
