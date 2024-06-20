@@ -48,6 +48,7 @@ nav ul li {
     height: 90px;
     border: 2px solid black;
     padding: 3px;
+    background: #fff;
 }
 nav ul li a{
     display: flex;
@@ -61,7 +62,7 @@ nav ul li img{
     height: 60%;
 }
 
-nav ul li:hover{
+nav ul li a:hover{
     opacity: 0.5;
     transition: 1s;
 }

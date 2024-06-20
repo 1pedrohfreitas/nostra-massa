@@ -46,7 +46,7 @@ public class PedidoService {
 
 			if (ultimoPedido.get().getStatus().equals(StatusPedidoEnum.ABERTO)) {
 				pedido = ultimoPedido.get();
-				pedidoDTO = mapper.map(pedido, PedidoDTO.class);
+				pedidoDTO = getDadosPedido(ultimoPedido.get().getId()); 
 				return pedidoDTO;
 			} else {
 				idPedido = ultimoPedido.get().getIdPedido() + 1;

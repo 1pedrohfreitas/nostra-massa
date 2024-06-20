@@ -38,6 +38,9 @@ export class PedidoManualComponent {
   ]
 
   pedido: PedidoDTO = new PedidoDTO;
+
+  telefone : string = '';
+  nome : string = '';
   idCliente: number = 0;
   idItem: number = 0;
   itemPedidoPizza: PedidoItemDTO = new PedidoItemDTO
@@ -50,9 +53,13 @@ export class PedidoManualComponent {
   showModalItemBebida = false;
   showModalPrevia = false;
 
+  showNomeCliente = false;
   showSalvarCliente = false;
+  showBotaoBuscarCliente = false;
+  showBotaoRemoveCliente = false;
+  showBotaoEnderecoCliente = false;
+  showItensPedido = false;
 
-  desabilitaCampoIDPedido = false;
   enderecoPedido = '';
 
   optionDefaultTipoPagamento?: InputSelectOption;
@@ -127,7 +134,7 @@ export class PedidoManualComponent {
   }
 
   handleTelefone(value : string){
-    this.pedido.telefone = value
+    this.telefone = value
     this.listaTelefones = []
     if(value!= ''){
       this._autoCompleteService.autoCompleteTelefone(value).then((response)=>{
@@ -137,34 +144,43 @@ export class PedidoManualComponent {
   }
 
   getDadosClienteByTelefone() {
-    if (this.pedido.telefone != undefined && this.pedido.telefone != '') {
-      this._clientesService.getDadosClienteByTelefone(this.pedido.telefone).then((response) => {
+    this.showNomeCliente = true;
+    if (this.telefone != undefined && this.telefone != '') {
+      this._clientesService.getDadosClienteByTelefone(this.telefone).then((response) => {
         if (response != null) {
-          if (response.id != undefined) {
-            this.idCliente = response.id
-          }
+          console.log(response)
+          this.nome = response.nome;
           this.pedido.nome = response.nome;
           this.pedido.enderecoDescricao = response.enderecoDescricao
-
+          this.pedido.telefone = this.telefone
           this.pedido.rua = response.rua;
           this.pedido.bairro = response.bairro;
           this.pedido.numero = response.numero;
           this.pedido.complemento = response.complemento;
           this.pedido.bloco = response.bloco;
           this.pedido.apartamento = response.apartamento;
-           
-          this._pedidoService.getTaxaDeEntrega(response.bairro).then((responseTx)=>{
-            this.pedido.taxaEntrega = responseTx
-            this.gravarPedido();
-          })
+          
           
         } else {
           this.showSalvarCliente = true;
         }
-        this.calculaValorPedido();
       }
-      
-      );
+      ).then(()=>{
+        if(this.pedido.entrega){
+          if(this.pedido.bairro != undefined){
+            this._pedidoService.getTaxaDeEntrega(this.pedido.bairro).then((responseTx)=>{
+              console.log(responseTx)
+              this.pedido.taxaEntrega = responseTx
+            }).then(()=>{
+              console.log('123')
+              this.calculaValorPedido();
+            })
+          }
+        } else{
+          this.calculaValorPedido();
+        }
+        
+      });
     }
   }
 
@@ -186,6 +202,21 @@ export class PedidoManualComponent {
       })
     }
   }
+  removerCliente() {
+    this.nome = '';
+    this.telefone = '';
+    this.pedido.nome = '';
+    this.pedido.telefone = '';
+    this.pedido.taxaEntrega = 0;
+    this.pedido.apartamento = '';
+    this.pedido.bloco = '';
+    this.pedido.complemento = '';
+    this.pedido.rua = '';
+    this.pedido.bairro = '';
+    this.pedido.numero = '';
+    this.pedido.enderecoDescricao = '';
+    this.validaMostrarCampos();
+  }
 
   setTipoPagamento(tipoDePagamento: InputSelectOption) {
     this.pedido.tipoPagamento = tipoDePagamento.value
@@ -197,7 +228,6 @@ export class PedidoManualComponent {
     }
     const novoItem: PedidoItemDTO = new PedidoItemDTO
     novoItem.tipo = tipo
-    // this.pedido.itensPedido.push(novoItem);
     this.itemPedidoBebida = JSON.parse(JSON.stringify(novoItem));
     this.itemPedidoPizza = JSON.parse(JSON.stringify(novoItem));
     this.openModalItem(novoItem);
@@ -242,48 +272,48 @@ export class PedidoManualComponent {
     this.idCliente = 0;
     this._pedidoService.criarPedido().then((response) => {
       if (response != undefined && response != null) {
-        this.pedido = response;
-        this.desabilitaCampoIDPedido = true;
-        if (this.pedido.telefone != undefined) {
-          this.getDadosClienteByTelefone();
-        } else {
-          this.calculaValorPedido();
-        }
+        this.preencheDadosPedido(response);
       }
-      this.carregaDadosPedidoGeral();
-    });
-
+    }).then(()=> this.validaMostrarCampos());
   }
 
   carregaDadosPedidoGeral() {
     if (this.pedido.id != undefined && this.pedido.id != 0) {
       this._pedidoService.getDadosPedido(this.pedido.id).then((response) => {
-
-        if (response != undefined && response != null) {
-          this.pedido = JSON.parse(JSON.stringify(response));
-          this.pageTitulo = 'Pedido: ' + (this.pedido.idPedido != null ? this.pedido.idPedido : '');
-          if (response.itensPedido == null || response.itensPedido == undefined) {
-            this.pedido.itensPedido = []
-          }
-          if (this.pedido.tipoPagamento != null && this.pedido.tipoPagamento != undefined) {
-            this.optionDefaultTipoPagamento = {
-              option: response.tipoPagamento,
-              value: response.tipoPagamento
-            }
-          } else {
-            this.pedido.tipoPagamento = 'GERAL'
-          }
-          this.desabilitaCampoIDPedido = true;
-        }
-        this.calculaValorPedido();
-      });
+        this.preencheDadosPedido(response);
+      }).then(()=> this.validaMostrarCampos());
     }
+  }
+
+  preencheDadosPedido(response : PedidoDTO){
+    if (response != undefined && response != null) {
+      this.pedido = JSON.parse(JSON.stringify(response));
+      if(this.pedido.telefone != undefined && this.pedido.telefone != null){
+        this.telefone = this.pedido.telefone
+      }
+      if(this.pedido.nome != undefined && this.pedido.nome != null){
+        this.nome = this.pedido.nome
+      }
+      this.pageTitulo = 'Pedido: ' + (this.pedido.idPedido != null ? this.pedido.idPedido : '');
+      if (response.itensPedido == null || response.itensPedido == undefined) {
+        this.pedido.itensPedido = []
+      }
+      if (this.pedido.tipoPagamento != null && this.pedido.tipoPagamento != undefined) {
+        this.optionDefaultTipoPagamento = {
+          option: response.tipoPagamento,
+          value: response.tipoPagamento
+        }
+      } else {
+        this.pedido.tipoPagamento = 'GERAL'
+      }
+    }
+    this.validaMostrarCampos();
+    this.calculaValorPedido();
   }
 
   gravarPedido() {
     if (this.pedido.id != undefined) {
       this._pedidoService.atualizaDadosPedido(this.pedido.id, this.pedido).then((response) => {
-        this.carregaDadosPedidoGeral();
       })
     }
   }
@@ -394,10 +424,38 @@ export class PedidoManualComponent {
       })
     }
     this.pedido.valor = valor
+    this.gravarPedido();
   }
 
   mostrarEmNovaAba() {
     this.previa = this.geraArquivoRelatorio();
     this.showModalPrevia = true
+  }
+
+  validaMostrarCampos(){
+    if(this.pedido.nome != ''){
+      this.showNomeCliente = true;
+    } else {
+      this.showNomeCliente = false;
+    }
+    if(this.pedido.telefone != '' && this.pedido.nome !=''){
+      this.showBotaoBuscarCliente = false;
+      this.showBotaoRemoveCliente = true;
+      this.showItensPedido = true;
+      if(this.pedido.entrega){
+        this.showBotaoEnderecoCliente = true;
+      } else{
+        this.showBotaoEnderecoCliente = false;
+      }
+    } else {
+      this.showBotaoBuscarCliente = true;
+      this.showBotaoRemoveCliente = false;
+      this.showBotaoEnderecoCliente = false;
+      this.showItensPedido = false;
+    }
+    
+    
+    
+    
   }
 }
