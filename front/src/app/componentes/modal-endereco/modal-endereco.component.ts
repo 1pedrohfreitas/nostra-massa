@@ -19,8 +19,7 @@ export class ModalEnderecoComponent {
 
   listaRuas : string[] = [];
   listaBairros : string[] = [];
-  taxaEntrega = 0;
-  
+
   constructor(
     private _clienteService : ClientesService,
     private _autoCompleteService : AutoCompleteServiceService
