@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { LocalStorageServiceService } from '../../services/local-storage-service.service';
-import { BairroDTO, ClienteDTO, RuaDTO } from '../../shared/models/ClienteDTO';
+import { ClienteDTO } from '../../shared/models/ClienteDTO';
 import { ClientesService } from '../../pages/cliente-page/clientes.service';
 import { AutoCompleteServiceService } from '../../services/auto-complete-service.service';
 
@@ -23,7 +22,6 @@ export class ModalEnderecoComponent {
   taxaEntrega = 0;
   
   constructor(
-    private _localStorageService : LocalStorageServiceService,
     private _clienteService : ClientesService,
     private _autoCompleteService : AutoCompleteServiceService
   ){
@@ -67,24 +65,15 @@ export class ModalEnderecoComponent {
 
   handleBairro(value: string){
       this._autoCompleteService.autoCompleteBairro(value).then((response)=>{
-        console.log(response)
         this.listaBairros = response.content
       });
-    // const bairroSelecionado: BairroDTO | undefined = this._localStorageService.listaBairros.find(opt => opt.nome!= undefined && opt.nome === value);
-    // if(bairroSelecionado != undefined){
-    //   this.cliente.bairro = bairroSelecionado.nome;
-    //   this.cliente.taxaEntrega = bairroSelecionado.taxaEntrega
-    // }
+      this.cliente.bairro = value;
   }
 
   handleRua(value: string){
       this._autoCompleteService.autoCompleteRua(value).then((response)=>{
         this.listaRuas = response.content
       });
-    
-    // const ruaSelecionada: RuaDTO | undefined = this._localStorageService.listaRuas.find(opt => opt.nome != undefined && opt.nome === value);
-    // if(ruaSelecionada != undefined){
-    //   this.cliente.rua= ruaSelecionada.nome;
-    // }
+      this.cliente.rua = value;
   }
 }
