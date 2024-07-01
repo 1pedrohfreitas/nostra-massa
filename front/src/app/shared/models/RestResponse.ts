@@ -17,7 +17,7 @@ export class ResponseMessagemDTO {
 export class Notificacao{
     tipo : 'sucesso' | 'alerta' | 'erro' = 'alerta';
     titulo: string = '';
-    mensagem: string = '';
+    mensagem ?: string = '';
 }
 
 export class PageResquest{

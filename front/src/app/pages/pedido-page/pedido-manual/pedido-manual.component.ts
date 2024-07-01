@@ -9,6 +9,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ClienteDTO } from '../../../shared/models/ClienteDTO';
 import { ButtonAction, ButtonActionClick, InputSelectOption } from 'pedrohfreitas-lib';
 import { AutoCompleteServiceService } from '../../../services/auto-complete-service.service';
+import { Notificacao, ResponseMessagemDTO } from '../../../shared/models/RestResponse';
+import { ApiServicesService } from '../../../services/api-services.service';
 
 @Component({
   selector: 'app-pedido-manual',
@@ -87,6 +89,7 @@ export class PedidoManualComponent {
   constructor(
     private _pedidoService: PedidoService,
     private _clientesService: ClientesService,
+    private _apiServiceService: ApiServicesService,
     private activatedRoute: ActivatedRoute,
     private _autoCompleteService : AutoCompleteServiceService
   ) {
@@ -131,6 +134,7 @@ export class PedidoManualComponent {
     if (this.pedido.entrega) {
       this.getDadosClienteByTelefone();
     }
+    this.validaMostrarCampos();
   }
 
   handleTelefone(value : string){
@@ -148,7 +152,6 @@ export class PedidoManualComponent {
     if (this.telefone != undefined && this.telefone != '') {
       this._clientesService.getDadosClienteByTelefone(this.telefone).then((response) => {
         if (response != null) {
-          console.log(response)
           this.nome = response.nome;
           this.pedido.nome = response.nome;
           this.pedido.enderecoDescricao = response.enderecoDescricao
@@ -169,7 +172,6 @@ export class PedidoManualComponent {
         if(this.pedido.entrega){
           if(this.pedido.bairro != undefined){
             this._pedidoService.getTaxaDeEntrega(this.pedido.bairro).then((responseTx)=>{
-              console.log(responseTx)
               this.pedido.taxaEntrega = responseTx
             }).then(()=>{
               this.calculaValorPedido();
@@ -403,7 +405,7 @@ export class PedidoManualComponent {
     return pedidoReport;
   }
   imprimir() {
-    if (this.pedido.itensPedido.length > 0) {
+    if (this.validaImpressao()) {
 
       this.pedido.pedidoRelatorio = this.geraArquivoRelatorio();
 
@@ -438,12 +440,11 @@ export class PedidoManualComponent {
   }
 
   validaMostrarCampos(){
-    if(this.pedido.nome != ''){
+    if(this.telefone != ''){
       this.showNomeCliente = true;
     } else {
       this.showNomeCliente = false;
     }
-    console.log(this.pedido)
     if(this.pedido.telefone != '' && this.pedido.telefone != null && this.pedido.nome != '' && this.pedido.nome != null){
       this.showBotaoBuscarCliente = false;
       this.showBotaoRemoveCliente = true;
@@ -459,9 +460,31 @@ export class PedidoManualComponent {
       this.showBotaoEnderecoCliente = false;
       this.showItensPedido = false;
     }
-    
-    
-    
-    
+    if(!this.showNomeCliente){
+      this.showSalvarCliente = false
+    }
+  }
+
+  validaImpressao() : boolean{
+    let validacoes : Notificacao[] = [];
+    if(this.pedido.entrega && this.pedido.taxaEntrega == 0){
+      validacoes.push({
+        tipo: 'erro',
+        titulo: 'Pedido para entrega sem valor da taxa'
+      })
+    }
+
+    if(this.pedido.itensPedido.length == 0){
+      validacoes.push({
+        tipo: 'erro',
+        titulo: 'Nenhum produto cadastrado'
+      })
+    }
+    if(validacoes.length != 0){
+      validacoes.forEach((validacao)=>{
+        this._apiServiceService.imprimiNotificacao(validacao);
+      }) 
+    }    
+    return validacoes.length == 0;
   }
 }
