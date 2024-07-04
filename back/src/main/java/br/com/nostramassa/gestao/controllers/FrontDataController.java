@@ -18,8 +18,8 @@ public class FrontDataController {
 	@Autowired
 	private FrontGetDataService frontGetDataService;
 	
-//	@GetMapping(path = "", produces = { MediaType.APPLICATION_JSON_VALUE })
-//	public ResponseEntity<ResponseDTO<FrontDataServiceDTO>> getDadosGeral(){
-//		return new ResponseDTO<FrontDataServiceDTO>().ok(frontGetDataService.getDataToFront(), null);
-//	}
+	@GetMapping(path = "", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ResponseDTO<FrontDataServiceDTO>> getDadosGeral(){
+		return new ResponseDTO<FrontDataServiceDTO>().ok(frontGetDataService.getDataToFront(), null);
+	}
 }

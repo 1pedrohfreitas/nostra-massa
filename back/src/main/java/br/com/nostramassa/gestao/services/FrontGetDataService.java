@@ -46,7 +46,7 @@ public class FrontGetDataService {
 	}
 
 	public FrontDataServiceDTO getDataToFront() {
-		atualizaDadosInicializacao();
+//		atualizaDadosInicializacao();
 		FrontDataServiceDTO frontDataServiceDTO = new FrontDataServiceDTO();
 		frontDataServiceDTO.setPizzasSabor(pizzasSabor);
 		frontDataServiceDTO.setBebidas(bebidas);

@@ -40,4 +40,7 @@ export class ParametrosComponent {
     this._parametrosService.atualizaParametros(this.parametros);
   }
 
+  atualizaDadosMemoria(){
+    this._parametrosService.atualizaDadosMemoria();
+  }
 }

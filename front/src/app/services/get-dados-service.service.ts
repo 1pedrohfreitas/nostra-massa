@@ -20,8 +20,8 @@ export class GetDadosServiceService {
       this._apiService.get('getDadosGeral').then((response) => {
         localStorage.setItem('listaBebidas', JSON.stringify(response.bebidas));
           localStorage.setItem('listaPizzaSabores', JSON.stringify(response.pizzasSabor));
-          localStorage.setItem('listaRuas', JSON.stringify(response.ruas));
-          localStorage.setItem('listaBairros', JSON.stringify(response.bairros));
+          // localStorage.setItem('listaRuas', JSON.stringify(response.ruas));
+          // localStorage.setItem('listaBairros', JSON.stringify(response.bairros));
           localStorage.setItem('listaPizzaAcrescimos', JSON.stringify(response.pizzasAcrescimos));
           this._localStorageService.handleLocalStorageDataFront();
         })

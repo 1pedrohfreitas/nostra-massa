@@ -20,4 +20,8 @@ export class ParametrosService {
   getListaImpressoras(): Promise<Page<string>> {
     return this._apiService.get('parametros/listaImpressoras');
   }
+  
+  atualizaDadosMemoria(): Promise<Page<string>> {
+    return this._apiService.post('parametros/atualizaDadosMemoria',{});
+  }
 }
