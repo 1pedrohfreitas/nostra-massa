@@ -1,0 +1,36 @@
+    <app-default-page
+    [pageTitle]="pageTitle"
+    [modelData]="productType"
+    [defaultFields]="[{
+        name : 'type',
+        label: 'Tipo de Produto'
+    }]"   
+    >
+    </app-default-page> 
+    <!-- <div class="row">
+        
+    </div>
+    <div class="row no-print">
+        <div class="col-8 no-print">
+            <app-fieldset label="Campos">
+                <div class="col-auto">
+                    <app-input id="product-type" [(value)]="productType.type" label="Tipo:" />
+                </div>
+
+            </app-fieldset>
+        </div>
+        <div class="col-4 no-print">
+            <app-fieldset label="Ações">
+                <div class="col-button">
+                    <app-button-action type="salvar" (click)="save()" />
+                </div>
+            </app-fieldset>
+        </div>
+    </div>
+    <div class="row no-print">
+        <app-fieldset [label]="'Bebidas Cadastrados: ' + tableData.length">
+            <app-table [headers]="tableHeader" [columns]="tableColluns" [columnSize]="tableCollunsSize"
+                [data]="tableData" [actionButtons]="tableActionsButtons"
+                (actionDataClick)="tableActionDataClick($event)" />
+        </app-fieldset>
+    </div> -->

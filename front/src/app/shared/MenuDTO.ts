@@ -39,6 +39,12 @@ export const Menu: MenuDTO[] = [
         path: '',
         children: [
             {
+                nome: 'Tipo',
+                img: 'assets/images/pizza.png',
+                path: 'produtos/tipo',
+    
+            },
+            {
                 nome: 'Pizza',
                 img: 'assets/images/pizza.png',
                 path: 'produtos/pizza',

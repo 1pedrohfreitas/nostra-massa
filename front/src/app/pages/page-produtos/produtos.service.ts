@@ -13,6 +13,13 @@ export class ProdutosService {
     private _apiService: ApiServicesService
   ) { }
 
+  create(data : any, field : string) : Promise<any>{
+    return this._apiService.post(`product/${field}`,data);
+  }
+  getAll(field : string) : Promise<Page<any>>{
+    return this._apiService.get(`product/${field}`);
+  }
+
   adicionaAcrescimo(acrescimo : PizzaAcrescimoDTO) : Promise<PizzaAcrescimoDTO>{
     return this._apiService.post('produto/acrescimo',acrescimo);
   }

@@ -19,6 +19,9 @@ export class ApiServicesService {
   }
 
   async post(url : string, data : any) {
+    data['data'] != undefined ? data = data['data'] : data = data
+    console.log((data as object))
+    console.log(data)
     const response = await lastValueFrom(this._http.post<ResponseDTO<any>>(`${environment.url}api/${url}`,data));
     this.printMsg(response.msgs);
     return response.data;

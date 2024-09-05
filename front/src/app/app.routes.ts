@@ -12,6 +12,7 @@ import { IngredientesComponent } from './pages/page-produtos/ingredientes/ingred
 import { BebidasComponent } from './pages/page-produtos/bebidas/bebidas.component';
 import { BairrosComponent } from './pages/enderecos/bairros/bairros.component';
 import { RuasComponent } from './pages/enderecos/ruas/ruas.component';
+import { ProdutoTipoComponent } from './pages/page-produtos/tipos/produto-tipo.component';
 
 export const routes: Routes = [
     {
@@ -41,6 +42,10 @@ export const routes: Routes = [
         path : 'produtos',
         component: PageProdutosComponent,
         children: [
+            {
+                path: 'tipo',
+                component: ProdutoTipoComponent,
+            },
             {
                 path: 'pizza',
                 component: PizzasComponent,

@@ -1,0 +1,25 @@
+<app-page [titulo]="pageTitle">
+    <div class="row">
+        <div class="col-auto">
+            <form action="create" class="row">
+                <span *ngFor="let field of defaultFields" class="col-5">
+                    <div class="col-8">
+                        <app-input [label]="field.label" [id]="modelName+'-'+field.name" [(value)]="modelFields['type']"  />
+                    </div>
+                </span>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-button">
+            <app-button-action type="salvar" (click)="save()" />
+        </div>
+    </div>
+    <div class="row no-print">
+        <app-fieldset [label]="'Cadastros: ' + tableData.length">
+            <app-table [headers]="tableHeader" [columns]="tableColluns" [columnSize]="tableCollunsSize"
+                [data]="tableData" [actionButtons]="tableActionsButtons"
+                (actionDataClick)="tableActionDataClick($event)" />
+        </app-fieldset>
+    </div>
+</app-page>
