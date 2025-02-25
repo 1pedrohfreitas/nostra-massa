@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nostramassa.gestao.dtos.ResponseDTO;
-import br.com.nostramassa.gestao.dtos.ResponseMessagemDTO;
 import br.com.nostramassa.gestao.models.sistema.Parametros;
 import br.com.nostramassa.gestao.services.FrontGetDataService;
 import br.com.nostramassa.gestao.services.ImpressoraService;
 import br.com.nostramassa.gestao.services.ParametroService;
+import dev.pedrofreitas.core.dtos.restResponse.ResponseDTO;
+import dev.pedrofreitas.core.dtos.restResponse.ResponseMessageDTO;
+import dev.pedrofreitas.core.enums.TypeMsgEnum;
 
 @RestController
 @RequestMapping(value = "/api/parametros")
@@ -46,10 +47,7 @@ public class ParametrosController {
 	public ResponseEntity<ResponseDTO<Parametros>> atualizaParametros(
 			@RequestBody Parametros parametros) {
 		Parametros parametrosRetorno = parametroService.atualizaParametros(parametros);
-		ResponseMessagemDTO msg = new ResponseMessagemDTO();
-		msg.setTypeMsg("sucesso");
-		msg.setTitulo("Paramêtros Atualizados");
-		return new ResponseDTO<Parametros>().ok(parametrosRetorno, Arrays.asList(msg));
+		return new ResponseDTO<Parametros>().ok(parametrosRetorno, Arrays.asList(new ResponseMessageDTO(TypeMsgEnum.SUCCESS)));
 	}
 	
 	@GetMapping(path = "/listaImpressoras", produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -66,10 +64,7 @@ public class ParametrosController {
 	public ResponseEntity<ResponseDTO<String>> atualizaDadosMemoria(
 			@RequestBody Parametros parametros) {
 		frontGetDataService.atualizaDadosInicializacao();
-		ResponseMessagemDTO msg = new ResponseMessagemDTO();
-		msg.setTypeMsg("sucesso");
-		msg.setTitulo("Dados da Memoria Atualizados");
-		return new ResponseDTO<String>().ok("Dados da Memoria Atualizados", Arrays.asList(msg));
+		return new ResponseDTO<String>().ok("Dados da Memoria Atualizados", Arrays.asList(new ResponseMessageDTO(TypeMsgEnum.SUCCESS)));
 	}
 	
 }

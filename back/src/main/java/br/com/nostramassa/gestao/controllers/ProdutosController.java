@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nostramassa.gestao.dtos.ResponseDTO;
 import br.com.nostramassa.gestao.dtos.pedido.BebidaDTO;
 import br.com.nostramassa.gestao.dtos.pedido.PizzaAcrescimoDTO;
 import br.com.nostramassa.gestao.dtos.pedido.PizzaSaborDTO;
 import br.com.nostramassa.gestao.dtos.pedido.PizzaSaborIngredienteDTO;
 import br.com.nostramassa.gestao.services.ProdutosService;
+import dev.pedrofreitas.core.dtos.restResponse.ResponseDTO;
 
 @RestController
 @RequestMapping(value = "/api/produto")

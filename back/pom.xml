@@ -15,7 +15,7 @@
 	<name>Sistema de Gestao Nostra Massa</name>
 	<description>Sistema para gestão de pedidos pizzaria nostra massa</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>21</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -73,6 +73,12 @@
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>3.0.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>dev.pedrofreitas</groupId>
+			<artifactId>core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>

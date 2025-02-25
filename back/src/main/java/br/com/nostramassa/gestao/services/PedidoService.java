@@ -34,9 +34,6 @@ public class PedidoService {
 	@Autowired
 	private PedidoItemRepository pedidoItemRepository;
 	
-	@Autowired
-	private TelegramService telegramService;
-
 	public PedidoDTO criarPedido() {
 		PedidoDTO pedidoDTO = new PedidoDTO();
 		Pedido pedido = new Pedido();

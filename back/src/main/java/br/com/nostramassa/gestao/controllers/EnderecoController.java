@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nostramassa.gestao.dtos.ResponseDTO;
 import br.com.nostramassa.gestao.dtos.pedido.BairroDTO;
 import br.com.nostramassa.gestao.dtos.pedido.RuaDTO;
 import br.com.nostramassa.gestao.services.EnderecoService;
+import dev.pedrofreitas.core.dtos.restResponse.ResponseDTO;
 
 @RestController
 @RequestMapping(value = "/api/endereco")
@@ -25,47 +25,35 @@ public class EnderecoController {
 
 	@GetMapping(path = "/rua", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Page<RuaDTO>>> getRuas(Pageable pageable) {
-		if (pageable == null) {
-			pageable = PageRequest.of(0, 10000);
-		}
-		return new ResponseDTO<Page<RuaDTO>>().ok(enderecoService.getRuas(pageable), null);
+		return new ResponseDTO<Page<RuaDTO>>().ok(enderecoService.getRuas(PageRequest.of(0, 2000)), null);
 	}
 	
 	@GetMapping(path = "/bairro", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Page<BairroDTO>>> getBairros(Pageable pageable) {
-		if (pageable == null) {
-			pageable = PageRequest.of(0, 10000);
-		}
-		return new ResponseDTO<Page<BairroDTO>>().ok(enderecoService.getBairros(pageable), null);
+		return new ResponseDTO<Page<BairroDTO>>().ok(enderecoService.getBairros(PageRequest.of(0, 1000)), null);
 	}
 
 	@GetMapping(path = "/bairroMaisUtilizados", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Page<String>>> bairroMaisUtilizados(Pageable pageable) {
-		return new ResponseDTO<Page<String>>().ok(enderecoService.getBairrosMaisUtilizados(pageable), null);
+		return new ResponseDTO<Page<String>>().ok(enderecoService.getBairrosMaisUtilizados(PageRequest.of(0, 50)), null);
 	}
 	
 	@GetMapping(path = "/bairroMaisUtilizados/autoComplete/{bairro}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Page<String>>> autoCompleteBairroMaisUtilizados(Pageable pageable, @PathVariable String bairro) {
-		if (pageable == null) {
-			pageable = PageRequest.of(0, 10);
-		}
-		return new ResponseDTO<Page<String>>().ok(enderecoService.autoCompleteBairrosMaisUtilizados(pageable,bairro), null);
+		return new ResponseDTO<Page<String>>().ok(enderecoService.autoCompleteBairrosMaisUtilizados(PageRequest.of(0, 20),bairro), null);
 	}
 	
 	@GetMapping(path = "/rua/autoComplete/{rua}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Page<String>>> autoCompleteRua(Pageable pageable, @PathVariable String rua) {
 		if (pageable == null) {
-			pageable = PageRequest.of(0, 10);
+			pageable = PageRequest.of(0, 50);
 		}
-		return new ResponseDTO<Page<String>>().ok(enderecoService.autoCompleteRua(pageable, rua.replaceAll("_", " ")), null);
+		return new ResponseDTO<Page<String>>().ok(enderecoService.autoCompleteRua(PageRequest.of(0, 100), rua.replaceAll("_", " ")), null);
 	}
 	
 	@GetMapping(path = "/bairro/autoComplete/{bairro}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ResponseDTO<Page<String>>> autoCompleteBairro(Pageable pageable, @PathVariable String bairro) {
-		if (pageable == null) {
-			pageable = PageRequest.of(0, 10);
-		}
-		return new ResponseDTO<Page<String>>().ok(enderecoService.autoCompleteBairro(pageable, bairro.replaceAll("_", " ")), null);
+		return new ResponseDTO<Page<String>>().ok(enderecoService.autoCompleteBairro(PageRequest.of(0, 100), bairro.replaceAll("_", " ")), null);
 	}
 	
 	@GetMapping(path = "/bairro/taxaEntrega/{bairro}", produces = { MediaType.APPLICATION_JSON_VALUE })

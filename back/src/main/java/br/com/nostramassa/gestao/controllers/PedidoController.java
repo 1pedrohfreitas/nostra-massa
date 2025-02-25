@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nostramassa.gestao.dtos.ResponseDTO;
-import br.com.nostramassa.gestao.dtos.ResponseMessagemDTO;
 import br.com.nostramassa.gestao.dtos.pedido.PedidoDTO;
 import br.com.nostramassa.gestao.dtos.pedido.PedidoItemDTO;
 import br.com.nostramassa.gestao.enums.StatusPedidoEnum;
 import br.com.nostramassa.gestao.services.ImpressoraService;
 import br.com.nostramassa.gestao.services.PedidoService;
+import dev.pedrofreitas.core.dtos.restResponse.ResponseDTO;
+import dev.pedrofreitas.core.dtos.restResponse.ResponseMessageDTO;
+import dev.pedrofreitas.core.enums.TypeMsgEnum;
 
 @RestController
 @RequestMapping(value = "api/pedido")
@@ -38,7 +40,7 @@ public class PedidoController {
 	public ResponseEntity<ResponseDTO<Page<PedidoDTO>>> lista(
 			Pageable pageable
 			) {
-		Page<PedidoDTO> pedidos = pedidoService.getAll(pageable);
+		Page<PedidoDTO> pedidos = pedidoService.getAll(PageRequest.of(0, 100));
 		return new ResponseDTO<Page<PedidoDTO>>().ok(pedidos, null);
 	}
 	
@@ -52,7 +54,7 @@ public class PedidoController {
 	public ResponseEntity<ResponseDTO<Page<PedidoDTO>>> getPedidoByTelefone(
 			@PathVariable String telefone,
 			Pageable pageable) {
-		return new ResponseDTO<Page<PedidoDTO>>().ok(pedidoService.getPedidosByTelefone(pageable,telefone), null);
+		return new ResponseDTO<Page<PedidoDTO>>().ok(pedidoService.getPedidosByTelefone(PageRequest.of(0, 100),telefone), null);
 	}
 	
 	@PutMapping(path = "/cancela/{id}")
@@ -60,13 +62,12 @@ public class PedidoController {
 			@PathVariable Long id) {
 		
 		PedidoDTO pedido = pedidoService.cancelaPedido(id);
-		ResponseMessagemDTO msg = new ResponseMessagemDTO();
+		ResponseMessageDTO msg = new ResponseMessageDTO(TypeMsgEnum.SUCCESS);
 		if(pedido != null) {
-			msg.setTypeMsg("sucesso");
-			msg.setTitulo("Pedido cancelado com sucesso");
+			msg.setTitle("Pedido cancelado com sucesso");
 		} else {
-			msg.setTypeMsg("erro");
-			msg.setTitulo("Registro não encontrado");
+			msg.setTypeMsg(TypeMsgEnum.ERROR);
+			msg.setTitle("Registro não encontrado");
 		}
 		
 		return new ResponseDTO<PedidoDTO>().ok(pedido, Arrays.asList(msg));
@@ -87,7 +88,7 @@ public class PedidoController {
 	public ResponseEntity<ResponseDTO<Page<PedidoDTO>>> buscaPedidosbyFiltro(
 			@PathVariable String dataReferencia,
 			Pageable pageable) {
-		return new ResponseDTO<Page<PedidoDTO>>().ok(pedidoService.getPedidosByData(dataReferencia, pageable), null);
+		return new ResponseDTO<Page<PedidoDTO>>().ok(pedidoService.getPedidosByData(dataReferencia, PageRequest.of(0, 100)), null);
 	}
 	
 	@PostMapping(path = "/novo", produces = { MediaType.APPLICATION_JSON_VALUE })

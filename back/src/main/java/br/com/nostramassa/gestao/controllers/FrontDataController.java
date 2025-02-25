@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nostramassa.gestao.dtos.FrontDataServiceDTO;
-import br.com.nostramassa.gestao.dtos.ResponseDTO;
 import br.com.nostramassa.gestao.services.FrontGetDataService;
+import dev.pedrofreitas.core.dtos.restResponse.ResponseDTO;
 
 @RestController
 @RequestMapping(value = "/api/getDadosGeral")
