@@ -40,20 +40,22 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+
+      - name: Resolve Spring Dependecies
+        run: |
+          cd back
+          mvn clean dependency:copy-dependencies -s settings.xml
+        env:
+          PACKAGER_TOKEN: ${{ secrets.PACKAGER_TOKEN }}
       
       - name: Build Spring Test
         run: |
           cd back
-          mvn clean verify -s settings.xml
+          mvn verify -s settings.xml
         env:
           PACKAGER_TOKEN: ${{ secrets.PACKAGER_TOKEN }}
       
-      - name: Resolve Spring Dependecies
-        run: |
-          cd back
-          mvn dependency:copy-dependencies -s settings.xml
-        env:
-          PACKAGER_TOKEN: ${{ secrets.PACKAGER_TOKEN }}
+      
       
       - name: Construir o projeto
         if: success()
