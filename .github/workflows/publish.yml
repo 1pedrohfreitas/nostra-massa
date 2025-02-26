@@ -44,18 +44,24 @@ jobs:
       - name: Build Spring Test
         run: |
           cd back
-          mvn clean verify
+          mvn clean verify -s settings.xml
+        env:
+          PACKAGER_TOKEN: ${{ secrets.PACKAGER_TOKEN }}
       
       - name: Resolve Spring Dependecies
         run: |
           cd back
-          mvn dependency:copy-dependencies
+          mvn dependency:copy-dependencies -s settings.xml
+        env:
+          PACKAGER_TOKEN: ${{ secrets.PACKAGER_TOKEN }}
       
       - name: Construir o projeto
         if: success()
         run: |
           cd back
-          mvn package -DskipTests --file pom.xml
+          mvn package -DskipTests --file pom.xml -s settings.xml
+        env:
+          PACKAGER_TOKEN: ${{ secrets.PACKAGER_TOKEN }}
 
       - name: Disponibilizar o JAR como artefato
         uses: actions/upload-artifact@v4
