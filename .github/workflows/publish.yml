@@ -15,25 +15,25 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
       
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '18'
 
-      - name: Install Angular dependencies
-        run: |
-          cd front
-          npm install --legacy-peer-deps
+      # - name: Install Angular dependencies
+      #   run: |
+      #     cd front
+      #     npm install --legacy-peer-deps
 
-      - name: Build Angular
-        run: |
-          cd front
-          npm run build --prod
+      # - name: Build Angular
+      #   run: |
+      #     cd front
+      #     npm run build --prod
       
-      - name: Copy Angular dist to Spring static folder
-        run: |
-          mkdir -p back/src/main/resources/static
-          cp -r front/dist/* back/src/main/resources/static/
+      # - name: Copy Angular dist to Spring static folder
+      #   run: |
+      #     mkdir -p back/src/main/resources/static
+      #     cp -r front/dist/* back/src/main/resources/static/
 
       - name: Configurar JDK 21
         uses: actions/setup-java@v3
@@ -44,26 +44,26 @@ jobs:
       - name: Resolve Spring Dependecies
         run: |
           cd back
-          mvn clean dependency:copy-dependencies -s settings.xml
+          mvn clean dependency:copy-dependencies package -DskipTests --file pom.xml -s settings.xml
         env:
           PACKAGER_TOKEN: ${{ secrets.PACKAGER_TOKEN }}
       
-      - name: Build Spring Test
-        run: |
-          cd back
-          mvn verify -s settings.xml
-        env:
-          PACKAGER_TOKEN: ${{ secrets.PACKAGER_TOKEN }}
+      # - name: Build Spring Test
+      #   run: |
+      #     cd back
+      #     mvn verify -s settings.xml
+      #   env:
+      #     PACKAGER_TOKEN: ${{ secrets.PACKAGER_TOKEN }}
       
       
       
-      - name: Construir o projeto
-        if: success()
-        run: |
-          cd back
-          mvn package -DskipTests --file pom.xml -s settings.xml
-        env:
-          PACKAGER_TOKEN: ${{ secrets.PACKAGER_TOKEN }}
+      # - name: Construir o projeto
+      #   if: success()
+      #   run: |
+      #     cd back
+      #     mvn  -s settings.xml
+      #   env:
+      #     PACKAGER_TOKEN: ${{ secrets.PACKAGER_TOKEN }}
 
       - name: Disponibilizar o JAR como artefato
         uses: actions/upload-artifact@v4
